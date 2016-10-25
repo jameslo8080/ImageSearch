@@ -28,3 +28,13 @@ Mat rgbMat_to_hsvHist(Mat src_base)
 
 	return hist_base;
 }
+
+Mat calSURFDescriptor(Mat input) {
+	SurfFeatureDetector detector;
+	SurfDescriptorExtractor extractor;
+	vector<KeyPoint> keyPoints;
+	Mat descriptors;
+	detector.detect(input, keyPoints);
+	extractor.compute(input, keyPoints, descriptors);
+	return descriptors;
+}

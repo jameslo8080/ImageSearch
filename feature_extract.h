@@ -11,3 +11,4 @@ using namespace cv;
 
 
 Mat rgbMat_to_hsvHist(Mat src_base);
+Mat calSURFDescriptor(Mat input);

@@ -58,13 +58,11 @@ vector<Mat> load_allDescriptions_YML() {
 	{
 		while (fscanf_s(fp, "%s ", imagepath, sizeof(imagepath)) > 0)
 		{
-			printf("%s\n", imagepath);
 			char tempname[200];
 			sprintf_s(tempname, 200, "../%s", imagepath);
-
 			cv::FileStorage storage(tempname, cv::FileStorage::READ);
 			Mat descriptors;
-			storage["descriptors"] >> descriptors;
+			storage["descriptors"] >> descriptors;	
 			allDescriptors.push_back(descriptors);
 			storage.release();
 		}

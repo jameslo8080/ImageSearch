@@ -115,8 +115,23 @@ int main(int argc, char** argv){
 	// hsv_compare(src_input, index);
 
 	// *********** Do compare surf here ***************
-	vector<Mat> allDescriptors = load_allDescriptions_YML(); // need to call save_allDescriptions_YML() once, before run this
+	// need to call save_allDescriptions_YML() once, before run this
+	vector<Mat> allDescriptors = load_allDescriptions_YML();  // <------------------ here have BUG. cannot really log the MAT
 
+	Mat inputDescriptor = calSURFDescriptor(src_input);
+	vector<ImgScore> scores;
+	for (int i = 0; i < allDescriptors.size(); ++i) {
+		ImgScore sc;
+		sc.db_id = i;
+		sc.score = surf_compare(inputDescriptor, allDescriptors[i]);
+
+		scores.push_back(sc);
+	}
+	sort(scores.rbegin(), scores.rend());
+
+	scores.resize(10);
+	printf("res0¡@Acc: %lf \n", validate_fit(scores, index));
+	printf("Done \n");
 	// ************************************************
 
 	waitESC();
