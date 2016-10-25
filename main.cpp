@@ -63,17 +63,33 @@ string getFilePath999(int index){
 	return s;
 }
 
-//Compute pixel-by-pixel difference
-double compareImgs(Mat img1, Mat img2){
-	int w = img1.cols, h = img2.rows;
-	Mat new_img2;
-	resize(img2, new_img2, img1.size());
-	double sum = 0;
-	for (int i = 0; i < w; i++)
-	for (int j = 0; j < h; j++)	{
-		sum += abs(img1.at<uchar>(j, i) - new_img2.at<uchar>(j, i));
+void waitESC() {
+	// Wait for the user to press a key in the GUI window.
+	//Press ESC to quit
+	int keyValue = 0;
+	while (keyValue >= 0)
+	{
+		keyValue = cvWaitKey(0);
+
+		switch (keyValue)
+		{
+		case 27:keyValue = -1;
+			break;
+		}
 	}
-	return sum;
+}
+
+void hsv_compare(Mat src_input, int index) {
+
+	//// compare hsv
+	Mat src_hsv = rgbMat_to_hsvHist(src_input);	
+	vector<ImgScore> res0;
+	vector<Mat> features = load_features();
+	for (int i = 0; i < features.size(); ++i) res0.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
+	sort(res0.rbegin(), res0.rend());
+	res0.resize(10);
+	printf("res0¡@Acc: %lf \n", validate_fit(res0, index));
+	printf("Done \n");
 }
 
 int main(int argc, char** argv){
@@ -95,56 +111,44 @@ int main(int argc, char** argv){
 	}
 	imshow("Input", src_input);
 
-	//// compare hsv
-	//Mat src_hsv = rgbMat_to_hsvHist(src_input);	
-	//vector<ImgScore> res0;
-	//vector<Mat> features = load_features();
-	//for (int i = 0; i < features.size(); ++i) res0.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
-	//sort(res0.rbegin(), res0.rend());
-	//res0.resize(10);
-	//printf("res0¡@Acc: %lf \n", validate_fit(res0, index));
-	//printf("Done \n");
+	// -- hsv compare approach --
+	// hsv_compare(src_input, index);
 
-	// SURF + SVM
-	Mat allDescriptors = load_allDescriptions();
-	cout << "Train BOW" << endl;
-	Mat dictionary = trainBOW(allDescriptors);
-	Ptr<DescriptorExtractor> extractor = DescriptorMatcher::create("SIFT");
-	Ptr<DescriptorMatcher>  matcher = DescriptorExtractor::create("BruteForce");
-	BOWImgDescriptorExtractor bowExtractor(extractor, matcher);
-	bowExtractor.setVocabulary(dictionary);
-	cout << "load Samples" << endl;
-	map<int, Mat> samples = load_mlSample(bowExtractor);
-	map<int, Ptr<SVM>> svms;
-	cout << "train Svm" << endl;
-	for (int i = 0; i < 10; ++i) {
-		CvSVMParams svmParams;
-		svms[i] = new SVM;
-		trainSvm(samples, i, svmParams, svms[i]);
-		string fname = to_string(i);
-		string extension(".xml");
-		string fullname = fname + extension;
-		svms[i]->save(fullname.c_str());
-	}
-	cout << "Predict" << endl;
-	Mat src_descriptor = cal_descriptor(bowExtractor, src_input);
-	int result = classifyBySvm(svms, src_descriptor);
-	cout << "svm result " << result << endl;
+	// *********** Do compare surf here ***************
+	vector<Mat> allDescriptors = load_allDescriptions_YML(); // need to call save_allDescriptions_YML() once, before run this
 
+	// ************************************************
 
-	// Wait for the user to press a key in the GUI window.
-	//Press ESC to quit
-	int keyValue = 0;
-	while (keyValue >= 0)
-	{
-		keyValue = cvWaitKey(0);
-
-		switch (keyValue)
-		{
-		case 27:keyValue = -1;
-			break;
-		}
-	}
+	waitESC();
 
 	return 0;
 }
+
+
+/**          The code to run clustering  - SURF + SVM approach
+             Too slow in training, so give up
+
+cout << "Train BOW" << endl;
+Mat dictionary = trainBOW(allDescriptors);
+Ptr<DescriptorExtractor> extractor = DescriptorMatcher::create("SIFT");
+Ptr<DescriptorMatcher>  matcher = DescriptorExtractor::create("BruteForce");
+BOWImgDescriptorExtractor bowExtractor(extractor, matcher);
+bowExtractor.setVocabulary(dictionary);
+cout << "load Samples" << endl;
+map<int, Mat> samples = load_mlSample(bowExtractor);
+map<int, Ptr<SVM>> svms;
+cout << "train Svm" << endl;
+for (int i = 0; i < 10; ++i) {
+CvSVMParams svmParams;
+svms[i] = new SVM;
+trainSvm(samples, i, svmParams, svms[i]);
+string fname = to_string(i);
+string extension(".xml");
+string fullname = fname + extension;
+svms[i]->save(fullname.c_str());
+}
+cout << "Predict" << endl;
+Mat src_descriptor = cal_descriptor(bowExtractor, src_input);
+int result = classifyBySvm(svms, src_descriptor);
+cout << "svm result " << result << endl;
+*/

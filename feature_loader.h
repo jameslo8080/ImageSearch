@@ -14,10 +14,13 @@
 using namespace std;
 using namespace cv;
 
+#define SURF_LIST_FILE "inputsurf.txt"
 #define IMAGE_LIST_FILE "inputimage.txt"  // NOTE: this is relative to current file
 
 Mat load_allDescriptions();
 
+void save_allDescriptions_YML();
+vector<Mat> load_allDescriptions_YML();
 
 Mat cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img);
 
