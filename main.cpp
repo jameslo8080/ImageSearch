@@ -132,9 +132,9 @@ int main(int argc, char** argv){
 
 	// "../surf_c/"
 	string compare_filepath = "../surf_c/" + files[index] + ".yml";
-	cout << "load pre-compare : " << compare_filepath;
+	cout << "load pre-compare : " << compare_filepath << endl;
 
-	FileStorage fs2(compare_filepath, FileStorage::READ);
+	FileStorage fs2(compare_filepath, FileStorage::WRITE);
 	if (fs2["s999"].empty()){
 		fs2.release();
 		FileStorage fs2(compare_filepath, FileStorage::WRITE);
@@ -142,13 +142,13 @@ int main(int argc, char** argv){
 		for (int i = 0; i < allDescriptors.size(); ++i) {
 			ImgScore sc;
 			sc.db_id = i;
-			cout << "comparing : " << i;
+			cout << "comparing : " << i << ".jpg" << endl;
 			sc.score = surf_compare(inputDescriptor, allDescriptors[i]);
-			
-			string temp = "s" + std::to_string( i );
+
+			string temp = "s" + std::to_string(i);
 			fs2 << temp << sc.score;
 
-			cout << temp <<" score : " << sc.score << endl;
+			cout << temp << ".jpg score : " << sc.score << endl;
 			scores.push_back(sc);
 		}
 		fs2.release();
@@ -158,11 +158,12 @@ int main(int argc, char** argv){
 		printf("res0�@Acc: %lf \n", validate_fit(scores, index));
 		printf("Done \n");
 
-		
-	} else{
+
+	}
+	else{
 		// read score only
-		
-		
+
+
 	}
 	// ************************************************
 

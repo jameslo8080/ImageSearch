@@ -82,10 +82,10 @@ int surf_compare(Mat descriptors_1, Mat descriptors_2) {
 	FlannBasedMatcher matcher;
 	std::vector< DMatch > matches;
 
-	printf("B\n");
+	printf("B,");
 	matcher.match(descriptors_1, descriptors_2, matches);
 
-	printf("C\n");
+	printf("C,");
 	double max_dist = 0; double min_dist = 100;
 	//-- Quick calculation of max and min distances between keypoints
 	for (int i = 0; i < descriptors_1.rows; i++)

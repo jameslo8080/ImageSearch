@@ -54,6 +54,7 @@ vector<Mat> load_allDescriptions_YML() {
 	fopen_s(&fp, SURF_LIST_FILE, "r");
 	printf("Extracting Descriptions from input images...\n");
 
+	int i = 0;
 	while (!feof(fp))
 	{
 		while (fscanf_s(fp, "%s ", imagepath, sizeof(imagepath)) > 0)
@@ -81,7 +82,12 @@ vector<Mat> load_allDescriptions_YML() {
 			allDescriptors.push_back(descriptors);
 			storage.release();
 
+			i++;
+			if (i == 5)
+				break;
 		}
+		if (i == 5)
+			break;
 	}
 	fclose(fp);
 
