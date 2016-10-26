@@ -98,7 +98,7 @@ int main(int argc, char** argv){
 	Mat max_img;
 
 	cout << "Which file " << "(0:'beach', 1:'building', 2:'bus'," << endl
-		<< "          3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? " << endl 
+		<< "          3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? " << endl
 		<< "or -2 for save_allDescriptions_YML(): ";
 	int index;
 	cin >> index;
@@ -125,22 +125,45 @@ int main(int argc, char** argv){
 
 	// *********** Do compare surf here ***************
 	// need to call save_allDescriptions_YML() once, before run this
-	vector<Mat> allDescriptors = load_allDescriptions_YML();  // <------------------ here have BUG. cannot really log the MAT
+	vector<Mat> allDescriptors = load_allDescriptions_YML();
 
 	Mat inputDescriptor = calSURFDescriptor(src_input);
 	vector<ImgScore> scores;
-	for (int i = 0; i < allDescriptors.size(); ++i) {
-		ImgScore sc;
-		sc.db_id = i;
-		sc.score = surf_compare(inputDescriptor, allDescriptors[i]);
 
-		scores.push_back(sc);
+	// "../surf_c/"
+	string compare_filepath = "../surf_c/" + files[index] + ".yml";
+	cout << "load pre-compare : " << compare_filepath;
+
+	FileStorage fs2(compare_filepath, FileStorage::READ);
+	if (fs2["s999"].empty()){
+		fs2.release();
+		FileStorage fs2(compare_filepath, FileStorage::WRITE);
+
+		for (int i = 0; i < allDescriptors.size(); ++i) {
+			ImgScore sc;
+			sc.db_id = i;
+			cout << "comparing : " << i;
+			sc.score = surf_compare(inputDescriptor, allDescriptors[i]);
+			
+			string temp = "s" + std::to_string( i );
+			fs2 << temp << sc.score;
+
+			cout << temp <<" score : " << sc.score << endl;
+			scores.push_back(sc);
+		}
+		fs2.release();
+		sort(scores.rbegin(), scores.rend());
+
+		scores.resize(10);
+		printf("res0�@Acc: %lf \n", validate_fit(scores, index));
+		printf("Done \n");
+
+		
+	} else{
+		// read score only
+		
+		
 	}
-	sort(scores.rbegin(), scores.rend());
-
-	scores.resize(10);
-	printf("res0�@Acc: %lf \n", validate_fit(scores, index));
-	printf("Done \n");
 	// ************************************************
 
 	waitESC();
