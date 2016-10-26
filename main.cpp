@@ -11,8 +11,8 @@
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/nonfree/nonfree.hpp"
-#include "opencv2/features2d/features2d.hpp"
-
+#include "opencv2/features2d/features2d.hpp" 
+#include "ImageScore.h"
 
 using namespace std;
 using namespace cv;
@@ -33,6 +33,45 @@ food		: 900 ~ 999
 */
 
 string files[] = { "beach", "building", "bus", "dinosaur", "flower", "horse", "man" };
+
+
+bool isMatch(const ImageScore& imgsc, int targetClass){
+	//return targetClass == imgsc.classID();
+
+	switch (targetClass){
+	case 0:
+		if (imgsc.id >= 100 && imgsc.id <= 199)
+			return true;
+		break;
+	case 1:
+		if (imgsc.id >= 200 && imgsc.id <= 299)
+			return true;
+		break;
+	case 2:
+		if (imgsc.id >= 300 && imgsc.id <= 399)
+			return true;
+		break;
+	case 3:
+		if (imgsc.id >= 400 && imgsc.id <= 499)
+			return true;
+		break;
+	case 4:
+		if (imgsc.id >= 600 && imgsc.id <= 699)
+			return true;
+		break;
+	case 5:
+		if (imgsc.id >= 700 && imgsc.id <= 799)
+			return true;
+		break;
+	case 6:
+		if (imgsc.id >= 0 && imgsc.id <= 100)
+			return true;
+		break;
+	}
+	return false;
+
+}
+
 
 string getFilePath(int index){
 	if (index < 0 || index >= sizeof(files))
@@ -120,6 +159,7 @@ int method1(int argc, char** argv){
 			/// Apply the pixel-by-pixel comparison method
 			score[db_id] = compareImgs(gray_input, db_gray_img);
 			/// Compute max score
+
 			if (score[db_id] < maxscore)
 			{
 				maxscore = score[db_id];
