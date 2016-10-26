@@ -68,6 +68,7 @@ vector<Mat> load_allDescriptions_YML() {
 		}
 	}
 	fclose(fp);
+
 	return allDescriptors;
 }
 

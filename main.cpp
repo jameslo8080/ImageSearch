@@ -139,7 +139,6 @@ int main(int argc, char** argv){
 	return 0;
 }
 
-
 /**          The code to run clustering  - SURF + SVM approach
 Too slow in training, so give up
 
