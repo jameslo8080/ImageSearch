@@ -2,7 +2,9 @@
 
 #include <iostream>
 #include <vector>
+#include "opencv2/features2d.hpp"
 using namespace std;
+using namespace cv;
 
 struct ImgScore{
 	int db_id;
@@ -15,3 +17,4 @@ struct ImgScore{
 };
 
 double validate_fit(vector<ImgScore> ids, int target_id);
+int surf_compare(Mat descriptors_1, Mat descriptors_2);

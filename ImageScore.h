@@ -29,3 +29,33 @@ feature
 
 11.  Report
 */
+/*
+man			: 0 ~ 99, 100?
+beach		: 101 ~ 199, 100?
+building	: 200 ~ 299
+bus			: 300 ~ 399
+dinosaur	: 400 ~ 499
+elephant	: 500 ~ 599
+flower		: 600 ~ 699
+horse		: 700 ~ 799
+mountain	: 800 ~ 899
+food		: 900 ~ 999
+*/
+
+//string files[] = { "beach", "building", "bus", "dinosaur", "flower", "horse", "man" };
+
+// #include <iostream>
+// #include <string>
+// #include <sstream>
+using namespace std;
+
+
+struct ImageScore {
+	int id;
+	int score;
+	bool operator < (const ImageScore & other) const {
+		return score < other.score;
+	}
+};
+
+
