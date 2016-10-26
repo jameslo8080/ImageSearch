@@ -1,5 +1,3 @@
-// yoyo
-/*
 0:'beach', 1:'building', 2:'bus', 3:'dinosaur', 4:'flower', 5:'horse', 6:'man'
 
 1.	compare -> output image#
@@ -28,4 +26,3 @@ feature
 10.  GUI
 
 11.  Report
-*/
