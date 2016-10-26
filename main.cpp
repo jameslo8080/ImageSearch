@@ -8,13 +8,16 @@
 #include <string>
 #include <stdio.h>
 #include <vector>
+#include <map>
 #include <algorithm>
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/nonfree/nonfree.hpp"
 #include "opencv2/features2d/features2d.hpp"
+#include "feature_loader.h"
 #include "feature_extract.h"
 #include "feature_compare.h"
+#include "ml.h"
 
 using namespace std;
 using namespace cv;
@@ -74,9 +77,8 @@ double compareImgs(Mat img1, Mat img2){
 }
 
 int main(int argc, char** argv){
-	Mat src_input, db_img;
+	Mat src_input;
 
-	int db_id = 0;
 	Mat max_img;
 
 	cout << "Which file" << "(0:'beach', 1:'building', 2:'bus'," << " 3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? ";
@@ -93,59 +95,42 @@ int main(int argc, char** argv){
 	}
 	imshow("Input", src_input);
 
-	Mat src_hsv = rgbMat_to_hsvHist(src_input);	
-	vector<ImgScore> res0;
-	vector<ImgScore> res1;
-	vector<ImgScore> res2;
-	vector<ImgScore> res3;
+	//// compare hsv
+	//Mat src_hsv = rgbMat_to_hsvHist(src_input);	
+	//vector<ImgScore> res0;
+	//vector<Mat> features = load_features();
+	//for (int i = 0; i < features.size(); ++i) res0.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
+	//sort(res0.rbegin(), res0.rend());
+	//res0.resize(10);
+	//printf("res0¡@Acc: %lf \n", validate_fit(res0, index));
+	//printf("Done \n");
 
-	///Read Database
-	FILE* fp;
-	char imagepath[200];
-	fopen_s(&fp, IMAGE_LIST_FILE, "r");
-	printf("Extracting features from input images...\n");
-	while (!feof(fp))
-	{
-		while (fscanf_s(fp, "%s ", imagepath, sizeof(imagepath)) > 0)
-		{
-			printf("%s\n", imagepath);
-			char tempname[200];
-			sprintf_s(tempname, 200, "../%s", imagepath);
-
-			db_img = imread(tempname); // read database image
-			if (!db_img.data)
-			{
-				printf("Cannot find the database image number %d!\n", db_id + 1);
-				system("pause");
-				return -1;
-			}
-
-			Mat hist_base = rgbMat_to_hsvHist(db_img);
-			res0.push_back(ImgScore(db_id, compareHist(hist_base, src_hsv, 0)));
-			res1.push_back(ImgScore(db_id, compareHist(hist_base, src_hsv, 1)));
-			res2.push_back(ImgScore(db_id, compareHist(hist_base, src_hsv, 2)));
-			res3.push_back(ImgScore(db_id, compareHist(hist_base, src_hsv, 3)));
-
-			db_id++;
-
-		}
+	// SURF + SVM
+	Mat allDescriptors = load_allDescriptions();
+	cout << "Train BOW" << endl;
+	Mat dictionary = trainBOW(allDescriptors);
+	Ptr<DescriptorExtractor> extractor = DescriptorMatcher::create("SIFT");
+	Ptr<DescriptorMatcher>  matcher = DescriptorExtractor::create("BruteForce");
+	BOWImgDescriptorExtractor bowExtractor(extractor, matcher);
+	bowExtractor.setVocabulary(dictionary);
+	cout << "load Samples" << endl;
+	map<int, Mat> samples = load_mlSample(bowExtractor);
+	map<int, Ptr<SVM>> svms;
+	cout << "train Svm" << endl;
+	for (int i = 0; i < 10; ++i) {
+		CvSVMParams svmParams;
+		svms[i] = new SVM;
+		trainSvm(samples, i, svmParams, svms[i]);
+		string fname = to_string(i);
+		string extension(".xml");
+		string fullname = fname + extension;
+		svms[i]->save(fullname.c_str());
 	}
-	fclose(fp);
+	cout << "Predict" << endl;
+	Mat src_descriptor = cal_descriptor(bowExtractor, src_input);
+	int result = classifyBySvm(svms, src_descriptor);
+	cout << "svm result " << result << endl;
 
-	sort(res0.rbegin(), res0.rend());
-	sort(res1.rbegin(), res1.rend());
-	sort(res2.rbegin(), res2.rend());
-	sort(res3.rbegin(), res3.rend());
-
-	res0.resize(10);
-	res1.resize(10);
-	res2.resize(10);
-	res3.resize(10);
-	printf("res0¡@Acc: %lf \n", validate_fit(res0, index));
-	printf("res1¡@Acc: %lf \n", validate_fit(res1, index));
-	printf("res2¡@Acc: %lf \n", validate_fit(res2, index));
-	printf("res3¡@Acc: %lf \n", validate_fit(res3, index));
-	printf("Done \n");
 
 	// Wait for the user to press a key in the GUI window.
 	//Press ESC to quit
