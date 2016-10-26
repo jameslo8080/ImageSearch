@@ -34,9 +34,10 @@ void save_allDescriptions_YML() {
 			detector.detect(db_img, keyPoints);
 			extractor.compute(db_img, keyPoints, descriptors);
 
-			FileStorage fs("../surf/ " + to_string(db_id) + ".yml", FileStorage::WRITE);
-			write(fs, "keypoints", keyPoints);
-			write(fs, "descriptors", descriptors);
+			FileStorage fs("../surf/" + to_string(db_id) + ".yml", FileStorage::WRITE);
+			fs << "keypoints" << keyPoints;
+			fs << "descriptors" << descriptors;
+
 			fs.release();
 
 			db_id++;
@@ -59,10 +60,25 @@ vector<Mat> load_allDescriptions_YML() {
 		while (fscanf_s(fp, "%s ", imagepath, sizeof(imagepath)) > 0)
 		{
 			char tempname[200];
-			sprintf_s(tempname, 200, "../%s", imagepath);
-			cv::FileStorage storage(tempname, cv::FileStorage::READ);
+			sprintf_s(tempname, 200, "../%s", imagepath); // ../%s
+			cout << "reading : " << tempname << endl;
+			FileStorage storage = FileStorage(tempname, FileStorage::READ);
+
+			if (storage["descriptors"].empty()){
+				cout << "descriptors is empty" << endl;
+				//waitESC();
+				int a;
+				cin >> a;
+			}
+			
 			Mat descriptors;
-			storage["descriptors"] >> descriptors;	
+			//Vector<Mat> descriptorsss;
+			//storage["descriptors"] >> descriptors;	
+
+			storage["descriptors"] >> descriptors;
+			cout << "descriptors readed" << endl;
+			//waitESC();
+
 			allDescriptors.push_back(descriptors);
 			storage.release();
 		}

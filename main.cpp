@@ -97,9 +97,18 @@ int main(int argc, char** argv){
 
 	Mat max_img;
 
-	cout << "Which file" << "(0:'beach', 1:'building', 2:'bus'," << " 3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? ";
+	cout << "Which file " << "(0:'beach', 1:'building', 2:'bus'," << endl
+		<< "          3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? " << endl 
+		<< "or -2 for save_allDescriptions_YML(): ";
 	int index;
 	cin >> index;
+
+	if (index == -2){
+		save_allDescriptions_YML();
+		waitESC();
+		return 0;
+	}
+
 	string filepath = getFilePath(index);
 
 	src_input = imread(filepath); // read input image
