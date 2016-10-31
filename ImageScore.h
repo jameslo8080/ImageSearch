@@ -1,4 +1,3 @@
-// yoyo
 /*
 0:'beach', 1:'building', 2:'bus', 3:'dinosaur', 4:'flower', 5:'horse', 6:'man'
 
@@ -53,9 +52,9 @@ using namespace std;
 struct ImageScore {
 	int id;
 	int score;
+	ImageScore() {}
+	ImageScore(int i, double s) : id(i), score(s) {}
 	bool operator < (const ImageScore & other) const {
 		return score < other.score;
 	}
 };
-
-

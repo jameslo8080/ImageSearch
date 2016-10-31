@@ -48,7 +48,8 @@ string getFilePath(int index){
 }
 
 string askFile(){
-	cout << "Which file" << "(0:'beach', 1:'building', 2:'bus'," << " 3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? ";
+	cout << "Which file (0:'beach', 1:'building', 2:'bus'," << endl
+		<< "            3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? ";
 	int index;
 	cin >> index;
 	return getFilePath(index);
@@ -97,9 +98,9 @@ int main(int argc, char** argv){
 
 	Mat max_img;
 
-	cout << "Which file " << "(0:'beach', 1:'building', 2:'bus'," << endl
-		<< "          3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? " << endl
-		<< "or -2 for save_allDescriptions_YML(): ";
+	cout << "Which file?(0:'beach', 1:'building', 2:'bus'," << endl
+		<< "            3:'dinosaur', 4:'flower', 5:'horse', 6:'man') " << endl
+		<< "            or -2 for save_allDescriptions_YML(): ";
 	int index;
 	cin >> index;
 
