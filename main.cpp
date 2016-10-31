@@ -18,6 +18,7 @@
 #include "feature_extract.h"
 #include "feature_compare.h"
 #include "ml.h"
+#include "compare.h"
 
 using namespace std;
 using namespace cv;
@@ -90,91 +91,6 @@ void waitESC() {
 	}
 }
 
-void hsv_compare(Mat src_input, int index) {
-
-	//// compare hsv
-	Mat src_hsv = rgbMat_to_hsvHist(src_input);
-	vector<ImgScore> res0;
-	vector<Mat> features = load_features();
-	for (int i = 0; i < features.size(); ++i) res0.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
-	sort(res0.rbegin(), res0.rend());
-	res0.resize(100);
-	printf("res0 Acc: %lf \n", validate_fit(res0, index));
-	printf("Done \n");
-}
-
-void surf_compare(Mat src_input, int index) {
-	 //need to call save_allDescriptions_YML() once, before run this
-	vector<Mat> allDescriptors = load_allDescriptions_YML();
-
-	Mat inputDescriptor = calSURFDescriptor(src_input);
-	vector<ImgScore> scores;
-
-	// "../surf_c/"
-	string compare_filepath = "../surf_c/" + files[index] + ".yml";
-	cout << "load pre-compare : " << compare_filepath << endl;
-
-	FileStorage fsload(compare_filepath, FileStorage::WRITE);
-	if (fsload["s999"].empty()){
-		fsload.release();
-		FileStorage fssave(compare_filepath, FileStorage::WRITE);
-
-		for (int i = 0; i < allDescriptors.size(); ++i) {
-			ImgScore sc;
-			sc.db_id = i;
-			cout << "comparing : " << i << ".jpg" << endl;
-			sc.score = surf_compare(inputDescriptor, allDescriptors[i]);
-
-			string temp = "s" + std::to_string(i);
-			fssave << temp << sc.score;
-
-			cout << temp << ".jpg score : " << sc.score << endl;
-			scores.push_back(sc);
-		}
-		fssave.release();
-		sort(scores.rbegin(), scores.rend());
-
-		scores.resize(10);
-		printf("res0 Acc: %lf \n", validate_fit(scores, index));
-		printf("Done \n");
-
-
-	}
-	else{
-		// read score only
-	}
-}
-
-void svm_compare(Mat src_input, int index) {
-	//Too slow in training, so give up
-
-	vector<Mat> allDescriptors = load_allDescriptions_YML();
-	Mat mallDescriptors;
-	for (auto m : allDescriptors) mallDescriptors.push_back(m);
-	cout << "Train BOW" << endl;
-	Mat dictionary = trainBOW(mallDescriptors);
-	Ptr<DescriptorExtractor> extractor = DescriptorMatcher::create("SIFT");
-	Ptr<DescriptorMatcher>  matcher = DescriptorExtractor::create("BruteForce");
-	BOWImgDescriptorExtractor bowExtractor(extractor, matcher);
-	bowExtractor.setVocabulary(dictionary);
-	cout << "load Samples" << endl;
-	map<int, Mat> samples = load_mlSample(bowExtractor);
-	map<int, Ptr<SVM>> svms;
-	cout << "train Svm" << endl;
-	for (int i = 0; i < 10; ++i) {
-		CvSVMParams svmParams;
-		svms[i] = new SVM;
-		trainSvm(samples, i, svmParams, svms[i]);
-		string fname = to_string(i);
-		string extension(".xml");
-		string fullname = fname + extension;
-		svms[i]->save(fullname.c_str());
-	}
-	cout << "Predict" << endl;
-	Mat src_descriptor = cal_descriptor(bowExtractor, src_input);
-	int result = classifyBySvm(svms, src_descriptor);
-	cout << "svm result " << result << endl;
-}
 
 int main(int argc, char** argv){
 	Mat src_input;
