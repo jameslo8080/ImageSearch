@@ -137,8 +137,9 @@ map<int, Mat> load_mlSample(BOWImgDescriptorExtractor& bowExtractor) {
 	return samples;
 }
 
+vector<Mat> all_feature;
 vector<Mat> load_features() {
-	vector<Mat> features;
+	if (!all_feature.empty()) return all_feature;
 	///Read Database
 	int db_id = 0;
 	Mat db_img;
@@ -148,9 +149,27 @@ vector<Mat> load_features() {
 	printf("Extracting features from input images...\n");
 	while (read_images(fp, db_img, db_id)) {
 		Mat hist_base = rgbMat_to_hsvHist(db_img);
-		features.push_back(hist_base);
+		all_feature.push_back(hist_base);
 		db_id++;
 	}
 	fclose(fp);
-	return features;
+	return all_feature;
+}
+
+vector<Mat> all_img;
+vector<Mat> load_imgs() {
+	if (!all_img.empty()) return all_img;
+	///Read Database
+	int db_id = 0;
+	Mat db_img;
+	FILE* fp;
+	char imagepath[200];
+	fopen_s(&fp, IMAGE_LIST_FILE, "r");
+	printf("Extracting features from input images...\n");
+	while (read_images(fp, db_img, db_id)) {
+		all_img.push_back(db_img);
+		db_id++;
+	}
+	fclose(fp);
+	return all_img;
 }

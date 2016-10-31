@@ -28,3 +28,4 @@ Mat cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img);
 map<int, Mat> load_mlSample(BOWImgDescriptorExtractor& bowExtractor);
 
 vector<Mat> load_features();
+vector<Mat> load_imgs();

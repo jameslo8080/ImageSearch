@@ -40,6 +40,7 @@ food		: 900 ~ 999
 
 // not supported: 5 
 string files[] = {"man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food"};
+int valid_index[] = { 0, 1, 2, 3, 4, 6, 7 };
 
 string getFilePath(int index){
 	if (index < 0 || index >= sizeof(files))
@@ -91,6 +92,23 @@ void waitESC() {
 	}
 }
 
+double solve(int index) {
+	string filepath = getFilePath(index);
+
+	Mat src_input = imread(filepath); // read input image
+	if (!src_input.data)
+	{
+		printf("Cannot find the input image!\n");
+		exit(1);
+	}
+	imshow("Input", src_input);
+
+	// double acc = hsv_compare(src_input, index);
+	double acc = hsv_split_compare(src_input, index);
+	// double acc = surf_compare(src_input, index);
+	// double acc = svm_compare(src_input, index);
+	return acc;
+}
 
 int main(int argc, char** argv){
 	Mat src_input;
@@ -98,7 +116,8 @@ int main(int argc, char** argv){
 	Mat max_img;
 
 	file_select_instruction();
-	cout << " or -2 for save_allDescriptions_YML(): ";
+	cout << " or -1 for all average: " << endl;
+	cout << " or -2 for save_allDescriptions_YML(): " << endl;
 
 	int index;
 	cin >> index;
@@ -108,23 +127,29 @@ int main(int argc, char** argv){
 		waitESC();
 		return 0;
 	}
-
-	string filepath = getFilePath(index);
-
-	src_input = imread(filepath); // read input image
-	if (!src_input.data)
-	{
-		printf("Cannot find the input image!\n");
-		system("pause");
-		return -1;
+	else if (index == -1) {
+		double cnt = 7;
+		double totacc = 0;
+		vector<double> accs;
+		for (auto idx : valid_index) {
+			double acc = solve(idx);
+			totacc += acc;
+			accs.push_back(acc);
+		}
+		
+		cout << "----------------------------" << endl;
+		for (int i = 0; i < accs.size(); ++i) {
+			int idx = valid_index[i];
+			double acc = accs[i];
+			cout << "Case " << idx << " acc: " << acc << endl;
+		}
+		cout << "Total average acc: " << totacc / cnt << endl;
 	}
-	imshow("Input", src_input);
+	else {
+		solve(index);
+	}
 
-	// -- hsv compare approach --
-	hsv_compare(src_input, index);
-
-	// surf_compare(src_input, index);
-	// svm_compare(src_input, index);
+	
 
 	waitESC();
 

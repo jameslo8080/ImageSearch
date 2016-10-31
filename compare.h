@@ -19,6 +19,7 @@ using namespace cv;
 
 
 
-void hsv_compare(Mat src_input, int index);
-void svm_compare(Mat src_input, int index);
-void surf_compare(Mat src_input, int index);
+double hsv_compare(Mat src_input, int index);
+double hsv_split_compare(Mat src_input, int index);
+double svm_compare(Mat src_input, int index);
+double surf_compare(Mat src_input, int index);

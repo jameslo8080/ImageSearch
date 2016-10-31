@@ -1,6 +1,6 @@
 #include "compare.h"
 
-void svm_compare(Mat src_input, int index) {
+double svm_compare(Mat src_input, int index) {
 	//Too slow in training, so give up
 
 	vector<Mat> allDescriptors = load_allDescriptions_YML();
@@ -29,4 +29,5 @@ void svm_compare(Mat src_input, int index) {
 	Mat src_descriptor = cal_descriptor(bowExtractor, src_input);
 	int result = classifyBySvm(svms, src_descriptor);
 	cout << "svm result " << result << endl;
+	return 0;
 }

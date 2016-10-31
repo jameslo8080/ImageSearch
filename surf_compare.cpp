@@ -1,7 +1,7 @@
 #include "compare.h"
 
 
-void surf_compare(Mat src_input, int index) {
+double surf_compare(Mat src_input, int index) {
 
 	string files[] = { "man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food" };
 	//need to call save_allDescriptions_YML() once, before run this
@@ -35,12 +35,15 @@ void surf_compare(Mat src_input, int index) {
 		sort(scores.rbegin(), scores.rend());
 
 		scores.resize(10);
-		printf("res0 Acc: %lf \n", validate_fit(scores, index));
-		printf("Done \n");
 
+		double acc = validate_fit(scores, index);
+		printf("res Acc: %lf \n", acc);
+		printf("Done \n");
+		return acc;
 
 	}
 	else{
 		// read score only
+		return 0;
 	}
 }
