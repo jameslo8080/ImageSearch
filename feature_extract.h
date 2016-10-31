@@ -11,4 +11,5 @@ using namespace cv;
 
 
 Mat rgbMat_to_hsvHist(Mat src_base);
+vector<Mat> divide_image(Mat raw_img, int n_row, int n_col);
 Mat calSURFDescriptor(Mat input);

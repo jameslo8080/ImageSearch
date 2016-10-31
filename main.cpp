@@ -38,7 +38,7 @@ food		: 900 ~ 999
 */
 
 // not supported: 5 
-string files[] = { "man", "beach", "building", "bus", "dinosaur", "!elephant!", "flower", "horse" };
+string files[] = {"man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food"};
 
 string getFilePath(int index){
 	if (index < 0 || index >= sizeof(files))
@@ -48,15 +48,18 @@ string getFilePath(int index){
 	return s;
 }
 
+void file_select_instruction() {
+	cout << "Which file? (0:'man' 1:'beach', 2:'building', 3:'bus', 4:'dinosaur', " << endl
+		<< "            6:'flower', 7:'horse')? " << endl;
+}
+
 string askFile(){
-	cout << "Which file (0:'beach', 1:'building', 2:'bus', 3:'dinosaur', " << endl
-		<< "            4:'flower', 6:'horse', 7:'man')? "; //5 elephant
+	file_select_instruction();
 	int index;
 	cin >> index;
 	while (index <-2 || index == 5 || index > 7)
 	{
-		cout << "Which file (0:'beach', 1:'building', 2:'bus', 3:'dinosaur', " << endl
-			<< "            4:'flower', 6:'horse', 7:'man')? "; //5 elephant
+		file_select_instruction();
 		cin >> index;
 	}
 	return getFilePath(index);
@@ -95,7 +98,7 @@ void hsv_compare(Mat src_input, int index) {
 	vector<Mat> features = load_features();
 	for (int i = 0; i < features.size(); ++i) res0.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
 	sort(res0.rbegin(), res0.rend());
-	res0.resize(10);
+	res0.resize(100);
 	printf("res0 Acc: %lf \n", validate_fit(res0, index));
 	printf("Done \n");
 }
@@ -178,9 +181,9 @@ int main(int argc, char** argv){
 
 	Mat max_img;
 
-	cout << "Which file?(0:'beach', 1:'building', 2:'bus'," << endl
-		<< "            3:'dinosaur', 4:'flower', 5:'horse', 6:'man') " << endl
-		<< "            or -2 for save_allDescriptions_YML(): ";
+	file_select_instruction();
+	cout << " or -2 for save_allDescriptions_YML(): ";
+
 	int index;
 	cin >> index;
 
@@ -211,7 +214,3 @@ int main(int argc, char** argv){
 
 	return 0;
 }
-
-/**          The code to run clustering  - SURF + SVM approach
-
-*/

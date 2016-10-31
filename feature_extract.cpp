@@ -7,7 +7,7 @@ Mat rgbMat_to_hsvHist(Mat src_base)
 	cvtColor(src_base, hsv_base, COLOR_BGR2HSV);
 
 	/// Using 50 bins for hue and 60 for saturation
-	int h_bins = 16; int s_bins = 20; int v_bins = 3;
+	int h_bins = 16, s_bins = 20, v_bins = 3;
 	int histSize[] = { h_bins, s_bins, v_bins };
 
 	// hue varies from 0 to 179, saturation from 0 to 255
@@ -28,6 +28,18 @@ Mat rgbMat_to_hsvHist(Mat src_base)
 	// normalize(hist_base, hist_base, 0, 1, NORM_MINMAX, -1, Mat());
 
 	return hist_base;
+}
+
+vector<Mat> divide_image(Mat raw_img, int n_row, int n_col) {
+	int w = raw_img.cols, h = raw_img.rows;
+	int iw = w / n_col, ih = h / n_row;
+	vector<Mat> res;
+
+	for (int i = 0; i < n_row; ++i)
+		for (int j = 0; j < n_col; ++j)
+			res.push_back(Mat(raw_img, Rect(i*iw, j*ih, i*iw+iw, j*ih+ih))); // add .clone() wull be deep copy
+
+	return res;
 }
 
 Mat calSURFDescriptor(Mat input) {
