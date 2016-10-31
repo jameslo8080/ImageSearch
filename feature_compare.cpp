@@ -8,6 +8,8 @@ inline int get_group(int db_id) {
 double validate_fit(vector<ImgScore> ids, int target_id) {
 	int cnt = 0;
 	int len = ids.size();
+	if (len == 0) return 0;
+
 	for (auto imgS : ids) {
 		if (get_group(imgS.db_id) == target_id) cnt++;
 		cout << "db_id: " << imgS.db_id << "  Group: " << get_group(imgS.db_id) << "  score: " << imgS.score << endl;

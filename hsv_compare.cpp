@@ -34,6 +34,7 @@ double hsv_split_compare(Mat src_input, int index) {
 	}
 	sort(res.rbegin(), res.rend());
 	res.resize(100);
+	//res.erase(remove_if(res.begin(), res.end(), [](const ImgScore &x){return x.score < 0.3; }), res.end());
 
 	double acc = validate_fit(res, index);
 	printf("res Acc: %lf \n", acc);
