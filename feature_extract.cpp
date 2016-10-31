@@ -7,17 +7,18 @@ Mat rgbMat_to_hsvHist(Mat src_base)
 	cvtColor(src_base, hsv_base, COLOR_BGR2HSV);
 
 	/// Using 50 bins for hue and 60 for saturation
-	int h_bins = 50; int s_bins = 60;
-	int histSize[] = { h_bins, s_bins };
+	int h_bins = 16; int s_bins = 20; int v_bins = 3;
+	int histSize[] = { h_bins, s_bins, v_bins };
 
 	// hue varies from 0 to 179, saturation from 0 to 255
 	float h_ranges[] = { 0, 180 };
 	float s_ranges[] = { 0, 256 };
+	float v_ranges[] = { 0, 256 };
 
-	const float* ranges[] = { h_ranges, s_ranges };
+	const float* ranges[] = { h_ranges, s_ranges, v_ranges };
 
 	// Use the o-th and 1-st channels
-	int channels[] = { 0, 1 };
+	int channels[] = { 0, 1, 2 };
 
 	/// Histograms
 	MatND hist_base;

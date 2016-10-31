@@ -37,7 +37,8 @@ mountain	: 800 ~ 899
 food		: 900 ~ 999
 */
 
-string files[] = { "beach", "building", "bus", "dinosaur", "flower", "horse", "man" };
+// not supported: 5 
+string files[] = { "man", "beach", "building", "bus", "dinosaur", "!elephant!", "flower", "horse" };
 
 string getFilePath(int index){
 	if (index < 0 || index >= sizeof(files))
@@ -48,10 +49,16 @@ string getFilePath(int index){
 }
 
 string askFile(){
-	cout << "Which file (0:'beach', 1:'building', 2:'bus'," << endl
-		<< "            3:'dinosaur', 4:'flower', 5:'horse', 6:'man')? ";
+	cout << "Which file (0:'beach', 1:'building', 2:'bus', 3:'dinosaur', " << endl
+		<< "            4:'flower', 6:'horse', 7:'man')? "; //5 elephant
 	int index;
 	cin >> index;
+	while (index <-2 || index == 5 || index > 7)
+	{
+		cout << "Which file (0:'beach', 1:'building', 2:'bus', 3:'dinosaur', " << endl
+			<< "            4:'flower', 6:'horse', 7:'man')? "; //5 elephant
+		cin >> index;
+	}
 	return getFilePath(index);
 }
 
@@ -89,7 +96,7 @@ void hsv_compare(Mat src_input, int index) {
 	for (int i = 0; i < features.size(); ++i) res0.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
 	sort(res0.rbegin(), res0.rend());
 	res0.resize(10);
-	printf("res0�@Acc: %lf \n", validate_fit(res0, index));
+	printf("res0 Acc: %lf \n", validate_fit(res0, index));
 	printf("Done \n");
 }
 
@@ -122,50 +129,50 @@ int main(int argc, char** argv){
 	imshow("Input", src_input);
 
 	// -- hsv compare approach --
-	// hsv_compare(src_input, index);
+	hsv_compare(src_input, index);
 
 	// *********** Do compare surf here ***************
 	// need to call save_allDescriptions_YML() once, before run this
-	vector<Mat> allDescriptors = load_allDescriptions_YML();
+	//vector<Mat> allDescriptors = load_allDescriptions_YML();
 
-	Mat inputDescriptor = calSURFDescriptor(src_input);
-	vector<ImgScore> scores;
+	//Mat inputDescriptor = calSURFDescriptor(src_input);
+	//vector<ImgScore> scores;
 
-	// "../surf_c/"
-	string compare_filepath = "../surf_c/" + files[index] + ".yml";
-	cout << "load pre-compare : " << compare_filepath << endl;
+	//// "../surf_c/"
+	//string compare_filepath = "../surf_c/" + files[index] + ".yml";
+	//cout << "load pre-compare : " << compare_filepath << endl;
 
-	FileStorage fs2(compare_filepath, FileStorage::WRITE);
-	if (fs2["s999"].empty()){
-		fs2.release();
-		FileStorage fs2(compare_filepath, FileStorage::WRITE);
+	//FileStorage fs2(compare_filepath, FileStorage::WRITE);
+	//if (fs2["s999"].empty()){
+	//	fs2.release();
+	//	FileStorage fs2(compare_filepath, FileStorage::WRITE);
 
-		for (int i = 0; i < allDescriptors.size(); ++i) {
-			ImgScore sc;
-			sc.db_id = i;
-			cout << "comparing : " << i << ".jpg" << endl;
-			sc.score = surf_compare(inputDescriptor, allDescriptors[i]);
+	//	for (int i = 0; i < allDescriptors.size(); ++i) {
+	//		ImgScore sc;
+	//		sc.db_id = i;
+	//		cout << "comparing : " << i << ".jpg" << endl;
+	//		sc.score = surf_compare(inputDescriptor, allDescriptors[i]);
 
-			string temp = "s" + std::to_string(i);
-			fs2 << temp << sc.score;
+	//		string temp = "s" + std::to_string(i);
+	//		fs2 << temp << sc.score;
 
-			cout << temp << ".jpg score : " << sc.score << endl;
-			scores.push_back(sc);
-		}
-		fs2.release();
-		sort(scores.rbegin(), scores.rend());
+	//		cout << temp << ".jpg score : " << sc.score << endl;
+	//		scores.push_back(sc);
+	//	}
+	//	fs2.release();
+	//	sort(scores.rbegin(), scores.rend());
 
-		scores.resize(10);
-		printf("res0�@Acc: %lf \n", validate_fit(scores, index));
-		printf("Done \n");
-
-
-	}
-	else{
-		// read score only
+	//	scores.resize(10);
+	//	printf("res0�@Acc: %lf \n", validate_fit(scores, index));
+	//	printf("Done \n");
 
 
-	}
+	//}
+	//else{
+	//	// read score only
+
+
+	//}
 	// ************************************************
 
 	waitESC();
