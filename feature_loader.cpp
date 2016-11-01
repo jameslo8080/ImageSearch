@@ -4,14 +4,13 @@
 Save the surf of each image to ../surf
 */
 
-
-bool read_images(FILE* fp, Mat &db_img, int db_id) {
+bool read_images(FILE* fp, Mat &db_img, int db_id, bool output) {
 	char imagepath[200];
 	while (!feof(fp))
 	{
 		while (fscanf_s(fp, "%s ", imagepath, sizeof(imagepath)) > 0)
 		{
-			printf("%s\n", imagepath);
+			if (output)printf("%s, ", imagepath);
 			char tempname[200];
 			sprintf_s(tempname, 200, "../%s", imagepath);
 
@@ -25,7 +24,12 @@ bool read_images(FILE* fp, Mat &db_img, int db_id) {
 		}
 	}
 	fclose(fp);
+	if (output) printf("\n");
 	return false;
+}
+
+bool read_images(FILE* fp, Mat &db_img, int db_id) {
+	return read_images(fp, db_img, db_id, true);
 }
 
 void save_allDescriptions_YML() {
@@ -72,7 +76,7 @@ vector<Mat> load_allDescriptions_YML() {
 			if (storage["descriptors"].empty()){
 				cout << "descriptors is empty" << endl;
 			}
-			
+
 			Mat descriptors;
 
 			storage["descriptors"] >> descriptors;
@@ -147,17 +151,23 @@ vector<Mat> load_features() {
 	char imagepath[200];
 	fopen_s(&fp, IMAGE_LIST_FILE, "r");
 	printf("Extracting features from input images...\n");
-	while (read_images(fp, db_img, db_id)) {
+	while (read_images(fp, db_img, db_id, false)) {
 		Mat hist_base = rgbMat_to_hsvHist(db_img);
 		all_feature.push_back(hist_base);
+
+		if (db_id % 50 == 0)
+			cout << db_id / 10 << "%..";
+
 		db_id++;
 	}
 	fclose(fp);
+	printf("Done\n");
 	return all_feature;
 }
 
 vector<Mat> all_img;
-vector<Mat> load_imgs() {
+
+vector<Mat> load_imgs(bool out) {
 	if (!all_img.empty()) return all_img;
 	///Read Database
 	int db_id = 0;
@@ -166,10 +176,17 @@ vector<Mat> load_imgs() {
 	char imagepath[200];
 	fopen_s(&fp, IMAGE_LIST_FILE, "r");
 	printf("Extracting features from input images...\n");
-	while (read_images(fp, db_img, db_id)) {
+	while (read_images(fp, db_img, db_id, out)) {
 		all_img.push_back(db_img);
+		if (db_id % 50 == 0)
+			cout << db_id / 10 << "%..";
 		db_id++;
 	}
 	fclose(fp);
+	printf("Done\n");
 	return all_img;
+}
+
+vector<Mat> load_imgs(){
+	return load_imgs(true);
 }

@@ -29,3 +29,4 @@ map<int, Mat> load_mlSample(BOWImgDescriptorExtractor& bowExtractor);
 
 vector<Mat> load_features();
 vector<Mat> load_imgs();
+vector<Mat> load_imgs(bool);

@@ -1,0 +1,155 @@
+Which file? (0:'man' 1:'beach', 2:'building', 3:'bus', 4:'dinosaur',
+            6:'flower', 7:'horse')?
+ or -1 for all average:
+ or -2 for save_allDescriptions_YML():
+ or -3 for test from r1c1 to r10c10 :
+-3
+pre-load 1000 images for saving time...Extracting features from input images...
+0%..5%..10%..15%..20%..25%..30%..35%..40%..45%..50%..55%..60%..65%..70%..75%..80%..85%..90%..95%..Done
+Work for img "man" :
+img#0 r02c02, Grade(A++) Acc(100): 65.0000%, bestIndex:99, bP:65.0000, bR:65.0000, bPRS:0.3586, firstWrong:16
+ --pr60 index (24): 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110
+ --grade A index (19): 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107
+last grade A index score: 0.345334
+img#0 r03c03, Grade(A++) Acc(100): 65.0000%, bestIndex:99, bP:65.0000, bR:65.0000, bPRS:0.2760, firstWrong:16
+ --pr60 index (27): 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 114 115 119
+ --grade A index (15): 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108
+last grade A index score: 0.259612
+img#0 r04c04, Grade(A++) Acc(100): 67.0000%, bestIndex:108, bP:65.1376, bR:71.0000, bPRS:0.2303, firstWrong:10
+ --pr60 index (36): 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 118 119
+ --grade A index (33): 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117
+last grade A index score: 0.21896
+img#0 r05c05, Grade(A++) Acc(100): 64.0000%, bestIndex:100, bP:64.3564, bR:65.0000, bPRS:0.2182, firstWrong:14
+ --pr60 index (32): 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 117
+ --grade A index (22): 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112
+last grade A index score: 0.209119
+img#0 r06c06, Grade(A++) Acc(100): 65.0000%, bestIndex:99, bP:65.0000, bR:65.0000, bPRS:0.2013, firstWrong:11
+ --pr60 index (32): 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117
+ --grade A index (28): 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115
+last grade A index score: 0.187356
+img#0 r07c07, Grade(A++) Acc(100): 64.0000%, bestIndex:98, bP:64.6465, bR:64.0000, bPRS:0.1848, firstWrong:8
+ --pr60 index (27): 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110
+ --grade A index (21): 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107
+last grade A index score: 0.17962
+img#0 r08c08, Grade(A++) Acc(100): 64.0000%, bestIndex:103, bP:63.4615, bR:66.0000, bPRS:0.1769, firstWrong:8
+ --pr60 index (31): 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115
+ --grade A index (26): 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 110 111 112 113
+last grade A index score: 0.162078
+img#0 r09c09, Grade(A++) Acc(100): 63.0000%, bestIndex:97, bP:64.2857, bR:63.0000, bPRS:0.1634, firstWrong:8
+ --pr60 index (24): 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110
+ --grade A index (13): 94 95 96 97 98 99 100 101 102 103 104 105 107
+last grade A index score: 0.154624
+img#0 r10c10, Grade(B++) Acc(100): 62.0000%, bestIndex:106, bP:60.7477, bR:65.0000, bPRS:0.1506, firstWrong:9
+ --pr60 index (19): 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 109
+ --grade A index (9): 95 96 97 98 99 100 101 102 103
+last grade A index score: 0.151754
+img#0 r11c11, Grade(A++) Acc(100): 63.0000%, bestIndex:98, bP:63.6364, bR:63.0000, bPRS:0.1492, firstWrong:9
+ --pr60 index (24): 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109
+ --grade A index (13): 93 94 95 96 97 98 99 100 101 102 103 105 107
+last grade A index score: 0.140762
+Done for img "man".
+Work for img "beach" :
+img#1 r02c02, Grade(F) Acc(100): 28.0000%, bestIndex:172, bP:31.2139, bR:54.0000, bPRS:0.1570, firstWrong:0
+img#1 r03c03, Grade(F) Acc(100): 32.0000%, bestIndex:257, bP:25.1938, bR:65.0000, bPRS:0.0706, firstWrong:0
+img#1 r04c04, Grade(F) Acc(100): 33.0000%, bestIndex:278, bP:23.2975, bR:65.0000, bPRS:0.0637, firstWrong:0
+img#1 r05c05, Grade(F) Acc(100): 37.0000%, bestIndex:252, bP:25.2964, bR:64.0000, bPRS:0.0625, firstWrong:0
+img#1 r06c06, Grade(F) Acc(100): 34.0000%, bestIndex:280, bP:22.7758, bR:64.0000, bPRS:0.0513, firstWrong:0
+img#1 r07c07, Grade(F) Acc(100): 35.0000%, bestIndex:250, bP:24.7012, bR:62.0000, bPRS:0.0564, firstWrong:0
+img#1 r08c08, Grade(F) Acc(100): 33.0000%, bestIndex:266, bP:24.3446, bR:65.0000, bPRS:0.0467, firstWrong:0
+img#1 r09c09, Grade(F) Acc(100): 34.0000%, bestIndex:270, bP:23.9852, bR:65.0000, bPRS:0.0429, firstWrong:0
+img#1 r10c10, Grade(F) Acc(100): 31.0000%, bestIndex:230, bP:25.5411, bR:59.0000, bPRS:0.0502, firstWrong:0
+img#1 r11c11, Grade(F) Acc(100): 31.0000%, bestIndex:256, bP:25.2918, bR:65.0000, bPRS:0.0420, firstWrong:0
+Done for img "beach".
+Work for img "building" :
+img#2 r02c02, Grade(F) Acc(100): 14.0000%, bestIndex:389, bP:15.1282, bR:59.0000, bPRS:0.0291, firstWrong:0
+img#2 r03c03, Grade(F) Acc(100): 14.0000%, bestIndex:501, bP:13.3466, bR:67.0000, bPRS:0.0014, firstWrong:0
+img#2 r04c04, Grade(F) Acc(100): 16.0000%, bestIndex:489, bP:13.6735, bR:67.0000, bPRS:0.0009, firstWrong:0
+img#2 r05c05, Grade(F) Acc(100): 15.0000%, bestIndex:558, bP:13.7746, bR:77.0000, bPRS:-0.0047, firstWrong:0
+img#2 r06c06, Grade(F) Acc(100): 13.0000%, bestIndex:606, bP:13.6738, bR:83.0000, bPRS:-0.0092, firstWrong:0
+img#2 r07c07, Grade(F) Acc(100): 10.0000%, bestIndex:567, bP:13.3803, bR:76.0000, bPRS:-0.0053, firstWrong:0
+img#2 r08c08, Grade(F) Acc(100): 12.0000%, bestIndex:570, bP:13.4851, bR:77.0000, bPRS:-0.0047, firstWrong:0
+img#2 r09c09, Grade(F) Acc(100): 12.0000%, bestIndex:415, bP:14.9038, bR:62.0000, bPRS:0.0063, firstWrong:0
+img#2 r10c10, Grade(F) Acc(100): 12.0000%, bestIndex:449, bP:14.0000, bR:63.0000, bPRS:0.0040, firstWrong:0
+img#2 r11c11, Grade(F) Acc(100): 12.0000%, bestIndex:483, bP:13.4298, bR:65.0000, bPRS:0.0008, firstWrong:0
+Done for img "building".
+Work for img "bus" :
+img#3 r02c02, Grade(F) Acc(100): 7.0000%, bestIndex:519, bP:12.5000, bR:65.0000, bPRS:0.1071, firstWrong:0
+img#3 r03c03, Grade(F) Acc(100): 1.0000%, bestIndex:529, bP:12.0755, bR:64.0000, bPRS:0.0968, firstWrong:0
+img#3 r04c04, Grade(F) Acc(100): 2.0000%, bestIndex:577, bP:11.2457, bR:65.0000, bPRS:0.0738, firstWrong:0
+img#3 r05c05, Grade(F) Acc(100): 4.0000%, bestIndex:828, bP:10.9771, bR:91.0000, bPRS:0.0174, firstWrong:0
+img#3 r06c06, Grade(F) Acc(100): 2.0000%, bestIndex:871, bP:11.0092, bR:96.0000, bPRS:0.0001, firstWrong:0
+img#3 r07c07, Grade(F) Acc(100): 2.0000%, bestIndex:835, bP:11.0048, bR:92.0000, bPRS:0.0116, firstWrong:0
+img#3 r08c08, Grade(F) Acc(100): 4.0000%, bestIndex:793, bP:11.0831, bR:88.0000, bPRS:0.0194, firstWrong:0
+img#3 r09c09, Grade(F) Acc(100): 3.0000%, bestIndex:606, bP:11.2026, bR:68.0000, bPRS:0.0472, firstWrong:0
+img#3 r10c10, Grade(F) Acc(100): 3.0000%, bestIndex:637, bP:11.2853, bR:72.0000, bPRS:0.0397, firstWrong:0
+img#3 r11c11, Grade(F) Acc(100): 3.0000%, bestIndex:588, bP:11.0357, bR:65.0000, bPRS:0.0430, firstWrong:0
+Done for img "bus".
+Work for img "dinosaur" :
+img#4 r02c02, Grade(F) Acc(100): 51.0000%, bestIndex:116, bP:49.5726, bR:58.0000, bPRS:0.3677, firstWrong:0
+img#4 r03c03, Grade(B++) Acc(100): 54.0000%, bestIndex:128, bP:49.6124, bR:64.0000, bPRS:0.2937, firstWrong:1
+img#4 r04c04, Grade(F) Acc(100): 54.0000%, bestIndex:105, bP:53.7736, bR:57.0000, bPRS:0.3126, firstWrong:0
+img#4 r05c05, Grade(F) Acc(100): 54.0000%, bestIndex:103, bP:55.7692, bR:58.0000, bPRS:0.2885, firstWrong:0
+img#4 r06c06, Grade(B++) Acc(100): 58.0000%, bestIndex:107, bP:57.4074, bR:62.0000, bPRS:0.2712, firstWrong:1
+img#4 r07c07, Grade(F) Acc(100): 57.0000%, bestIndex:79, bP:65.0000, bR:52.0000, bPRS:0.3145, firstWrong:0
+img#4 r08c08, Grade(F) Acc(100): 58.0000%, bestIndex:117, bP:55.0847, bR:65.0000, bPRS:0.2257, firstWrong:0
+img#4 r09c09, Grade(F) Acc(100): 58.0000%, bestIndex:124, bP:53.6000, bR:67.0000, bPRS:0.2115, firstWrong:0
+img#4 r10c10, Grade(F) Acc(100): 58.0000%, bestIndex:117, bP:55.0847, bR:65.0000, bPRS:0.2129, firstWrong:0
+img#4 r11c11, Grade(F) Acc(100): 58.0000%, bestIndex:119, bP:55.0000, bR:66.0000, bPRS:0.2037, firstWrong:0
+Done for img "dinosaur".
+Work for img "flower" :
+img#6 r02c02, Grade(F) Acc(100): 7.0000%, bestIndex:652, bP:12.5574, bR:82.0000, bPRS:-0.0131, firstWrong:0
+img#6 r03c03, Grade(F) Acc(100): 9.0000%, bestIndex:600, bP:12.9784, bR:78.0000, bPRS:0.0041, firstWrong:0
+img#6 r04c04, Grade(F) Acc(100): 10.0000%, bestIndex:534, bP:13.6449, bR:73.0000, bPRS:0.0101, firstWrong:0
+img#6 r05c05, Grade(F) Acc(100): 12.0000%, bestIndex:454, bP:14.2857, bR:65.0000, bPRS:0.0176, firstWrong:0
+img#6 r06c06, Grade(F) Acc(100): 11.0000%, bestIndex:509, bP:13.5294, bR:69.0000, bPRS:0.0138, firstWrong:0
+img#6 r07c07, Grade(F) Acc(100): 12.0000%, bestIndex:515, bP:13.1783, bR:68.0000, bPRS:0.0118, firstWrong:0
+img#6 r08c08, Grade(F) Acc(100): 12.0000%, bestIndex:494, bP:13.1313, bR:65.0000, bPRS:0.0128, firstWrong:0
+img#6 r09c09, Grade(F) Acc(100): 8.0000%, bestIndex:577, bP:13.1488, bR:76.0000, bPRS:0.0066, firstWrong:0
+img#6 r10c10, Grade(F) Acc(100): 10.0000%, bestIndex:550, bP:13.6116, bR:75.0000, bPRS:0.0072, firstWrong:0
+img#6 r11c11, Grade(F) Acc(100): 7.0000%, bestIndex:545, bP:13.3700, bR:73.0000, bPRS:0.0071, firstWrong:0
+Done for img "flower".
+Work for img "horse" :
+img#7 r02c02, Grade(A++) Acc(100): 70.0000%, bestIndex:123, bP:65.3226, bR:81.0000, bPRS:0.2651, firstWrong:1
+ --pr60 index (71): 74 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112
+113 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142 143 144
+ --grade A index (63): 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 1
+15 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 141
+last grade A index score: 0.224692
+img#7 r03c03, Grade(B-+) Acc(100): 71.0000%, bestIndex:112, bP:65.4867, bR:74.0000, bPRS:0.2264, firstWrong:0
+ --pr60 index (65): 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115
+116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142
+
+img#7 r04c04, Grade(B-+) Acc(100): 70.0000%, bestIndex:112, bP:65.4867, bR:74.0000, bPRS:0.1947, firstWrong:0
+ --pr60 index (62): 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 117 1
+18 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 138 139 140 141 142
+
+img#7 r05c05, Grade(B-+) Acc(100): 70.0000%, bestIndex:117, bP:65.2542, bR:77.0000, bPRS:0.1736, firstWrong:0
+ --pr60 index (58): 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116
+ 117 118 119 120 121 122 123 124 125 126 127 129 130 132 134 135 136 137 138 139
+
+img#7 r06c06, Grade(B-+) Acc(100): 71.0000%, bestIndex:114, bP:65.2174, bR:75.0000, bPRS:0.1621, firstWrong:0
+ --pr60 index (49): 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115 116 11
+7 118 119 120 121 122 123 124 125 126 127 129
+
+img#7 r07c07, Grade(B-+) Acc(100): 70.0000%, bestIndex:119, bP:65.0000, bR:78.0000, bPRS:0.1455, firstWrong:0
+ --pr60 index (62): 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 1
+15 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137 139
+
+img#7 r08c08, Grade(B-+) Acc(100): 71.0000%, bestIndex:122, bP:65.0407, bR:80.0000, bPRS:0.1385, firstWrong:0
+ --pr60 index (60): 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 115
+116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137
+
+img#7 r09c09, Grade(B-+) Acc(100): 71.0000%, bestIndex:123, bP:65.3226, bR:81.0000, bPRS:0.1308, firstWrong:0
+ --pr60 index (60): 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113 114 1
+15 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 137
+
+img#7 r10c10, Grade(B-+) Acc(100): 71.0000%, bestIndex:122, bP:65.0407, bR:80.0000, bPRS:0.1235, firstWrong:0
+ --pr60 index (61): 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113
+ 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135
+
+img#7 r11c11, Grade(B-+) Acc(100): 71.0000%, bestIndex:123, bP:65.3226, bR:81.0000, bPRS:0.1172, firstWrong:0
+ --pr60 index (63): 75 76 77 78 79 80 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 97 98 99 100 101 102 103 104 105 106 107 108 109 110 111 112 113
+ 114 115 116 117 118 119 120 121 122 123 124 125 126 127 128 129 130 131 132 133 134 135 136 137
+
+Done for img "horse".
+waiting for exit...
