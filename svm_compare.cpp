@@ -3,12 +3,12 @@
 double svm_compare(Mat src_input, int index) {
 	//Too slow in training, so give up
 
-	vector<Mat> allDescriptors = load_allDescriptions_YML(false);
+	vector<Mat> allDescriptors = load_allDescriptions_YML("ORB");
 	Mat mallDescriptors;
 	for (auto m : allDescriptors) mallDescriptors.push_back(m);
 	cout << "Train BOW" << endl;
 	Mat dictionary = trainBOW(mallDescriptors);
-	Ptr<DescriptorExtractor> extractor = DescriptorMatcher::create("SIFT");
+	Ptr<DescriptorExtractor> extractor = DescriptorMatcher::create("ORB");
 	Ptr<DescriptorMatcher>  matcher = DescriptorExtractor::create("BruteForce");
 	BOWImgDescriptorExtractor bowExtractor(extractor, matcher);
 	bowExtractor.setVocabulary(dictionary);

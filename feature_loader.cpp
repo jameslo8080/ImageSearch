@@ -32,8 +32,10 @@ bool read_images(FILE* fp, Mat &db_img, int db_id) {
 	return read_images(fp, db_img, db_id, true);
 }
 
+vector<Mat> allDescriptors;
 vector<Mat> load_allDescriptions_YML(string type) {
-	vector<Mat> allDescriptors;
+	if (!allDescriptors.empty()) return allDescriptors;
+
 	FILE* fp;
 	char imagepath[200];
 	string fpath;

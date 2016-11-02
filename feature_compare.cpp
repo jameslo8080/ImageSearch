@@ -19,14 +19,12 @@ double validate_fit(vector<ImgScore> ids, int target_id) {
 
 
 double descriptors_cal_match(Mat descriptors_1, Mat descriptors_2) {
-/*
 	if (descriptors_1.type() != CV_32F) {
 		descriptors_1.convertTo(descriptors_1, CV_32F);
 	}
-
 	if (descriptors_2.type() != CV_32F) {
 		descriptors_2.convertTo(descriptors_2, CV_32F);
-	}*/
+	}
 
 	if (descriptors_1.empty())
 		cout << "1st descriptor empty" << endl;
@@ -52,11 +50,13 @@ double descriptors_cal_match(Mat descriptors_1, Mat descriptors_2) {
 	sort(matches.begin(), matches.end());
 	vector< DMatch > good_matches;
 	double res = 0.0;
-	for (int i = 0; i < 20; i++)
+	for (int i = 0; i < matches.size(); i++)
 	{
 		good_matches.push_back(matches[i]);
 		res += matches[i].distance;
+		if (good_matches.size() >= 100) break;
 	}
 
-	return res;// good_matches.size();
+	if (good_matches.size() == 0) return 9999;
+	return res / (double)good_matches.size();
 }
