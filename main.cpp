@@ -77,6 +77,18 @@ string getFilePath999(int index){
 	return s;
 }
 
+Mat get_input_img(int index) {
+	string filepath = getFilePath(index);
+
+	Mat src_input = imread(filepath); // read input image
+	if (!src_input.data)
+	{
+		printf("Cannot find the input image!\n");
+		exit(1);
+	}
+	return src_input;
+}
+
 void waitESC() {
 	// Wait for the user to press a key in the GUI window.
 	//Press ESC to quit
@@ -94,14 +106,7 @@ void waitESC() {
 }
 
 double solve(int index) {
-	string filepath = getFilePath(index);
-
-	Mat src_input = imread(filepath); // read input image
-	if (!src_input.data)
-	{
-		printf("Cannot find the input image!\n");
-		exit(1);
-	}
+	Mat src_input = get_input_img(index);
 
 	//imshow("Input", src_input);
 	double acc = hsv_compare(src_input, index);
@@ -111,15 +116,55 @@ double solve(int index) {
 	return acc;
 }
 
-double solve(Mat src_input, vector<Mat> features, int index) {
-	hsv_compare(src_input, features, index);
-	return 0;
+void test_all_average() {
+	double cnt = 7;
+	double totacc = 0;
+	vector<double> accs;
+	for (auto idx : valid_indexs) {
+		double acc = solve(idx);
+		totacc += acc;
+		accs.push_back(acc);
+	}
+
+	for (int i = 0; i < accs.size(); ++i) {
+		int idx = valid_indexs[i];
+		double acc = accs[i];
+		cout << "Case " << idx << " acc: " << acc << endl;
+	}
+	cout << "Total average acc: " << totacc / cnt << endl;
 }
 
-double solve(Mat src_input, vector<Mat> imgs, int src_index, int row, int col) {
-	hsv_split_compare(src_input, imgs, src_index, false, row, col);
-	return 0;
+void test_r1c1_to_r10c10() {
+	printf("pre-load 1000 images for saving time...");
+	vector<Mat> imgs = load_imgs(false);
+
+	for (auto v_index : valid_indexs){
+		Mat src_input = get_input_img(v_index);
+
+		printf("Work for img \"%s\" :\n", files[v_index].c_str());
+		for (int i = 0; i < 11; i++)
+			for (int j = 0; j < 10; j++)
+				hsv_split_compare(src_input, imgs, v_index, false, i + 1, j + 1);
+
+		printf("Done for img \"%s\".\n", files[v_index].c_str());
+
+	}
 }
+
+void test_all_hsv_compare() {
+	printf("pre-load 1000 images for saving time...");
+	vector<Mat> features = load_features();
+
+	for (auto v_index : valid_indexs){
+		Mat src_input = get_input_img(v_index);
+
+		printf("Work for img \"%s\" :\n", files[v_index].c_str());
+		hsv_compare(src_input, features, v_index);
+		printf("Done for img \"%s\".\n", files[v_index].c_str());
+
+	}
+}
+
 
 int main(int argc, char** argv){
 	Mat src_input;
@@ -141,74 +186,17 @@ int main(int argc, char** argv){
 		return 0;
 	}
 	else if (index == -1) {
-		double cnt = 7;
-		double totacc = 0;
-		vector<double> accs;
-		for (auto idx : valid_indexs) {
-			double acc = solve(idx);
-			totacc += acc;
-			accs.push_back(acc);
-		}
-
-		cout << "----------------------------" << endl;
-		for (int i = 0; i < accs.size(); ++i) {
-			int idx = valid_indexs[i];
-			double acc = accs[i];
-			cout << "Case " << idx << " acc: " << acc << endl;
-		}
-		cout << "Total average acc: " << totacc / cnt << endl;
+		test_all_average();
 	}
 	else if (index == -3){
-		printf("pre-load 1000 images for saving time...");
-		vector<Mat> imgs = load_imgs(false);
-
-		for (auto v_index : valid_indexs){
-			string filepath = getFilePath(v_index);
-			Mat src_input = imread(filepath); // read input image
-
-			if (!src_input.data)
-			{
-				printf("Cannot find the input image!\n");
-				continue;
-			}
-
-
-			printf("Work for img \"%s\" :\n", files[v_index].c_str());
-			for (int i = 0; i < 11; i++){
-				for (int j = 0; j < 10; j++){
-					solve(src_input, imgs, v_index, i + 1, j + 1);
-				}
-				//solve(src_input, imgs, v_index, i + 1, i + 1);
-			}
-			printf("Done for img \"%s\".\n", files[v_index].c_str());
-
-		}
+		test_r1c1_to_r10c10();
 	}
 	else if (index == -4){
-		printf("pre-load 1000 images for saving time...");
-		vector<Mat> features = load_features();
-
-		for (auto v_index : valid_indexs){
-			string filepath = getFilePath(v_index);
-			Mat src_input = imread(filepath); // read input image
-
-			if (!src_input.data)
-			{
-				printf("Cannot find the input image!\n");
-				continue;
-			}
-
-
-			printf("Work for img \"%s\" :\n", files[v_index].c_str());
-			solve(src_input, features, v_index);
-			printf("Done for img \"%s\".\n", files[v_index].c_str());
-
-		}
+		test_all_hsv_compare();
 	}
 	else {
 		solve(index);
 	}
-
 
 	do{
 		cout << "input -1 for exit...\n";
