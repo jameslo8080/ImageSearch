@@ -17,6 +17,7 @@
 #include "feature_loader.h"
 #include "feature_extract.h"
 #include "feature_compare.h"
+#include "feature_preprocess.h"
 
 #include "ml.h"
 #include "compare.h"
@@ -109,9 +110,11 @@ double solve(int index) {
 	Mat src_input = get_input_img(index);
 
 	//imshow("Input", src_input);
-	double acc = hsv_compare(src_input, index);
+	//double acc = hsv_compare(src_input, index);
 	// double acc = hsv_split_compare(src_input, index);
 	// double acc = surf_compare(src_input, index);
+	// double acc = sift_compare(src_input, index);
+	double acc = orb_compare(src_input, index);
 	// double acc = svm_compare(src_input, index);
 	return acc;
 }
@@ -181,7 +184,15 @@ int main(int argc, char** argv){
 	cin >> index;
 
 	if (index == -2){
-		save_allDescriptions_YML();
+		int type;
+		cout << " 0 for sift , 1 for surf, 2 for orb: " << endl;
+		cin >> type;
+		if (type == 0)
+			save_allSIFTDescriptions_YML();
+		else if (type == 1)
+			save_allSURFDescriptions_YML();
+		else
+			save_allORBDescriptions_YML();
 		waitESC();
 		return 0;
 	}

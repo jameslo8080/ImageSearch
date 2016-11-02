@@ -1,5 +1,4 @@
 #include "compare.h"
-#include "ScoreReport.h"
 
 double hsv_compare(Mat src_input, int inputIndex) {
 	vector<Mat> features = load_features();
@@ -8,14 +7,11 @@ double hsv_compare(Mat src_input, int inputIndex) {
 
 double hsv_compare(Mat src_input, vector<Mat> features, int inputIndex) {
 
-	//// compare hsv
 	Mat src_hsv = rgbMat_to_hsvHist(src_input);
 	vector<ImgScore> imgScoreResult;
 	for (int i = 0; i < features.size(); ++i) imgScoreResult.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
 
-	// sort
 	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
-
 	ScoreReport sr(imgScoreResult, inputIndex);
 	sr.report();
 
@@ -25,7 +21,7 @@ double hsv_compare(Mat src_input, vector<Mat> features, int inputIndex) {
 
 double hsv_split_compare(Mat src_input, int inputIndex) {
 	vector<Mat> imgs = load_imgs();
-	return  hsv_split_compare(src_input, imgs, inputIndex, true, 5, 5);
+	return  hsv_split_compare(src_input, imgs, inputIndex, true, 2, 2);
 }
 
 double hsv_split_compare(Mat src_input, vector<Mat> all_img, int inputIndex, bool output, int row, int col) {

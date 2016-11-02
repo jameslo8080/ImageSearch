@@ -18,22 +18,25 @@ double validate_fit(vector<ImgScore> ids, int target_id) {
 }
 
 
-int surf_compare(Mat descriptors_1, Mat descriptors_2) {
+double descriptors_cal_match(Mat descriptors_1, Mat descriptors_2) {
+/*
 	if (descriptors_1.type() != CV_32F) {
 		descriptors_1.convertTo(descriptors_1, CV_32F);
 	}
 
 	if (descriptors_2.type() != CV_32F) {
 		descriptors_2.convertTo(descriptors_2, CV_32F);
-	}
+	}*/
 
 	if (descriptors_1.empty())
 		cout << "1st descriptor empty" << endl;
 	if (descriptors_2.empty())
 		cout << "2st descriptor empty" << endl;
 
-	FlannBasedMatcher matcher;
-	std::vector< DMatch > matches;
+	BFMatcher matcher(NORM_L2);
+	// BFMatcher matcher(NORM_HAMMING);
+	// FlannBasedMatcher matcher;
+	vector< DMatch > matches;
 
 	matcher.match(descriptors_1, descriptors_2, matches);
 
@@ -46,14 +49,14 @@ int surf_compare(Mat descriptors_1, Mat descriptors_2) {
 		if (dist > max_dist) max_dist = dist;
 	}
 
+	sort(matches.begin(), matches.end());
 	vector< DMatch > good_matches;
-	for (int i = 0; i < descriptors_1.rows; i++)
+	double res = 0.0;
+	for (int i = 0; i < 20; i++)
 	{
-		if (matches[i].distance <= max(2 * min_dist, 0.02))
-		{
-			good_matches.push_back(matches[i]);
-		}
+		good_matches.push_back(matches[i]);
+		res += matches[i].distance;
 	}
 
-	return good_matches.size();
+	return res;// good_matches.size();
 }

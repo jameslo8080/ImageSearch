@@ -15,13 +15,14 @@
 using namespace std;
 using namespace cv;
 
+#define ORB_LIST_FILE "inputorb.txt"
+#define SIFT_LIST_FILE "inputsift.txt"
 #define SURF_LIST_FILE "inputsurf.txt"
 #define IMAGE_LIST_FILE "inputimage.txt"  // NOTE: this is relative to current file
 
 Mat load_allDescriptions();
 
-void save_allDescriptions_YML();
-vector<Mat> load_allDescriptions_YML();
+vector<Mat> load_allDescriptions_YML(string type);
 
 Mat cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img);
 
@@ -30,3 +31,4 @@ map<int, Mat> load_mlSample(BOWImgDescriptorExtractor& bowExtractor);
 vector<Mat> load_features();
 vector<Mat> load_imgs();
 vector<Mat> load_imgs(bool);
+bool read_images(FILE* fp, Mat &db_img, int db_id);

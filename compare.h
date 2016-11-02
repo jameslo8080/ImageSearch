@@ -13,6 +13,7 @@
 #include "feature_loader.h"
 #include "feature_extract.h"
 #include "feature_compare.h"
+#include "ScoreReport.h"
 #include "ml.h"
 
 using namespace std;
@@ -28,3 +29,5 @@ double hsv_split_compare(Mat src_input, int index);
 double hsv_split_compare(Mat src_input, vector<Mat> all_img, int index, bool output, int row, int col);
 double svm_compare(Mat src_input, int index);
 double surf_compare(Mat src_input, int index);
+double sift_compare(Mat src_input, int index);
+double orb_compare(Mat src_input, int index);

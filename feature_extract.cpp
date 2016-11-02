@@ -54,3 +54,22 @@ Mat calSURFDescriptor(Mat input) {
 	extractor.compute(input, keyPoints, descriptors);
 	return descriptors;
 }
+
+Mat calSIFTDescriptor(Mat input) {
+	SiftFeatureDetector  sift;
+	vector<KeyPoint> keyPoints;
+	Mat descriptors;
+	sift.detect(input, keyPoints);
+	sift.compute(input, keyPoints, descriptors);
+	return descriptors;
+}
+
+Mat calORBDescriptor(Mat input) {
+	OrbFeatureDetector detector;
+	OrbDescriptorExtractor extractor;
+	vector<KeyPoint> keyPoints;
+	Mat descriptors;
+	detector.detect(input, keyPoints);
+	extractor.compute(input, keyPoints, descriptors);
+	return descriptors;
+}

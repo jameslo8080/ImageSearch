@@ -32,36 +32,18 @@ bool read_images(FILE* fp, Mat &db_img, int db_id) {
 	return read_images(fp, db_img, db_id, true);
 }
 
-void save_allDescriptions_YML() {
-	int db_id = 0;
-	Mat db_img;
-	FILE* fp;
-	fopen_s(&fp, IMAGE_LIST_FILE, "r");
-	printf("Extracting Descriptions from input images...\n");
-
-	while (read_images(fp, db_img, db_id)) {
-		SurfFeatureDetector detector;
-		SurfDescriptorExtractor extractor;
-		vector<KeyPoint> keyPoints;
-		Mat descriptors;
-		detector.detect(db_img, keyPoints);
-		extractor.compute(db_img, keyPoints, descriptors);
-
-		FileStorage fs("../surf/" + to_string(db_id) + ".yml", FileStorage::WRITE);
-		fs << "keypoints" << keyPoints;
-		fs << "descriptors" << descriptors;
-
-		fs.release();
-
-		db_id++;
-	}
-}
-
-vector<Mat> load_allDescriptions_YML() {
+vector<Mat> load_allDescriptions_YML(string type) {
 	vector<Mat> allDescriptors;
 	FILE* fp;
 	char imagepath[200];
-	fopen_s(&fp, SURF_LIST_FILE, "r");
+	string fpath;
+	if (type == "SURF")
+		fpath = SURF_LIST_FILE;
+	else if (type == "SIFT")
+		fpath = SIFT_LIST_FILE;
+	else
+		fpath = ORB_LIST_FILE;
+	fopen_s(&fp, fpath.c_str(), "r");
 	printf("Extracting Descriptions from input images...\n");
 
 	while (!feof(fp))

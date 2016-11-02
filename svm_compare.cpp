@@ -3,7 +3,7 @@
 double svm_compare(Mat src_input, int index) {
 	//Too slow in training, so give up
 
-	vector<Mat> allDescriptors = load_allDescriptions_YML();
+	vector<Mat> allDescriptors = load_allDescriptions_YML(false);
 	Mat mallDescriptors;
 	for (auto m : allDescriptors) mallDescriptors.push_back(m);
 	cout << "Train BOW" << endl;

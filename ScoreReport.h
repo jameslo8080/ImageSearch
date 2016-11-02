@@ -10,23 +10,24 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/nonfree/nonfree.hpp"
 #include "opencv2/features2d/features2d.hpp"
-#include "feature_loader.h"
-#include "feature_extract.h"
-#include "feature_compare.h"
+
 #include "ml.h"
 
 
-string getGrade(int firstWrong, int p, int r){
-	return (firstWrong > 0 && p > 60 && r > 60) ? "A++" :
-		(firstWrong > 0 && (p > 60 || r > 60)) ? "B++" :
-		(p > 60 && r > 60) ? "B-+" : "F";
-}
+string getGrade(int firstWrong, int p, int r);
 
-int getGradeNum(int firstWrong, int p, int r){
-	return (firstWrong > 0 && p > 60 && r > 60) ? 1 :
-		(firstWrong > 0 && (p > 60 || r > 60)) ? 2 :
-		(p > 60 && r > 60) ? 3 : 4;
-}
+int getGradeNum(int firstWrong, int p, int r);
+
+
+struct ImgScore{
+	int db_id;
+	double score;
+	ImgScore() {}
+	ImgScore(int i, double s) : db_id(i), score(s) {}
+	bool operator < (const ImgScore& b) const {
+		return score < b.score;
+	}
+};
 
 // 𝑃𝑟𝑒𝑐𝑖𝑠𝑖𝑜𝑛 = 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜𝑓 𝑟𝑒𝑡𝑟𝑖𝑣𝑒𝑑 𝑖𝑚𝑎𝑔𝑒𝑠 𝑡ℎ𝑎𝑡 𝑎𝑟𝑒 𝑓𝑟𝑜𝑚 𝑡ℎ𝑒 𝑐𝑜𝑟𝑟𝑒𝑐𝑡 𝑐𝑎𝑡𝑒𝑔𝑜𝑟𝑦 / 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜𝑓 𝑟𝑒𝑡𝑟𝑖𝑒𝑣𝑒𝑑 𝑖𝑚𝑎𝑔𝑒𝑠
 // 𝑅𝑒𝑐𝑎𝑙𝑙 = 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜𝑓 𝑟𝑒𝑡𝑟𝑖𝑣𝑒𝑑 𝑖𝑚𝑎𝑔𝑒𝑠 𝑡ℎ𝑎𝑡 𝑎𝑟𝑒 𝑓𝑟𝑜𝑚 𝑡ℎ𝑒 𝑐𝑜𝑟𝑟𝑒𝑐𝑡 𝑐𝑎𝑡𝑒𝑔𝑜𝑟𝑦 / 𝑡𝑜𝑡𝑎𝑙 𝑛𝑢𝑚𝑏𝑒𝑟 𝑜𝑓 𝑖𝑚𝑎𝑔𝑒𝑠 𝑖𝑛 𝑡ℎ𝑒 𝑡𝑎𝑟𝑔𝑒𝑡 𝑐𝑎𝑡𝑒𝑔𝑜𝑟𝑦 𝑜𝑓 𝑡ℎ𝑒 𝑑𝑎𝑡𝑎𝑠𝑒𝑡
