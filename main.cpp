@@ -175,10 +175,10 @@ int main(int argc, char** argv){
 
 			printf("Work for img \"%s\" :\n", files[v_index].c_str());
 			for (int i = 0; i < 11; i++){
-				//for (int j = 0; j < 10; j++){
-				//	solve(src_input, imgs, v_index, i + 1, j + 1);
-				//}
-				solve(src_input, imgs, v_index, i + 1, i + 1);
+				for (int j = 0; j < 10; j++){
+					solve(src_input, imgs, v_index, i + 1, j + 1);
+				}
+				//solve(src_input, imgs, v_index, i + 1, i + 1);
 			}
 			printf("Done for img \"%s\".\n", files[v_index].c_str());
 
