@@ -29,8 +29,8 @@ vector<Mat> divide_image(Mat raw_img, int n_row, int n_col) {
 	int iw = w / n_col, ih = h / n_row;
 	vector<Mat> res;
 
-	for (int i = 0; i < n_row; ++i)
-		for (int j = 0; j < n_col; ++j){
+	for (int i = 0; i < n_col; ++i)
+		for (int j = 0; j < n_row; ++j){
 			res.push_back(Mat(raw_img, Rect(i*iw, j*ih, iw, ih))); // add .clone() wull be deep copy
 		}
 	return res;
