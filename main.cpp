@@ -114,8 +114,8 @@ double solve(int index) {
 	// double acc = hsv_split_compare(src_input, index);
 	// double acc = surf_compare(src_input, index);
 	// double acc = sift_compare(src_input, index);
-	double acc = orb_compare(src_input, index);
-	// double acc = svm_compare(src_input, index);
+	// double acc = orb_compare(src_input, index);
+	double acc = svm_compare(src_input, index);
 	return acc;
 }
 

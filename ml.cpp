@@ -2,7 +2,7 @@
 
 
 Mat trainBOW(Mat allDescriptors) {
-	const int wordCount = 2000;
+	const int wordCount = 1000;
 	BOWKMeansTrainer bowTrainer(wordCount);
 	Mat vocabulary = bowTrainer.cluster(allDescriptors);
 	return vocabulary;
