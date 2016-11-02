@@ -146,7 +146,7 @@ void test_r1c1_to_r10c10() {
 
 		printf("Work for img \"%s\" :\n", files[v_index].c_str());
 		for (int i = 0; i < 11; i++)
-			for (int j = 0; j < 10; j++)
+			for (int j = 0; j < 11; j++)
 				hsv_split_compare(src_input, imgs, v_index, false, i + 1, j + 1);
 
 		printf("Done for img \"%s\".\n", files[v_index].c_str());
