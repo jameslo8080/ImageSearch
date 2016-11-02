@@ -23,10 +23,8 @@ using namespace cv;
 
 double hsv_compare(Mat src_input, int index);
 
-double hsv_compare(Mat src_input, vector<Mat> features, int inputIndex);
-
 double hsv_split_compare(Mat src_input, int index);
-double hsv_split_compare(Mat src_input, vector<Mat> all_img, int index, bool output, int row, int col);
+double hsv_split_compare(Mat src_input, int index, bool output, int row, int col);
 double svm_compare(Mat src_input, int index);
 double surf_compare(Mat src_input, int index);
 double sift_compare(Mat src_input, int index);

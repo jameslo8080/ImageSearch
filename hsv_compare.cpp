@@ -2,11 +2,6 @@
 
 double hsv_compare(Mat src_input, int inputIndex) {
 	vector<Mat> features = load_features();
-	return hsv_compare(src_input, features, inputIndex);
-}
-
-double hsv_compare(Mat src_input, vector<Mat> features, int inputIndex) {
-
 	Mat src_hsv = rgbMat_to_hsvHist(src_input);
 	vector<ImgScore> imgScoreResult;
 	for (int i = 0; i < features.size(); ++i) imgScoreResult.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
@@ -18,14 +13,12 @@ double hsv_compare(Mat src_input, vector<Mat> features, int inputIndex) {
 	return 0;
 }
 
-
 double hsv_split_compare(Mat src_input, int inputIndex) {
-	vector<Mat> imgs = load_imgs();
-	return  hsv_split_compare(src_input, imgs, inputIndex, true, 2, 2);
+	return  hsv_split_compare(src_input, inputIndex, true, 2, 2);
 }
 
-double hsv_split_compare(Mat src_input, vector<Mat> all_img, int inputIndex, bool output, int row, int col) {
-	vector<Mat> imgs = all_img;
+double hsv_split_compare(Mat src_input, int inputIndex, bool output, int row, int col) {
+	vector<Mat> imgs = load_imgs();
 
 	int tot = row*col;
 	vector<Mat> src_hsv = rgbMat_to_divided_hsvHist(src_input, row, col);

@@ -138,16 +138,13 @@ void test_all_average() {
 }
 
 void test_r1c1_to_r10c10() {
-	printf("pre-load 1000 images for saving time...");
-	vector<Mat> imgs = load_imgs(false);
-
 	for (auto v_index : valid_indexs){
 		Mat src_input = get_input_img(v_index);
 
 		printf("Work for img \"%s\" :\n", files[v_index].c_str());
 		for (int i = 0; i < 11; i++)
 			for (int j = 0; j < 11; j++)
-				hsv_split_compare(src_input, imgs, v_index, false, i + 1, j + 1);
+				hsv_split_compare(src_input, v_index, false, i + 1, j + 1);
 
 		printf("Done for img \"%s\".\n", files[v_index].c_str());
 
@@ -155,14 +152,11 @@ void test_r1c1_to_r10c10() {
 }
 
 void test_all_hsv_compare() {
-	printf("pre-load 1000 images for saving time...");
-	vector<Mat> features = load_features();
-
 	for (auto v_index : valid_indexs){
 		Mat src_input = get_input_img(v_index);
 
 		printf("Work for img \"%s\" :\n", files[v_index].c_str());
-		hsv_compare(src_input, features, v_index);
+		hsv_compare(src_input, v_index);
 		printf("Done for img \"%s\".\n", files[v_index].c_str());
 
 	}
