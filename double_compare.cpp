@@ -154,6 +154,7 @@ double double_compare_bus() {
 			if (i % 3 == 0)
 				cout << endl;
 			printf(" index:%3i, img#%3i, MScore:%f |", i, iss[i].db_id, iss[i].score);
+			(iss[i].db_id / 100 == 3) ? cout << " T |" : cout << "   |";
 		}
 		printf("-----\n");
 
