@@ -29,3 +29,5 @@ double svm_compare(Mat src_input, int index);
 double surf_compare(Mat src_input, int index);
 double sift_compare(Mat src_input, int index);
 double orb_compare(Mat src_input, int index);
+
+double double_compare_bus();
