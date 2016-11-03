@@ -9,7 +9,7 @@
 using namespace std;
 using namespace cv;
 
-
+vector<Mat> divide_image(Mat raw_img, int n_row, int n_col);
 Mat rgbMat_to_hsvHist(Mat src_base);
 vector<Mat> rgbMat_to_divided_hsvHist(Mat src_base, int n_row, int n_col);
 Mat calSURFDescriptor(Mat input);
