@@ -51,34 +51,51 @@ mountain	: 800 ~ 899
 food		: 900 ~ 999
 */
 double double_compare_bus() {
-	//Mat src_input, vector<vector<Mat>> features, int inputIndex
-	//	Mat bus_1 = imread("./precut/bus_1.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-	Mat bus_1 = imread("./precut/bus_3.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-	//bus_1 = imread("./bus.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	// Mat src_input, vector<vector<Mat>> features, int inputIndex
+	// Mat bus_1 = imread("./precut/bus_1.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	// Mat bus_1 = imread("./precut/bus_3.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	// Mat bus_1 = imread("./bus.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
 	// imread("./precut/bus_1.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	// Mat bus_2 = imread("./precut/bus_2.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
-	/*vector<Mat> busPreFeature = {
+	vector<Mat> busPreFeature = {
 		imread("./precut/bus_1.jpg", CV_LOAD_IMAGE_GRAYSCALE)
 		, imread("./precut/bus_2.jpg", CV_LOAD_IMAGE_GRAYSCALE)
-		};*/
+	};
+
+
 	bool showImg = false;
 	int start = 0, end = 1000;
 	int minHessian;
 
-	double bestAcc = 0, bestMinH = 0;
+	double bestAcc = 0;
+	int bestMinH = 0;
 	int useCase = 0;
 
-	for (int j = 0; j < 3; j++){
-		minHessian = 28 + 4 * j;
-		SurfFeatureDetector detector(minHessian);
-		std::vector<KeyPoint> keypoints_1, keypoints_2;
-		detector.detect(bus_1, keypoints_1);
+	for (int j = 0; j < 100; j++){
+		minHessian = 4 + 4 * j;
 
-		Mat descriptors_1, descriptors_dbimg;
+		SurfFeatureDetector detector(minHessian);
 		SurfDescriptorExtractor extractor;
-		extractor.compute(bus_1, keypoints_1, descriptors_1);
+
+		vector<std::vector<KeyPoint>> precut_keypoints(busPreFeature.size());
+		vector<Mat> precut_descriptors(busPreFeature.size());
+
+		for (int i = 0; i < busPreFeature.size(); i++){
+			detector.detect(busPreFeature[i], precut_keypoints[i]);
+			extractor.compute(busPreFeature[i], precut_keypoints[i], precut_descriptors[i]);
+		}
+
+
+		//std::vector<KeyPoint> keypoints_1, keypoints_2;
+		//detector.detect(bus_1, keypoints_1);
+
+		std::vector<KeyPoint>keypoints_2;
+
+		Mat descriptors_dbimg;
+
+
 
 		vector<ImgScore> iss;
 		vector<int> eIndex;
@@ -87,8 +104,7 @@ double double_compare_bus() {
 				string file = "../image.orig/" + to_string(i) + ".jpg";
 				Mat db_img = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 
-				if (!bus_1.data || !db_img.data)
-				{
+				if (!db_img.data){
 					printf("Error loading images\n"); return -1;
 				}
 
@@ -108,30 +124,44 @@ double double_compare_bus() {
 				// FlannBasedMatcher matcher;
 
 				std::vector<DMatch> matches;
-				matcher.match(descriptors_1, descriptors_dbimg, matches);
+				for (int i = 0; i < busPreFeature.size(); i++)
+				{
+					//matcher.match(descriptors_1, descriptors_dbimg, matches);
+					matcher.match(precut_descriptors[i], descriptors_dbimg, matches);
+				}
+
 
 				//-- Draw matches
 
 				if (showImg){
 					Mat img_matches;
-					drawMatches(bus_1, keypoints_1, db_img, keypoints_2, matches, img_matches);
-					imshow("Matches", img_matches);
+					for (int i = 0; i < busPreFeature.size(); i++)					{
+						drawMatches(busPreFeature[i], precut_keypoints[i], db_img, keypoints_2, matches, img_matches);
 
-					int keyValue = 0;
-					while (keyValue >= 0)
-					{
-						keyValue = cvWaitKey(0);
+						//drawMatches(bus_1, keypoints_1, db_img, keypoints_2, matches, img_matches);
+						imshow("Matches", img_matches);
 
-						switch (keyValue)
+						int keyValue = 0;
+						while (keyValue >= 0)
 						{
-						case 27:keyValue = -1;
-							break;
+							keyValue = cvWaitKey(0);
+
+							switch (keyValue)
+							{
+							case 27:keyValue = -1;
+								break;
+							}
 						}
 					}
 				}
 
 
-				double score = descriptors_cal_match(descriptors_1, descriptors_dbimg);
+				//double score = descriptors_cal_match(descriptors_1, descriptors_dbimg);
+				double score = 0;
+				for (int i = 0; i < busPreFeature.size(); i++){
+					score += descriptors_cal_match(precut_descriptors[i], descriptors_dbimg);
+				}
+				score /= busPreFeature.size();
 				iss.push_back(ImgScore(i, score));
 				//printf(" img#%i, match score:%f \n", i, score);
 				if (i % 10 == 0)
@@ -145,7 +175,7 @@ double double_compare_bus() {
 				eIndex.push_back(i);
 			}
 		}
-		printf("\nsorting...\n");
+		printf("\n\n");
 		sort(iss.begin(), iss.end());
 
 		printf("Sorted result (bus: 300 ~ 399):");
@@ -163,17 +193,17 @@ double double_compare_bus() {
 			for (int i : eIndex)
 				printf("%i .jpg, \n", i);
 		}
-
+		printf("-----\n");
 		ScoreReport sr(iss, 3);
 		sr.report();
-		printf("-----\n");
-
+		printf("=====End of minHessian=%3i\n=====\n", minHessian);
+		//cout << "acc:" << sr.acc100 <<" , bestAcc" << bestAcc;
 		if (sr.acc100 > bestAcc){
 			bestAcc = sr.acc100;
-			bestMinH = j;
+			bestMinH = minHessian;
 		}
 	}// for j
-	printf("best minH j=%i Acc:%f%% \n", bestMinH, bestAcc);
+	printf("best minH=%i Acc: %.4f%% | ", bestMinH, bestAcc);
 
 	printf("-1 to exit");
 	int input;

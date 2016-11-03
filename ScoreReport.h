@@ -80,7 +80,7 @@ private:
 				lastGAP = p;
 				lastGAR = r;
 			}
-			if (i == 99){
+			if (i <= 99){
 				acc100 = p;
 			}
 		}
