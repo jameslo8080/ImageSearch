@@ -53,7 +53,7 @@ food		: 900 ~ 999
 double double_compare_bus() {
 	//Mat src_input, vector<vector<Mat>> features, int inputIndex
 	//	Mat bus_1 = imread("./precut/bus_1.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-	Mat bus_1 = imread("./precut/bus_2.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	Mat bus_1 = imread("./precut/bus_3.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 	//bus_1 = imread("./bus.jpg", CV_LOAD_IMAGE_GRAYSCALE);
 
 	// imread("./precut/bus_1.jpg", CV_LOAD_IMAGE_GRAYSCALE);
@@ -71,7 +71,7 @@ double double_compare_bus() {
 	int useCase = 0;
 
 	for (int j = 0; j < 3; j++){
-		minHessian = 4 * (j + 1);
+		minHessian = 16 + 4 * j;
 		SurfFeatureDetector detector(minHessian);
 		std::vector<KeyPoint> keypoints_1, keypoints_2;
 		detector.detect(bus_1, keypoints_1);
@@ -148,10 +148,13 @@ double double_compare_bus() {
 		printf("\nsorting...\n");
 		sort(iss.begin(), iss.end());
 
-		printf("Sorted result (bus: 300 ~ 399): \n");
-		int times = (iss.size() > 100) ? 100 : iss.size();
+		printf("Sorted result (bus: 300 ~ 399):");
+		int times = (iss.size() > 180) ? 180 : iss.size();
 		for (int i = 0; i < times; i++){
-			printf(" img#%3i, match score:%f \n", iss[i].db_id, iss[i].score);
+			if (i % 3 == 0)
+				cout << endl;
+			printf(" index:%3i, img#%3i, MScore:%f | ", i, iss[i].db_id, iss[i].score);
+			cout << (iss[i].db_id/100 == 3)?"[Y]" :"[ ]";
 		}
 		printf("-----\n");
 
