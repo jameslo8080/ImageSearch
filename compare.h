@@ -32,4 +32,6 @@ double surf_compare(Mat src_input, int index);
 double sift_compare(Mat src_input, int index);
 double orb_compare(Mat src_input, int index);
 
-double double_compare_bus();
+void double_compare();
+void on_double_compare();
+void double_compare_bus();
