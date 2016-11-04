@@ -4,6 +4,8 @@
 #include <vector>
 #include "opencv2/features2d.hpp"
 #include "ScoreReport.h"
+#include "utils.h"
+
 using namespace std;
 using namespace cv;
 

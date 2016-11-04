@@ -33,7 +33,7 @@ bool read_images(FILE* fp, Mat &db_img, int db_id) {
 }
 
 vector<Mat> allDescriptors;
-vector<Mat> load_allDescriptions_YML(string type) {
+vector<Mat> load_allDescriptions_YML(string type, int partOf100) {
 	if (!allDescriptors.empty()) return allDescriptors;
 
 	FILE* fp;
@@ -48,10 +48,14 @@ vector<Mat> load_allDescriptions_YML(string type) {
 	fopen_s(&fp, fpath.c_str(), "r");
 	printf("Extracting Descriptions from input images...\n");
 
+	int cnt = -1;
 	while (!feof(fp))
 	{
 		while (fscanf_s(fp, "%s ", imagepath, sizeof(imagepath)) > 0)
 		{
+			cnt++;
+			if (cnt % 100 >= partOf100) continue;
+
 			char tempname[200];
 			sprintf_s(tempname, 200, "../%s", imagepath); // ../%s
 			cout << "reading : " << tempname << endl;
@@ -99,31 +103,6 @@ Mat load_allDescriptions() {
 	return allDescriptors;
 }
 
-Mat cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
-	SurfFeatureDetector detector;
-	vector<KeyPoint> keyPoints;
-	Mat descriptors;
-	detector.detect(db_img, keyPoints);
-	bowExtractor.compute(db_img, keyPoints, descriptors);
-	return descriptors;
-}
-
-map<int, Mat> load_mlSample(BOWImgDescriptorExtractor& bowExtractor) {
-	map<int, Mat> samples;
-
-	int db_id = 0;
-	Mat db_img;
-	FILE* fp;
-	char imagepath[200];
-	fopen_s(&fp, IMAGE_LIST_FILE, "r");
-	printf("Extracting mlSample from input images...\n");
-	while (read_images(fp, db_img, db_id)) {
-		samples[db_id / 100].push_back(cal_descriptor(bowExtractor, db_img));
-
-		db_id++;
-	}
-	return samples;
-}
 
 vector<Mat> all_feature;
 vector<Mat> load_features() {

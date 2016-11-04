@@ -1,23 +1,19 @@
 #pragma once 
 
-#include <cstdlib>
 #include <iostream>
 #include <string>
+#include <stdio.h>
 #include <vector>
-#include <algorithm>
 #include <map>
+#include <algorithm>
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/nonfree/nonfree.hpp"
 #include "opencv2/features2d/features2d.hpp"
-#include "feature_extract.h"
-#include "feature_loader.h"
-#include "ml.h"
 
 using namespace std;
 using namespace cv;
 
-void save_allSURFDescriptions_YML();
-void save_allSIFTDescriptions_YML();
-void save_allORBDescriptions_YML();
-void save_BOW(string featureName, int dictionarySize=1000);
+
+int get_group(int db_id);
+Mat convert_2DMat_to_1DMat(Mat inMat);

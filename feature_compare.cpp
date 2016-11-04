@@ -1,10 +1,5 @@
 #include "feature_compare.h"
 
-
-inline int get_group(int db_id) {
-	return (db_id < 0 || db_id > 999) ? -1 : db_id / 100;
-}
-
 double validate_fit(vector<ImgScore> ids, int target_id) {
 	int cnt = 0;
 	int len = ids.size();

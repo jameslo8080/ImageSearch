@@ -13,8 +13,10 @@
 #include "feature_loader.h"
 #include "feature_extract.h"
 #include "feature_compare.h"
+#include "feature_preprocess.h"
 #include "ScoreReport.h"
 #include "ml.h"
+#include "utils.h"
 
 using namespace std;
 using namespace cv;
