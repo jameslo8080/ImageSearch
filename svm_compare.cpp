@@ -1,7 +1,7 @@
 #include "compare.h"
 
 double svm_compare(Mat src_input, int index) {
-	string featureName = "SIFT";
+	string featureName = "SURF";
 	int dictionarySize = 1500;
 
 	vector<Mat> allDescriptors = load_allDescriptions_YML(featureName, 10);
@@ -37,10 +37,10 @@ double svm_compare(Mat src_input, int index) {
 
 	cout << "Train svm" << endl;
 	CvSVMParams params;
-	params.kernel_type = CvSVM::RBF;
 	params.svm_type = CvSVM::C_SVC;
-	params.gamma = 0.50625000000000009;
-	params.C = 312.50000000000000;
+	params.kernel_type = CvSVM::RBF;
+	params.gamma = 3;
+	params.C = 10;
 	params.term_crit = cvTermCriteria(CV_TERMCRIT_ITER, 100, 0.000001);
 	CvSVM svm;
 

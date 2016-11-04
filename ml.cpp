@@ -8,7 +8,8 @@ Mat trainBOW(vector<Mat> features, int dictionarySize) {
 
 	BOWKMeansTrainer bowTrainer(dictionarySize, tc, retries, flags);
 	for (auto feature : features) {
-		bowTrainer.add(feature);
+		Mat real = feature;
+		bowTrainer.add(real);
 	}
 
 	return bowTrainer.cluster();
