@@ -176,7 +176,6 @@ int main(int argc, char** argv){
 
 	int index;
 	cin >> index;
-
 	if (index == -2){
 		bool greyscale;
 		cout << "0 not greyScale, 1 greyScale: \n";

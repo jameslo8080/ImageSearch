@@ -17,3 +17,11 @@ Mat convert_2DMat_to_1DMat(Mat inMat) {
 
 	return outMat;
 }
+
+string BOW_file_path(string featureName, int dictionarySize, bool greyscale) {
+	return "../bow/" + (string)(greyscale ? "g_" : "") + featureName + to_string(dictionarySize) + ".yml";
+}
+
+string ids_features_file_path(string featureName, int dictionarySize, bool greyscale) {
+	return "../bow/" + (string)(greyscale ? "g_f" : "f") + featureName + to_string(dictionarySize) + ".yml";
+}

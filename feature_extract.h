@@ -17,4 +17,4 @@ Mat calSURFDescriptor(Mat input);
 Mat calSIFTDescriptor(Mat input);
 Mat calORBDescriptor(Mat input);
 
-Mat cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img, string type);
+Mat cal_descriptor(BOWImgDescriptorExtractor bowExtractor, Mat db_img, string type);

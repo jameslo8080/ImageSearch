@@ -5,7 +5,7 @@ vector<pair<int, Mat> > load_mlSample(BOWImgDescriptorExtractor& bowExtractor, s
 	vector<int> ids;
 	vector<Mat> features;
 
-	string fname = "../bow/f" + featureName + to_string(dictionarySize) + ".yml";
+	string fname = ids_features_file_path(featureName, dictionarySize, greyscale);
 	FileStorage storage = FileStorage(fname, FileStorage::READ);
 
 	if (storage["features"].empty()){
@@ -15,14 +15,14 @@ vector<pair<int, Mat> > load_mlSample(BOWImgDescriptorExtractor& bowExtractor, s
 		cout << "Calculating features" << endl;
 		for (int i = 0; i < imgs.size(); ++i) {
 			ids.push_back(i / 100);
-			Mat descriptor = cal_descriptor(bowExtractor, imgs[i], featureName);
 
 			if (greyscale) {
 				Mat greyMat;
-				cvtColor(descriptor, greyMat, CV_BGR2GRAY);
-				descriptor = greyMat;
+				cvtColor(imgs[i], greyMat, CV_BGR2GRAY);
+				imgs[i] = greyMat;
 			}
 
+			Mat descriptor = cal_descriptor(bowExtractor, imgs[i], featureName);
 			features.push_back(descriptor);
 		}
 		ws << "ids" << ids;

@@ -9,8 +9,8 @@ void save_BOW(string featureName, int dictionarySize, bool greyScale) {
 	cout << "Train BOW" << endl;
 	Mat dictionary = trainBOW(allDescriptors, dictionarySize);
 
-
-	FileStorage fs("../bow/" + featureName + (greyScale?"g_":"") +to_string(dictionarySize) + ".yml", FileStorage::WRITE);
+	string fname = BOW_file_path(featureName, dictionarySize, greyScale);
+	FileStorage fs(fname, FileStorage::WRITE);
 	fs << "dictionary" << dictionary;
 	fs.release();
 

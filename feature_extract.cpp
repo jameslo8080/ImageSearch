@@ -76,7 +76,7 @@ Mat calORBDescriptor(Mat input) {
 
 // =====================
 
-Mat surf_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
+Mat surf_cal_descriptor(BOWImgDescriptorExtractor bowExtractor, Mat db_img) {
 	SurfFeatureDetector detector;
 	vector<KeyPoint> keyPoints;
 	Mat descriptors;
@@ -85,7 +85,7 @@ Mat surf_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_i
 	return descriptors;
 }
 
-Mat sift_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
+Mat sift_cal_descriptor(BOWImgDescriptorExtractor bowExtractor, Mat db_img) {
 	SiftFeatureDetector detector;
 	vector<KeyPoint> keyPoints;
 	Mat descriptors;
@@ -94,7 +94,7 @@ Mat sift_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_i
 	return descriptors;
 }
 
-Mat orb_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
+Mat orb_cal_descriptor(BOWImgDescriptorExtractor bowExtractor, Mat db_img) {
 	OrbFeatureDetector detector;
 	vector<KeyPoint> keyPoints;
 	Mat descriptors;
@@ -103,7 +103,7 @@ Mat orb_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_im
 	return descriptors;
 }
 
-Mat cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img, string type) {
+Mat cal_descriptor(BOWImgDescriptorExtractor bowExtractor, Mat db_img, string type) {
 	if (type == "SURF")
 		return surf_cal_descriptor(bowExtractor, db_img);
 	else if (type == "SIFT")
