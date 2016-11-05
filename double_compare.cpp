@@ -3,15 +3,66 @@
 #include "ScoreReport.h"
 #include <ctime>
 
+Mat test(Mat src, int hbins, int sbins) {
+	Mat hsv;
+
+	cvtColor(src, hsv, CV_BGR2HSV);
+
+	// Quantize the hue to 30 levels
+	// and the saturation to 32 levels
+	//int hbins = 30, sbins = 32;
+
+	int histSize[] = { hbins, sbins };
+	// hue varies from 0 to 179, see cvtColor
+	float hranges[] = { 0, 180 };
+	// saturation varies from 0 (black-gray-white) to
+	// 255 (pure spectrum color)
+	float sranges[] = { 0, 256 };
+	const float* ranges[] = { hranges, sranges };
+	MatND hist;
+	// we compute the histogram from the 0-th and 1-st channels
+	int channels[] = { 0, 1 };
+
+	calcHist(&hsv, 1, channels, Mat(), // do not use mask
+			 hist, 2, histSize, ranges,
+			 true, // the histogram is uniform
+			 false);
+	if (!true) {
+		double maxVal = 0;
+		minMaxLoc(hist, 0, &maxVal, 0, 0);
+
+		int scale = 10;
+		Mat histImg = Mat::zeros(sbins*scale, hbins * 10, CV_8UC3);
+
+		for (int h = 0; h < hbins; h++)
+			for (int s = 0; s < sbins; s++) {
+				float binVal = hist.at<float>(h, s);
+				int intensity = cvRound(binVal * 255 / maxVal);
+				rectangle(histImg, Point(h*scale, s*scale),
+						  Point((h + 1)*scale - 1, (s + 1)*scale - 1),
+						  Scalar::all(intensity),
+						  CV_FILLED);
+			}
+
+		namedWindow("Source", 1);
+		imshow("Source", src);
+
+		namedWindow("H-S Histogram", 1);
+		imshow("H-S Histogram", histImg);
+		waitKey();
+	}
+	return hist;
+}
 void double_compare() {
 	using namespace std;
 	clock_t begin = clock();
+
 
 	on_double_compare();
 
 	clock_t end = clock();
 	double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-	printf("used time:%f\n", elapsed_secs);
+	printf("\nused time:%f\n", elapsed_secs);
 }
 void reportImgError(vector<int> eIndex) {
 	if (eIndex.size() > 0) {
@@ -42,112 +93,183 @@ vector<Mat> calSURFDescriptor_vector(vector<Mat> inputs, int minH = 8) {
 	}
 	return descriptors_results;
 }
+struct bestMethodData {
+	double bestGradeAP = 0, bestGradeAR = 0, score = 0;
+	int method = 0; // sort method
+	int bins[2];
+	int minH = 0;
+
+	void update(ScoreReport sr, int _method, int hbins, int sbins, int minHe) {
+		sr.reportSorted(100);
+		sr.report();
+		bestMethodData bmd;
+		if (sr.bestGradeAindex != -1 && sr.bestGradeAPR() > (bestGradeAP * bestGradeAR)) {
+			bestGradeAP = sr.bestGradeAP;
+			bestGradeAR = sr.bestGradeAR;
+			score = sr.score(sr.bestGradeAindex);
+			method = _method;
+			bins[0] = hbins;
+			bins[1] = sbins;
+			minH = minHe;
+		}
+		if (method <= 0 && sr.acc100 > score) {
+			score = sr.acc100;
+			method = _method * -1;
+			bins[0] = hbins;
+			bins[1] = sbins;
+			minH = minHe;
+		}
+	}
+	void report() {
+		printf(" - Current best hbins: %i , sbins: %i , method: %i , minH: %i \n", bins[0], bins[1], method, minH);
+		printf(" - Current best bestGradeAP: %f , GradeAR: %f , score: %f \n\n", bestGradeAP, bestGradeAR, score);
+	}
+};
+
 
 void on_double_compare() {
+declare:
+	int inputIndex = 0;
+	int hbins_[3] = { 12, 16, 4 };
+	int sbins_[3] = { 24, 32, 4 };
+	int minH_[3] = { 4, 32, 4 };
+
+	bool useHsv = false, useFea = true; // not ready
+
+start:
 	cout << endl << "double_compare:::::" << endl;
-	Mat bus = imread("./bus.jpg", CV_LOAD_IMAGE_GRAYSCALE);
+	string files[] = { "man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food" };
 
-	Mat flower = imread("./flower.jpg", CV_LOAD_IMAGE_GRAYSCALE);
-	Mat flower_hsv = rgbMat_to_hsvHist(imread("./flower.jpg"));
-	Mat src_input = flower;
+	string src = "./" + files[inputIndex] + ".jpg";
 
-	int minH = 24;
-
-	vector<Mat> imgs_fea = divide_image(src_input, 4, 4);
-	//vector<Mat> imgs_hsv = imgs_f;
-
-	// only need 6tt,7th,10th,11th
-	// erase the first 5 elements:
-	imgs_fea.erase(imgs_fea.begin(), imgs_fea.begin() + 5);
-	imgs_fea.erase(imgs_fea.begin() + 2, imgs_fea.begin() + 4);
-	imgs_fea.resize(4);
-
-	vector<Mat> input_descriptors = calSURFDescriptor_vector(imgs_fea, minH);
-
-	//imgs_hsv.erase(imgs_hsv.begin() + 9, imgs_hsv.begin() + 9 + 2);
-	//imgs_hsv.erase(imgs_hsv.begin() + 5, imgs_hsv.begin() + 5 + 2);
-
-	vector<int> errorIndex;
-	vector<ImgScore> iss;
-	for (int fileIndex = 0; fileIndex < 1000; fileIndex++) {
-		try {
-			// hsv
-			string file = "../image.orig/" + to_string(fileIndex) + ".jpg";
-			Mat dbimg_src = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
-			Mat dbimg_hsv = rgbMat_to_hsvHist(imread(file.c_str()));
-			double hsv_score = compareHist(flower_hsv, dbimg_hsv, 0);
-			//cout << "hsv_score:" << hsv_score << endl;
-			//fea
-			//vector<Mat> dbimg_fea = divide_image(dbimg_src, 4, 4);
-			//dbimg_fea.erase(dbimg_fea.begin(), dbimg_fea.begin() + 5);
-			//dbimg_fea.erase(dbimg_fea.begin() + 2, dbimg_fea.begin() + 4);
-			//dbimg_fea.resize(4);
-
-			//int keyValue = 0;
-
-			//imshow("dbimg_fea", dbimg_fea[1]);
-			//while (keyValue >= 0) {
-			//	keyValue = cvWaitKey(0);
-
-			//	switch (keyValue) {
-			//		case 27:keyValue = -1;
-			//			break;
-			//	}
-			//}
-
-			//vector<Mat> dmimg_descriptors = calSURFDescriptor_vector(dbimg_fea, minH);
-			Mat dmimg_descriptor = calSURFDescriptor_one(dbimg_src, minH);
-
-			double fea_score = 0;
-			for (int i = 0; i < input_descriptors.size(); i++) {
-				//for (int j = i; j < dmimg_descriptors.size(); j++) 
-				fea_score += descriptors_cal_match(input_descriptors[i], dmimg_descriptor);
-
-			}
-			//fea_score /= (double) input_descriptors.size() * (input_descriptors.size() + 1) / 2;
-			fea_score /= input_descriptors.size();
-			//cout << "fea_score:" << fea_score << endl;
-
-			double calScore = hsv_score;
-			//cout << "calScore:" << calScore << endl;
-
-			iss.push_back(ImgScore(fileIndex, calScore));
-
-		} catch (Exception e) {
-			printf(" -----ERROR-----img#%i, %s\n", fileIndex, e.msg);
-			errorIndex.push_back(fileIndex);
-		}
-		if (fileIndex % 10 == 0)
-			printf(" %i%%..", fileIndex / 10);
-	}
-	cout << endl;
-
-	//// compare hsv
-	//Mat src_hsv = rgbMat_to_hsvHist(src_input);
-
-	//for (int i = 0; i < features.size(); ++i)
-	//	imgScoreResult.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
+	Mat src_color = imread(src.c_str(), CV_LOAD_IMAGE_COLOR);
+	Mat src_gray = imread(src.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 
 
-	// sort
-	sort(iss.begin(), iss.end());
-	//sort(iss.rbegin(), iss.rend());
-
-	reportImgError(errorIndex);
-
-	ScoreReport sr(iss, 6);
-	sr.reportSorted(1000);
-	sr.report();
+	bestMethodData bestMData;
+	for (int minH = minH_[0]; minH <= minH_[1]; minH += minH_[2]) {
+		for (int hbins = hbins_[0]; hbins <= hbins_[1]; hbins += hbins_[2]) {
+			for (int sbins = sbins_[0]; sbins <= sbins_[1]; sbins += sbins_[2]) {
 
 
-	//printf("===== End of minHessian=%3i =====\n\n", minHessian);
-	//cout << "acc:" << sr.acc100 <<" , bestAcc" << bestAcc;
-	//if (sr.acc100 > bestAcc) {
-	//	bestAcc = sr.acc100;
-	//	bestMinH = minHessian;
-	//}
-	//printf(" - Current best minH:$i, Acc100:$.0f", bestMinH, bestAcc);
+				Mat src_hsv = test(imread(src.c_str(), 1), hbins, sbins);
 
+				//Mat(raw_img, Rect(i*iw, j*ih, iw, ih))); // add .clone() wull be deep copy
+				//vector<Mat> imgs_fea = divide_image(src_input, 4, 4);
+
+				Mat src_used = src_color;
+				int x = src_used.cols / 5, y = src_used.rows / 5, w = src_used.cols - (2 * x), h = src_used.rows - (2 * y);
+				printf("x:%i , y:%i , w:%i , h:%i \n", x, y, w, h);
+
+				Mat src_fea = Mat(src_used, Rect(x, y, w, h));
+
+				//flower_hsv = test(src_fea);
+				//imshow("cut_input", src_fea);
+				//cvWaitKey();
+
+				// only need 6tt,7th,10th,11th
+				// erase the first 5 elements:
+				Mat input_descriptor;
+				if (useFea) {
+					input_descriptor = calSURFDescriptor_one(src_fea, minH);
+				}
+				vector<int> errorIndex;
+				vector<ImgScore> iss;
+				for (int fileIndex = 0; fileIndex < 1000; fileIndex++) {
+					try {
+						// hsv
+						string file = "../image.orig/" + to_string(fileIndex) + ".jpg";
+
+						Mat dbimg_src_color = imread(file.c_str(), CV_LOAD_IMAGE_COLOR);
+						Mat dbimg_src_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
+						Mat dbimg_hsv = test(imread(file.c_str(), 1), hbins, sbins);
+						//rgbMat_to_hsvHist(imread(file.c_str(), 1));
+
+						double hsv_score = 0;
+						if (useHsv) { hsv_score = compareHist(src_hsv, dbimg_hsv, CV_COMP_CORREL); }
+						//cout << "hsv_score:" << hsv_score << endl;
+						//fea
+						//vector<Mat> dbimg_fea = divide_image(dbimg_src, 4, 4);
+						//dbimg_fea.erase(dbimg_fea.begin(), dbimg_fea.begin() + 5);
+						//dbimg_fea.erase(dbimg_fea.begin() + 2, dbimg_fea.begin() + 4);
+						//dbimg_fea.resize(4);
+
+						// ===== Feature =====
+						double fea_score = 0;
+						Mat dmimg_descriptor;
+						if (useFea) {
+							dmimg_descriptor = calSURFDescriptor_one(dbimg_src_color, minH);
+							fea_score = descriptors_cal_match(input_descriptor, dmimg_descriptor);
+						}
+						//for (int i = 0; i < input_descriptors.size(); i++) {
+						// fea_score += descriptors_cal_match(input_descriptors[i], dmimg_descriptor);
+						//}
+						//fea_score /= (double) input_descriptors.size() * (input_descriptors.size() + 1) / 2;
+						//fea_score /= input_descriptors.size();
+						//cout << "fea_score:" << fea_score << endl;
+
+						double calScore = 0;
+
+						if (useHsv && useFea) {
+							
+						} else if (useHsv) {
+							calScore = hsv_score;
+						} else if (useFea) {
+							calScore = fea_score;
+						}
+
+						iss.push_back(ImgScore(fileIndex, calScore));
+
+					} catch (Exception e) {
+						printf(" -----ERROR-----img#%i, %s\n", fileIndex, e.msg);
+						errorIndex.push_back(fileIndex);
+					}
+					if (fileIndex % 10 == 0)
+						printf(" %i%%..", fileIndex / 10);
+				}
+				cout << endl;
+
+				//// compare hsv
+				//Mat src_hsv = rgbMat_to_hsvHist(src_input);
+
+				//for (int i = 0; i < features.size(); ++i)
+				//	imgScoreResult.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
+
+				reportImgError(errorIndex);
+
+				ScoreReport sr;
+				// ===== sort method 1 // for fea?
+				sort(iss.begin(), iss.end());
+				sr = ScoreReport(iss, inputIndex);
+				bestMData.update(sr, 1, hbins, sbins, minH);
+
+				// ===== sort method 2 // for hsv?
+				sort(iss.rbegin(), iss.rend());
+				sr = ScoreReport(iss, inputIndex);
+				bestMData.update(sr, 2, hbins, sbins, minH);
+
+				// ===== sort method 3
+				for (ImgScore &is : iss) {
+					is.score = abs(is.score);
+				}
+				sort(iss.begin(), iss.end());
+				sr = ScoreReport(iss, inputIndex);
+				bestMData.update(sr, 3, hbins, sbins, minH);
+
+				// ===== sort method 4
+				sort(iss.rbegin(), iss.rend());
+				sr = ScoreReport(iss, inputIndex);
+				bestMData.update(sr, 4, hbins, sbins, minH);
+
+				printf(" - ===== End of minHessian=%i =====\n", minH);
+				printf(" - ===== Finished hbin : %i , sbin: %i \n", hbins, sbins);
+				bestMData.report();
+				if (!useHsv) { goto fea_only; }
+			} // sbins
+		} // hbins
+	fea_only:
+		if (!useFea) { break; }
+	} // minH
 }
 
 /*
@@ -302,7 +424,7 @@ void double_compare_bus() {
 			bestAcc = sr.acc100;
 			bestMinH = minHessian;
 		}
-		printf("-Current best minH:$i, Acc100:$.0f", bestMinH, bestAcc);
+		printf("-Current best minH:%i, Acc100:%.0f", bestMinH, bestAcc);
 	}// for j
 	printf("best minH=%i Acc: %.4f%% | ", bestMinH, bestAcc);
 

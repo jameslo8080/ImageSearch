@@ -32,6 +32,7 @@ struct ImgScore {
 struct ScoreReport {
 public:
 	vector<ImgScore> scoreList;
+	ScoreReport(){}
 	ScoreReport(vector<ImgScore>& scoreList, int inputIndex) : scoreList(scoreList), inputIndex(inputIndex) { init(); }
 
 	int inputIndex;
@@ -44,8 +45,11 @@ public:
 	vector<int> gradeAindex;
 	int bestGradeAindex = -1;
 	double bestGradeAP = 0, bestGradeAR = 0;
+	// getter
+	int id(int index) { return scoreList[index].db_id; }
+	double score(int index) { return scoreList[index].score; }
+	double bestGradeAPR(){ return bestGradeAP * bestGradeAR; }
 private:
-	double getScore(int index) { return scoreList[index].score; }
 	bool isMatch(int index) { return scoreList[index].db_id / 100 == inputIndex; }
 	void init() {
 		for (size_t i = 0; i < scoreList.size() && correct != 100; i++) {
@@ -56,8 +60,8 @@ private:
 				firstWrong = i;
 			}
 
-			double p = (double) correct / (i + 1.0) * 100.00;
-			double r = (double) correct;
+			double p = (double)correct / (i + 1.0) * 100.00;
+			double r = (double)correct;
 			// when >60 we can see it as 60, since 60% precision gets 20% of marks
 			double cp = (p > 60) ? 60 : p;
 			double cr = (r > 60) ? 60 : r;
@@ -94,7 +98,7 @@ public:
 	void report() {
 		string grade = getGrade(firstWrong, bestP, bestR);
 		printf("img#%i, Grade(%s) Acc100: %.0f%%, firstWrong:%i, bestIndex:%u, bP:%.4f%%, bR:%.4f%%, bPRS:%.4f \n"
-			   , inputIndex, grade.c_str(), acc100, firstWrong, bestPSindex, bestP, bestR, bestPRS);
+			, inputIndex, grade.c_str(), acc100, firstWrong, bestPSindex, bestP, bestR, bestPRS);
 
 		reportExtend();
 	}
@@ -102,7 +106,7 @@ public:
 	void report(int row, int col) {
 		string grade = getGrade(firstWrong, bestP, bestR);
 		printf("img#%i r%02ic%02i, Grade(%s) Acc100: %.0f%%, firstWrong:%i, bestIndex:%u, bP:%.4f%%, bR:%.4f%%, bPRS:%.4f  \n"
-			   , inputIndex, row, col, grade.c_str(), acc100, firstWrong, bestPSindex, bestP, bestR, bestPRS);
+			, inputIndex, row, col, grade.c_str(), acc100, firstWrong, bestPSindex, bestP, bestR, bestPRS);
 
 		reportExtend();
 	}
@@ -123,7 +127,7 @@ public:
 		}
 	}
 	void reportGAindex() {
-		if (gradeAindex.size() >0) {
+		if (gradeAindex.size() > 0) {
 			printf(" --grade A index (%i): ", gradeAindex.size());
 			for (int i = 0; i < gradeAindex.size(); ++i)
 				std::cout << gradeAindex[i] << ' ';
@@ -131,7 +135,7 @@ public:
 
 			int index = gradeAindex[gradeAindex.size() - 1];
 			if (bestGradeAindex != -1) {
-				printf(" --best grade A index:%3i score: ", bestGradeAindex, scoreList[index].score);
+				printf(" --best grade A index:%3i score: %f ", bestGradeAindex, scoreList[index].score);
 				printf(", P:%.4f%%, R:%.4f%%\n", bestGradeAP, bestGradeAR);
 			}
 		}
@@ -144,7 +148,7 @@ public:
 		for (int i = 0; i < times; i++) {
 			if (i % 3 == 0)
 				cout << endl;
-			printf(" index:%3i, img#%3i, MScore:%f |", i, scoreList[i].db_id, scoreList[i].score);
+			printf(" index:%3i, img#%3i, MScore:%.6f |", i, id(i), score(i));
 			(isMatch(i)) ? cout << " T |" : cout << "   |";
 		}
 		printf("\n");
