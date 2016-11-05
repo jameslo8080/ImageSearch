@@ -126,15 +126,22 @@ struct bestMethodData {
 	}
 };
 
+Mat cutMiddle(Mat src) {
+	int x = src.cols / 5, y = src.rows / 5, w = src.cols - (2 * x), h = src.rows - (2 * y);
+	return Mat(src, Rect(x, y, w, h));
+	/*imshow("result", result);
+	cvWaitKey();
+	return result;*/
+}
 
 void on_double_compare() {
 declare:
-	int inputIndex = 0;
-	int hbins_[3] = { 12, 16, 4 };
-	int sbins_[3] = { 24, 32, 4 };
-	int minH_[3] = { 4, 32, 4 };
+	int inputIndex = 3;
+	int hbins_[3] = { 8, 32, 4 };
+	int sbins_[3] = { 8, 32, 4 };
+	int minH_[3] = { 240, 300, 20 };
 
-	bool useHsv = false, useFea = true; // not ready
+	bool useHsv = true, useFea = false; // not ready
 
 start:
 	cout << endl << "double_compare:::::" << endl;
@@ -145,6 +152,12 @@ start:
 	Mat src_color = imread(src.c_str(), CV_LOAD_IMAGE_COLOR);
 	Mat src_gray = imread(src.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 
+	int x1 = src_color.cols / 5, y1 = src_color.rows / 5, x2 = src_color.cols - (x1), y2 = src_color.rows - (y1);
+
+	//cv::Rect const mask(x1, y1, x2, y2);
+	//cv::Mat roi = src_color(mask);
+	//imshow("roi", roi);
+	//cvWaitKey();
 
 	bestMethodData bestMData;
 	for (int minH = minH_[0]; minH <= minH_[1]; minH += minH_[2]) {
@@ -152,16 +165,16 @@ start:
 			for (int sbins = sbins_[0]; sbins <= sbins_[1]; sbins += sbins_[2]) {
 
 
-				Mat src_hsv = test(imread(src.c_str(), 1), hbins, sbins);
+				Mat src_hsv = test(cutMiddle(src_color), hbins, sbins);
 
 				//Mat(raw_img, Rect(i*iw, j*ih, iw, ih))); // add .clone() wull be deep copy
 				//vector<Mat> imgs_fea = divide_image(src_input, 4, 4);
 
 				Mat src_used = src_color;
-				int x = src_used.cols / 5, y = src_used.rows / 5, w = src_used.cols - (2 * x), h = src_used.rows - (2 * y);
-				printf("x:%i , y:%i , w:%i , h:%i \n", x, y, w, h);
+				Mat src_fea = cutMiddle(src_used);
 
-				Mat src_fea = Mat(src_used, Rect(x, y, w, h));
+				//imshow("src_fea", src_fea);
+				//cvWaitKey();
 
 				//flower_hsv = test(src_fea);
 				//imshow("cut_input", src_fea);
@@ -180,9 +193,9 @@ start:
 						// hsv
 						string file = "../image.orig/" + to_string(fileIndex) + ".jpg";
 
-						Mat dbimg_src_color = imread(file.c_str(), CV_LOAD_IMAGE_COLOR);
-						Mat dbimg_src_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
-						Mat dbimg_hsv = test(imread(file.c_str(), 1), hbins, sbins);
+						Mat dbimg_src_color = cutMiddle(imread(file.c_str(), CV_LOAD_IMAGE_COLOR));
+						//Mat dbimg_src_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
+						Mat dbimg_hsv = test(dbimg_src_color, hbins, sbins);
 						//rgbMat_to_hsvHist(imread(file.c_str(), 1));
 
 						double hsv_score = 0;
@@ -211,7 +224,7 @@ start:
 						double calScore = 0;
 
 						if (useHsv && useFea) {
-							
+							calScore = hsv_score + ((1 - fea_score) * 2);
 						} else if (useHsv) {
 							calScore = hsv_score;
 						} else if (useFea) {
@@ -224,8 +237,9 @@ start:
 						printf(" -----ERROR-----img#%i, %s\n", fileIndex, e.msg);
 						errorIndex.push_back(fileIndex);
 					}
+
 					if (fileIndex % 10 == 0)
-						printf(" %i%%..", fileIndex / 10);
+						printf("%i%% ", (fileIndex + 1) / 10);
 				}
 				cout << endl;
 
