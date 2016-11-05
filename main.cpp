@@ -44,7 +44,7 @@ food		: 900 ~ 999
 string files[] = { "man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food" };
 int valid_indexs[] = { 0, 1, 2, 3, 4, 6, 7 };
 
-string getFilePath(int index){
+string getFilePath(int index) {
 	if (index < 0 || index >= sizeof(files))
 		index = 0;
 	string s("./");
@@ -57,12 +57,11 @@ void file_select_instruction() {
 		<< "            6:'flower', 7:'horse')? " << endl;
 }
 
-string askFile(){
+string askFile() {
 	file_select_instruction();
 	int index;
 	cin >> index;
-	while (index <-2 || index == 5 || index > 7)
-	{
+	while (index < -2 || index == 5 || index > 7) {
 		file_select_instruction();
 		cin >> index;
 	}
@@ -70,7 +69,7 @@ string askFile(){
 }
 
 // "../image.orig/685.jpg"
-string getFilePath999(int index){
+string getFilePath999(int index) {
 	if (index < 0 || index > 999)
 		index = 0;
 	string s("../image.orig/");
@@ -82,8 +81,7 @@ Mat get_input_img(int index) {
 	string filepath = getFilePath(index);
 
 	Mat src_input = imread(filepath); // read input image
-	if (!src_input.data)
-	{
+	if (!src_input.data) {
 		printf("Cannot find the input image!\n");
 		exit(1);
 	}
@@ -94,14 +92,12 @@ void waitESC() {
 	// Wait for the user to press a key in the GUI window.
 	//Press ESC to quit
 	int keyValue = 0;
-	while (keyValue >= 0)
-	{
+	while (keyValue >= 0) {
 		keyValue = cvWaitKey(0);
 
-		switch (keyValue)
-		{
-		case 27:keyValue = -1;
-			break;
+		switch (keyValue) {
+			case 27:keyValue = -1;
+				break;
 		}
 	}
 }
@@ -138,7 +134,7 @@ void test_all_average() {
 }
 
 void test_r1c1_to_r10c10() {
-	for (auto v_index : valid_indexs){
+	for (auto v_index : valid_indexs) {
 		Mat src_input = get_input_img(v_index);
 
 		printf("Work for img \"%s\" :\n", files[v_index].c_str());
@@ -152,7 +148,7 @@ void test_r1c1_to_r10c10() {
 }
 
 void test_all_hsv_compare() {
-	for (auto v_index : valid_indexs){
+	for (auto v_index : valid_indexs) {
 		Mat src_input = get_input_img(v_index);
 
 		printf("Work for img \"%s\" :\n", files[v_index].c_str());
@@ -163,7 +159,7 @@ void test_all_hsv_compare() {
 }
 
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
 	Mat src_input;
 
 	Mat max_img;
@@ -177,7 +173,7 @@ int main(int argc, char** argv){
 	int index;
 	cin >> index;
 
-	if (index == -2){
+	if (index == -2) {
 		bool greyscale;
 		cout << "0 not greyScale, 1 greyScale: \n";
 		cin >> greyscale;
@@ -200,21 +196,19 @@ int main(int argc, char** argv){
 
 		waitESC();
 		return 0;
-	}
-	else if (index == -1) {
+	} else if (index == -1) {
 		test_all_average();
-	}
-	else if (index == -3){
+	} else if (index == -3) {
 		test_r1c1_to_r10c10();
-	}
-	else if (index == -4){
+	} else if (index == -4) {
 		test_all_hsv_compare();
-	}
-	else {
+	} else if (index == -5) {
+		double_compare();
+	} else {
 		solve(index);
 	}
 
-	do{
+	do {
 		cout << "input -1 for exit...\n";
 		cin >> index;
 	} while (index != -1);
