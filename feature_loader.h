@@ -23,9 +23,9 @@ using namespace cv;
 
 Mat load_allDescriptions();
 
-vector<Mat> load_allDescriptions_YML(string type, int partOf100 = 100);
+vector<Mat> load_allDescriptions_YML(string type, int partOf100 = 100, bool greyscale=false);
 
-vector<pair<int, Mat>>  load_mlSample(BOWImgDescriptorExtractor& bowExtractor, string type, int dictionarySize);
+vector<pair<int, Mat>>  load_mlSample(BOWImgDescriptorExtractor& bowExtractor, string type, int dictionarySize, bool greyscale=false);
 
 vector<Mat> load_features();
 vector<Mat> load_imgs();

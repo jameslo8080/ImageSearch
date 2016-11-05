@@ -33,7 +33,7 @@ bool read_images(FILE* fp, Mat &db_img, int db_id) {
 }
 
 vector<Mat> allDescriptors;
-vector<Mat> load_allDescriptions_YML(string type, int partOf100) {
+vector<Mat> load_allDescriptions_YML(string type, int partOf100, bool greyscale) {
 	if (!allDescriptors.empty()) return allDescriptors;
 
 	FILE* fp;
@@ -45,6 +45,10 @@ vector<Mat> load_allDescriptions_YML(string type, int partOf100) {
 		fpath = SIFT_LIST_FILE;
 	else
 		fpath = ORB_LIST_FILE;
+	if (greyscale) {
+		fpath = "g_" + fpath;
+	}
+
 	fopen_s(&fp, fpath.c_str(), "r");
 	printf("Extracting Descriptions from input images...\n");
 

@@ -178,21 +178,25 @@ int main(int argc, char** argv){
 	cin >> index;
 
 	if (index == -2){
+		bool greyscale;
+		cout << "0 not greyScale, 1 greyScale: \n";
+		cin >> greyscale;
+
 		int type;
 		cout << " 0 for sift , 1 for surf, 2 for orb, 3 for sift bow, 4 for surf bow, 5 for orb bow: " << endl;
 		cin >> type;
 		if (type == 0)
-			save_allSIFTDescriptions_YML();
+			save_allSIFTDescriptions_YML(greyscale);
 		else if (type == 1)
-			save_allSURFDescriptions_YML();
+			save_allSURFDescriptions_YML(greyscale);
 		else if (type == 2)
-			save_allORBDescriptions_YML();
+			save_allORBDescriptions_YML(greyscale);
 		else if (type == 3)
-			save_BOW("SIFT");
+			save_BOW("SIFT", greyscale);
 		else if (type == 4)
-			save_BOW("SURF");
+			save_BOW("SURF", greyscale);
 		else if (type == 5)
-			save_BOW("ORB");
+			save_BOW("ORB", greyscale);
 
 		waitESC();
 		return 0;

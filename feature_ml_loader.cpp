@@ -1,6 +1,6 @@
 #include "feature_loader.h"
 
-vector<pair<int, Mat> > load_mlSample(BOWImgDescriptorExtractor& bowExtractor, string featureName, int dictionarySize) {
+vector<pair<int, Mat> > load_mlSample(BOWImgDescriptorExtractor& bowExtractor, string featureName, int dictionarySize, bool greyscale) {
 	vector<pair<int, Mat> > res;
 	vector<int> ids;
 	vector<Mat> features;
@@ -11,11 +11,18 @@ vector<pair<int, Mat> > load_mlSample(BOWImgDescriptorExtractor& bowExtractor, s
 	if (storage["features"].empty()){
 		FileStorage ws = FileStorage(fname, FileStorage::WRITE);
 
-		cout << "Calculating features" << endl;
 		vector<Mat> imgs = load_imgs();
+		cout << "Calculating features" << endl;
 		for (int i = 0; i < imgs.size(); ++i) {
 			ids.push_back(i / 100);
 			Mat descriptor = cal_descriptor(bowExtractor, imgs[i], featureName);
+
+			if (greyscale) {
+				Mat greyMat;
+				cvtColor(descriptor, greyMat, CV_BGR2GRAY);
+				descriptor = greyMat;
+			}
+
 			features.push_back(descriptor);
 		}
 		ws << "ids" << ids;

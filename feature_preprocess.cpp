@@ -1,6 +1,6 @@
 #include "feature_preprocess.h"
 
-void save_allSURFDescriptions_YML() {
+void save_allSURFDescriptions_YML(bool greyscale) {
 	int db_id = 0;
 	Mat db_img;
 	FILE* fp;
@@ -8,15 +8,15 @@ void save_allSURFDescriptions_YML() {
 	printf("Extracting Descriptions from input images...\n");
 
 	while (read_images(fp, db_img, db_id)) {
-		SurfFeatureDetector detector;
-		SurfDescriptorExtractor extractor;
-		vector<KeyPoint> keyPoints;
-		Mat descriptors;
-		detector.detect(db_img, keyPoints);
-		extractor.compute(db_img, keyPoints, descriptors);
+		if (greyscale) {
+			Mat greyMat;
+			cvtColor(db_img, greyMat, CV_BGR2GRAY);
+			db_img = greyMat;
+		}
+		Mat descriptors = calSURFDescriptor(db_img);
 
-		FileStorage fs("../surf/" + to_string(db_id) + ".yml", FileStorage::WRITE);
-		fs << "keypoints" << keyPoints;
+		string foldername = greyscale ? "../g_surf/" : "../surf/";
+		FileStorage fs(foldername + to_string(db_id) + ".yml", FileStorage::WRITE);
 		fs << "descriptors" << descriptors;
 
 		fs.release();
@@ -25,7 +25,7 @@ void save_allSURFDescriptions_YML() {
 	}
 }
 
-void save_allSIFTDescriptions_YML() {
+void save_allSIFTDescriptions_YML(bool greyscale) {
 	int db_id = 0;
 	Mat db_img;
 	FILE* fp;
@@ -33,14 +33,15 @@ void save_allSIFTDescriptions_YML() {
 	printf("Extracting Descriptions from input images...\n");
 
 	while (read_images(fp, db_img, db_id)) {
-		SiftFeatureDetector  sift;
-		vector<KeyPoint> keyPoints;
-		Mat descriptors;
-		sift.detect(db_img, keyPoints);
-		sift.compute(db_img, keyPoints, descriptors);
+		if (greyscale) {
+			Mat greyMat;
+			cvtColor(db_img, greyMat, CV_BGR2GRAY);
+			db_img = greyMat;
+		}
+		Mat descriptors = calSIFTDescriptor(db_img);
 
-		FileStorage fs("../sift/" + to_string(db_id) + ".yml", FileStorage::WRITE);
-		fs << "keypoints" << keyPoints;
+		string foldername = greyscale ? "../g_sift/" : "../sift/";
+		FileStorage fs(foldername + to_string(db_id) + ".yml", FileStorage::WRITE);
 		fs << "descriptors" << descriptors;
 
 		fs.release();
@@ -49,7 +50,7 @@ void save_allSIFTDescriptions_YML() {
 	}
 }
 
-void save_allORBDescriptions_YML() {
+void save_allORBDescriptions_YML(bool greyscale) {
 	int db_id = 0;
 	Mat db_img;
 	FILE* fp;
@@ -57,16 +58,15 @@ void save_allORBDescriptions_YML() {
 	printf("Extracting Descriptions from input images...\n");
 
 	while (read_images(fp, db_img, db_id)) {
+		if (greyscale) {
+			Mat greyMat;
+			cvtColor(db_img, greyMat, CV_BGR2GRAY);
+			db_img = greyMat;
+		}
+		Mat descriptors = calORBDescriptor(db_img);
 
-		OrbFeatureDetector detector;
-		OrbDescriptorExtractor extractor;
-		vector<KeyPoint> keyPoints;
-		Mat descriptors;
-		detector.detect(db_img, keyPoints);
-		extractor.compute(db_img, keyPoints, descriptors);
-
-		FileStorage fs("../orb/" + to_string(db_id) + ".yml", FileStorage::WRITE);
-		fs << "keypoints" << keyPoints;
+		string foldername = greyscale ? "../g_orb/" : "../orb/";
+		FileStorage fs(foldername + to_string(db_id) + ".yml", FileStorage::WRITE);
 		fs << "descriptors" << descriptors;
 
 		fs.release();
