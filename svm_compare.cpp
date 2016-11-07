@@ -18,7 +18,6 @@ double svm_compare(Mat src_input, int index) {
 		testMat = src_input;
 	}
 
-
 	Ptr<DescriptorExtractor> extractor = DescriptorExtractor::create(featureName);
 	Ptr<DescriptorMatcher>  matcher = DescriptorMatcher::create("FlannBased");
 	BOWImgDescriptorExtractor bowExtractor(extractor, matcher);

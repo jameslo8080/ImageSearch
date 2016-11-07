@@ -16,7 +16,6 @@
 #include "opencv2/features2d/features2d.hpp"
 #include "feature_loader.h"
 #include "feature_extract.h"
-#include "feature_compare.h"
 #include "feature_preprocess.h"
 
 #include "ml.h"

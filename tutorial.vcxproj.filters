@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\compare_function">
+      <UniqueIdentifier>{6880ea51-2c86-4a53-8566-15fd3518aaa9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\feature">
+      <UniqueIdentifier>{9512d4f6-b514-47ad-b908-06ef761aa042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ml">
+      <UniqueIdentifier>{f106b27e-3dc4-42b9-a328-6521bcafab32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\compare_function\core_cmp">
+      <UniqueIdentifier>{4858a4a9-1666-46da-b497-51bb663fa1cf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="svm_compare.cpp">
+      <Filter>Source Files\compare_function</Filter>
+    </ClCompile>
+    <ClCompile Include="hsv_compare.cpp">
+      <Filter>Source Files\compare_function</Filter>
+    </ClCompile>
+    <ClCompile Include="feature_extract.cpp">
+      <Filter>Source Files\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="feature_loader.cpp">
+      <Filter>Source Files\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="ml.cpp">
+      <Filter>Source Files\ml</Filter>
+    </ClCompile>
+    <ClCompile Include="feature_preprocess.cpp">
+      <Filter>Source Files\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreReport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="feature_ml_loader.cpp">
+      <Filter>Source Files\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="feature_ml_preprocess.cpp">
+      <Filter>Source Files\feature</Filter>
+    </ClCompile>
+    <ClCompile Include="double_compare.cpp">
+      <Filter>Source Files\compare_function</Filter>
+    </ClCompile>
+    <ClCompile Include="psnr_compare.cpp">
+      <Filter>Source Files\compare_function</Filter>
+    </ClCompile>
+    <ClCompile Include="mssim_compare.cpp">
+      <Filter>Source Files\compare_function</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hist_cmp.cpp">
+      <Filter>Source Files\compare_function\core_cmp</Filter>
+    </ClCompile>
+    <ClCompile Include="core_cmp.h">
+      <Filter>Source Files\compare_function\core_cmp</Filter>
+    </ClCompile>
+    <ClCompile Include="pixel_compare.cpp">
+      <Filter>Source Files\compare_function\core_cmp</Filter>
+    </ClCompile>
+    <ClCompile Include="psnr_cmp.cpp">
+      <Filter>Source Files\compare_function\core_cmp</Filter>
+    </ClCompile>
+    <ClCompile Include="mssim_cmp.cpp">
+      <Filter>Source Files\compare_function\core_cmp</Filter>
+    </ClCompile>
+    <ClCompile Include="feature_cmp.cpp">
+      <Filter>Source Files\compare_function\core_cmp</Filter>
+    </ClCompile>
+    <ClCompile Include="feature_compare.cpp">
+      <Filter>Source Files\compare_function</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="compare.h">
+      <Filter>Source Files\compare_function</Filter>
+    </ClInclude>
+    <ClInclude Include="feature_extract.h">
+      <Filter>Source Files\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="feature_loader.h">
+      <Filter>Source Files\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="ml.h">
+      <Filter>Source Files\ml</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreReport.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature_preprocess.h">
+      <Filter>Source Files\feature</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

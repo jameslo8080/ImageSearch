@@ -1,8 +1,5 @@
 #include "feature_loader.h"
 
-/**
-Save the surf of each image to ../surf
-*/
 
 bool read_images(FILE* fp, Mat &db_img, int db_id, bool output) {
 	char imagepath[200];
@@ -88,7 +85,6 @@ Mat load_allDescriptions() {
 	int db_id = 0;
 	Mat db_img;
 	FILE* fp;
-	char imagepath[200];
 	fopen_s(&fp, IMAGE_LIST_FILE, "r");
 	printf("Extracting Descriptions from input images...\n");
 
@@ -115,7 +111,6 @@ vector<Mat> load_features() {
 	int db_id = 0;
 	Mat db_img;
 	FILE* fp;
-	char imagepath[200];
 	fopen_s(&fp, IMAGE_LIST_FILE, "r");
 	printf("Extracting features from input images...\n");
 	while (read_images(fp, db_img, db_id, false)) {
@@ -140,7 +135,6 @@ vector<Mat> load_imgs(bool out) {
 	int db_id = 0;
 	Mat db_img;
 	FILE* fp;
-	char imagepath[200];
 	fopen_s(&fp, IMAGE_LIST_FILE, "r");
 	printf("Extracting features from input images...\n");
 	while (read_images(fp, db_img, db_id, out)) {

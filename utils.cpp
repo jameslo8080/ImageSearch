@@ -18,6 +18,19 @@ Mat convert_2DMat_to_1DMat(Mat inMat) {
 	return outMat;
 }
 
+
+double validate_fit(vector<ImgScore> ids, int target_id) {
+	int cnt = 0;
+	int len = ids.size();
+	if (len == 0) return 0;
+
+	for (auto imgS : ids) if (get_group(imgS.db_id) == target_id) cnt++;
+
+	return cnt / (double)len;
+}
+
+
+
 string BOW_file_path(string featureName, int dictionarySize, bool greyscale) {
 	return "../bow/" + (string)(greyscale ? "g_" : "") + featureName + to_string(dictionarySize) + ".yml";
 }

@@ -1,55 +1,64 @@
-#include "feature_compare.h"
+#include "compare.h"
 
-double validate_fit(vector<ImgScore> ids, int target_id) {
-	int cnt = 0;
-	int len = ids.size();
-	if (len == 0) return 0;
+double _compare(Mat inputDescriptor, vector<Mat> allDescriptors, int index) {
 
-	for (auto imgS : ids) if (get_group(imgS.db_id) == target_id) cnt++;
+	string files[] = { "man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food" };
+	vector<ImgScore> scores;
 
-	return cnt / (double)len;
+	// "../surf_c/"
+	string compare_filepath = "../surf_c/" + files[index] + ".yml";
+
+	//FileStorage fsload(compare_filepath, FileStorage::WRITE);
+
+	if (true) { //fsload["s999"].empty()){
+		//fsload.release();
+		FileStorage fssave(compare_filepath, FileStorage::WRITE);
+
+		for (int i = 0; i < allDescriptors.size(); ++i) {
+			ImgScore sc;
+			sc.db_id = i;
+			sc.score = feature_cmp(inputDescriptor, allDescriptors[i]);
+
+			string temp = "s" + to_string(i);
+			fssave << temp << sc.score;
+			scores.push_back(sc);
+		}
+		fssave.release();
+		sort(scores.begin(), scores.end());
+
+		scores.resize(100);
+
+		double acc = validate_fit(scores, index);
+
+		ScoreReport sr(scores, index);
+		sr.report();
+		return acc;
+
+	}
+	else{
+		cout << "load pre-compare : " << compare_filepath << endl;
+		return 0;
+	}
 }
 
-
-double descriptors_cal_match(Mat descriptors_1, Mat descriptors_2) {
-	if (descriptors_1.type() != CV_32F) {
-		descriptors_1.convertTo(descriptors_1, CV_32F);
-	}
-	if (descriptors_2.type() != CV_32F) {
-		descriptors_2.convertTo(descriptors_2, CV_32F);
-	}
-
-	if (descriptors_1.empty())
-		cout << "1st descriptor empty" << endl;
-	if (descriptors_2.empty())
-		cout << "2st descriptor empty" << endl;
-
-	BFMatcher matcher(NORM_L2);
-	// BFMatcher matcher(NORM_HAMMING);
-	// FlannBasedMatcher matcher;
-	vector< DMatch > matches;
-
-	matcher.match(descriptors_1, descriptors_2, matches);
-
-	double max_dist = 0; double min_dist = 100;
-	//-- Quick calculation of max and min distances between keypoints
-	for (int i = 0; i < descriptors_1.rows; i++)
-	{
-		double dist = matches[i].distance;
-		if (dist < min_dist) min_dist = dist;
-		if (dist > max_dist) max_dist = dist;
-	}
-
-	sort(matches.begin(), matches.end());
-	vector< DMatch > good_matches;
-	double res = 0.0;
-	for (int i = 0; i < matches.size(); i++)
-	{
-		good_matches.push_back(matches[i]);
-		res += matches[i].distance;
-		if (good_matches.size() >= 100) break;
-	}
-
-	if (good_matches.size() == 0) return 9999;
-	return res / (double)good_matches.size();
+// save_allSURFDescriptions_YML
+double surf_compare(Mat src_input, int index) {
+	Mat inputDescriptor = calSURFDescriptor(src_input);
+	vector<Mat> allDescriptors = load_allDescriptions_YML("SURF");
+	return _compare(inputDescriptor, allDescriptors, index);
 }
+
+// save_allSIFTDescriptions_YML
+double sift_compare(Mat src_input, int index) {
+	Mat inputDescriptor = calSIFTDescriptor(src_input);
+	vector<Mat> allDescriptors = load_allDescriptions_YML("SIFT");
+	return _compare(inputDescriptor, allDescriptors, index);
+}
+
+// save_allORBDescriptions_YML
+double orb_compare(Mat src_input, int index) {
+	Mat inputDescriptor = calORBDescriptor(src_input);
+	vector<Mat> allDescriptors = load_allDescriptions_YML("ORB");
+	return _compare(inputDescriptor, allDescriptors, index);
+}
+
