@@ -104,9 +104,9 @@ Mat load_allDescriptions() {
 }
 
 
-vector<Mat> all_feature;
-vector<Mat> load_features() {
-	if (!all_feature.empty()) return all_feature;
+vector<Mat> all_hsvHist;
+vector<Mat> load_hsvHist() {
+	if (!all_hsvHist.empty()) return all_hsvHist;
 	///Read Database
 	int db_id = 0;
 	Mat db_img;
@@ -115,7 +115,7 @@ vector<Mat> load_features() {
 	printf("Extracting features from input images...\n");
 	while (read_images(fp, db_img, db_id, false)) {
 		Mat hist_base = rgbMat_to_hsvHist(db_img);
-		all_feature.push_back(hist_base);
+		all_hsvHist.push_back(hist_base);
 
 		if (db_id % 50 == 0)
 			cout << db_id / 10 << "%..";
@@ -124,7 +124,7 @@ vector<Mat> load_features() {
 	}
 	fclose(fp);
 	printf("Done\n");
-	return all_feature;
+	return all_hsvHist;
 }
 
 vector<Mat> all_img;

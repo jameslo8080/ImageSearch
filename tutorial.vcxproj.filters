@@ -90,6 +90,9 @@
     <ClCompile Include="feature_compare.cpp">
       <Filter>Source Files\compare_function</Filter>
     </ClCompile>
+    <ClCompile Include="combinate_compare.cpp">
+      <Filter>Source Files\compare_function</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compare.h">
