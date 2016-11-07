@@ -5,10 +5,8 @@ double validate_fit(vector<ImgScore> ids, int target_id) {
 	int len = ids.size();
 	if (len == 0) return 0;
 
-	for (auto imgS : ids) {
-		if (get_group(imgS.db_id) == target_id) cnt++;
-		cout << "db_id: " << imgS.db_id << "  Group: " << get_group(imgS.db_id) << "  score: " << imgS.score << endl;
-	}
+	for (auto imgS : ids) if (get_group(imgS.db_id) == target_id) cnt++;
+
 	return cnt / (double)len;
 }
 

@@ -3,20 +3,28 @@
 
 CvSVM svm;
 bool svmtrained = false;
-bool greyscale = true;
 
-void train_SVM(string featureName, int dictionarySize, BOWImgDescriptorExtractor bowExtractor) {
-	vector<Mat> allDescriptors = load_allDescriptions_YML(featureName, 10, greyscale);
 
-	for (int i = 0; i < allDescriptors.size(); ++i) {
-		Mat greyMat;
-		cvtColor(allDescriptors[i], greyMat, CV_BGR2GRAY);
-		allDescriptors[i] = greyMat;
+double svm_compare(Mat src_input, int index) {
+	bool greyscale = true;
+	string featureName = "SURF";
+	int dictionarySize = 1000; 
+	
+	Mat testMat;
+	if (greyscale) {
+		cvtColor(src_input, testMat, CV_BGR2GRAY);
+	}
+	else {
+		testMat = src_input;
 	}
 
-	cout << "Loading BOW" << endl;
 
-	string fname = "../bow/" + featureName + to_string(dictionarySize) + ".yml";
+	Ptr<DescriptorExtractor> extractor = DescriptorExtractor::create(featureName);
+	Ptr<DescriptorMatcher>  matcher = DescriptorMatcher::create("FlannBased");
+	BOWImgDescriptorExtractor bowExtractor(extractor, matcher);
+
+	cout << "Loading BOW" << endl;
+	string fname = BOW_file_path(featureName, dictionarySize, greyscale);
 	FileStorage storage = FileStorage(fname, FileStorage::READ);
 	if (storage["dictionary"].empty()){
 		cout << "Prebuilt BOW not exist. Creating now..." << endl;
@@ -31,7 +39,7 @@ void train_SVM(string featureName, int dictionarySize, BOWImgDescriptorExtractor
 
 	cout << "load Samples" << endl;
 	vector<pair<int, Mat> >  vtrainingData = load_mlSample(bowExtractor, featureName, dictionarySize, greyscale);
-	 
+
 	Mat labels(0, 1, CV_32FC1);
 	Mat trainingData(0, dictionarySize, CV_32FC1);
 	for (auto p : vtrainingData) {
@@ -43,31 +51,15 @@ void train_SVM(string featureName, int dictionarySize, BOWImgDescriptorExtractor
 
 	CvSVMParams params;
 	params.svm_type = CvSVM::C_SVC;
-	params.kernel_type = CvSVM::RBF;
+	params.kernel_type = CvSVM::RBF; // LINEAR POLY RBF SIGMOID
 	params.term_crit = cvTermCriteria(CV_TERMCRIT_ITER, 100, 0.000001);
 
-	svm.train_auto(trainingData, labels, cv::Mat(), cv::Mat(), params);
+	//svm.train(trainingData, labels, cv::Mat(), cv::Mat(), params);
+	if(!svmtrained) svm.train_auto(trainingData, labels, cv::Mat(), cv::Mat(), params);
 	svmtrained = true;
-}
-
-double svm_compare(Mat src_input, int index) {
-	if (greyscale) {
-		Mat greyMat;
-		cvtColor(src_input, greyMat, CV_BGR2GRAY);
-		src_input = greyMat;
-	}
-
-	string featureName = "SURF";
-	int dictionarySize = 1000;
-
-	Ptr<DescriptorExtractor> extractor = DescriptorExtractor::create(featureName);
-	Ptr<DescriptorMatcher>  matcher = DescriptorMatcher::create("FlannBased");
-	BOWImgDescriptorExtractor bowExtractor(extractor, matcher);
-	
-	if (!svmtrained) train_SVM(featureName, dictionarySize, bowExtractor);
 
 	cout << "Predict" << endl;
-	Mat src_descriptor = cal_descriptor(bowExtractor, src_input, featureName);
+	Mat src_descriptor = cal_descriptor(bowExtractor, testMat, featureName);
 	float response = svm.predict(src_descriptor);
 
 	cout << index << " | svm result: " << response << endl;

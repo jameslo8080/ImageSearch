@@ -106,12 +106,13 @@ double solve(int index) {
 	Mat src_input = get_input_img(index);
 
 	//imshow("Input", src_input);
-	//double acc = hsv_compare(src_input, index);
+	// double acc = hsv_compare(src_input, index);
 	// double acc = hsv_split_compare(src_input, index);
-	// double acc = surf_compare(src_input, index);
+	double acc = surf_compare(src_input, index);
 	// double acc = sift_compare(src_input, index);
 	// double acc = orb_compare(src_input, index);
-	double acc = svm_compare(src_input, index);
+	// double acc = psnr_compare(src_input, index);
+	// double acc = mssim_compare(src_input, index);
 	return acc;
 }
 

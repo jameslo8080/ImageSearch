@@ -10,7 +10,7 @@ double hsv_compare(Mat src_input, int inputIndex) {
 	ScoreReport sr(imgScoreResult, inputIndex);
 	sr.report();
 
-	return 0;
+	return sr.acc100;
 }
 
 double hsv_split_compare(Mat src_input, int inputIndex) {
@@ -40,5 +40,5 @@ double hsv_split_compare(Mat src_input, int inputIndex, bool output, int row, in
 	ScoreReport sr(imgScoreResult, inputIndex);
 	sr.report(row, col);
 
-	return 0;
+	return sr.acc100;
 }

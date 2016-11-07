@@ -7,23 +7,20 @@ double _compare(Mat inputDescriptor, vector<Mat> allDescriptors, int index) {
 
 	// "../surf_c/"
 	string compare_filepath = "../surf_c/" + files[index] + ".yml";
-	cout << "load pre-compare : " << compare_filepath << endl;
 
-	FileStorage fsload(compare_filepath, FileStorage::WRITE);
-	if (fsload["s999"].empty()){
-		fsload.release();
+	//FileStorage fsload(compare_filepath, FileStorage::WRITE);
+
+	if (true) { //fsload["s999"].empty()){
+		//fsload.release();
 		FileStorage fssave(compare_filepath, FileStorage::WRITE);
 
 		for (int i = 0; i < allDescriptors.size(); ++i) {
 			ImgScore sc;
 			sc.db_id = i;
-			cout << "comparing : " << i << ".jpg" << endl;
 			sc.score = descriptors_cal_match(inputDescriptor, allDescriptors[i]);
 
 			string temp = "s" + to_string(i);
 			fssave << temp << sc.score;
-
-			cout << temp << ".jpg score : " << sc.score << endl;
 			scores.push_back(sc);
 		}
 		fssave.release();
@@ -32,9 +29,6 @@ double _compare(Mat inputDescriptor, vector<Mat> allDescriptors, int index) {
 		scores.resize(100);
 
 		double acc = validate_fit(scores, index);
-		printf("res Acc: %lf \n", acc);
-		printf("Done \n");
-
 
 		ScoreReport sr(scores, index);
 		sr.report();
@@ -42,6 +36,7 @@ double _compare(Mat inputDescriptor, vector<Mat> allDescriptors, int index) {
 
 	}
 	else{
+		cout << "load pre-compare : " << compare_filepath << endl;
 		return 0;
 	}
 }
