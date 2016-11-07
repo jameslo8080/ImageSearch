@@ -4,6 +4,9 @@ double hist_cmp(const Mat& img1, const Mat& img2, int method) {
 	return compareHist(img1, img2, 0);
 }
 
+/**
+asdasd
+*/
 double hsv_cmp(const Mat& img1, const Mat& img2, int method) {
 	Mat himg1 = rgbMat_to_hsvHist(img1);
 	Mat himg2 = rgbMat_to_hsvHist(img2);

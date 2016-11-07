@@ -22,5 +22,7 @@ Mat convert_2DMat_to_1DMat(Mat inMat);
 
 double validate_fit(vector<ImgScore> ids, int target_id);
 
+vector<double> normalize_vec(const vector<double> &vec);
+
 string BOW_file_path(string featureName, int dictionarySize, bool greyscale);
 string ids_features_file_path(string featureName, int dictionarySize, bool greyscale);

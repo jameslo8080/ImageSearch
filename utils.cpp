@@ -30,6 +30,25 @@ double validate_fit(vector<ImgScore> ids, int target_id) {
 }
 
 
+vector<double> normalize_vec(const vector<double> &vec) {
+	int len = vec.size();
+	if (len == 0) return {};
+	if (len == 1) return { 0 };
+
+	vector<double> res(len);
+	double minv = vec[0], maxv = vec[0];
+	for (int i = 1; i < len; ++i) {
+		if (vec[i] < minv) minv = vec[i];
+		if (vec[i] > maxv) maxv = vec[i];
+	}
+
+	int range = maxv - minv;
+	for (int i = 0; i < len; ++i) {
+		res[i] = range == 0 ? 0 : (vec[i] - minv) / range;
+	}
+
+	return res;
+}
 
 string BOW_file_path(string featureName, int dictionarySize, bool greyscale) {
 	return "../bow/" + (string)(greyscale ? "g_" : "") + featureName + to_string(dictionarySize) + ".yml";

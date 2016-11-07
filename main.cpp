@@ -107,12 +107,31 @@ double solve(int index) {
 	//imshow("Input", src_input);
 	// double acc = hsv_compare(src_input, index);
 	// double acc = hsv_split_compare(src_input, index);
-	double acc = surf_compare(src_input, index);
+	// double acc = surf_compare(src_input, index);
 	// double acc = sift_compare(src_input, index);
 	// double acc = orb_compare(src_input, index);
 	// double acc = psnr_compare(src_input, index);
 	// double acc = mssim_compare(src_input, index);
+
+	double acc = combin_compare_4(src_input, index);
 	return acc;
+}
+
+void test_combin() {
+	double besti = -1, maxac = 0;
+	for (double i = 0; i <= 1; i += 0.1) {
+		double j = 1.0 - i;
+		double acc = 0;
+		printf("\ni: %lf <> j: %lf\n", i, j);
+		for (auto index : valid_indexs) {
+			acc += solve(index);
+		}
+		if (acc > maxac) {
+			maxac = acc;
+			besti = i;
+		}
+	}
+	printf("\nBest acc: %lf || i = %lf\n", maxac / 7.0, besti);
 }
 
 void test_all_average() {
@@ -169,6 +188,8 @@ int main(int argc, char** argv) {
 	cout << " or -2 for preprocessing(): " << endl;
 	cout << " or -3 for test from r1c1 to r10c10  : " << endl;
 	cout << " or -4 for test all hsv_compare()    : " << endl;
+	cout << " or -5 for double_compare()          : " << endl;
+	cout << " or -6 for test_combin()             : " << endl;
 
 	int index;
 	cin >> index;
@@ -204,6 +225,9 @@ int main(int argc, char** argv) {
 		test_all_hsv_compare();
 	} else if (index == -5) {
 		double_compare();
+	}
+	else if (index == -6) {
+		test_combin();
 	} else {
 		solve(index);
 	}

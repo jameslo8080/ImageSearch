@@ -1,5 +1,45 @@
 #include "feature_extract.h"
 
+Mat equalized(Mat src) {
+	Mat dst;
+	cvtColor(src, src, CV_BGR2GRAY);
+
+	equalizeHist(src, dst);
+	return dst;
+}
+
+Mat greyscaleHist(Mat src_base) {
+	int bins = 24;
+	int histSize[] = { bins };
+
+	float lranges[] = { 0, 256 };
+	const float* ranges[] = { lranges };
+	
+	Mat hist;
+	int channels[] = { 0 };
+
+	calcHist(&src_base, 1, channels, Mat(), hist, 1, histSize, ranges, true, false);
+
+	return hist;
+}
+
+Mat rgbHist(Mat src_base) {
+	float range[] = { 0, 256 };
+
+	int b_bins = 8, g_bins = 8, r_bins = 8;
+	int histSize[] = { b_bins, g_bins, r_bins };
+
+	const float* ranges[] = { range, range, range };
+	int channels[] = { 0, 1, 2 };
+
+	bool uniform = true; bool accumulate = false;
+
+	Mat b_hist, g_hist, r_hist;
+	MatND hist_base;
+	calcHist(&src_base, 1, channels, Mat(), b_hist, 2, histSize, ranges, uniform, accumulate);
+	return hist_base;
+}
+
 Mat rgbMat_to_hsvHist(Mat src_base) {
 	Mat hsv_base;
 	cvtColor(src_base, hsv_base, COLOR_BGR2HSV);

@@ -21,10 +21,6 @@
 using namespace std;
 using namespace cv;
 
-
-
-double pixel_compare(Mat img1, Mat img2);
-
 double hsv_compare(Mat src_input, int index);
 double hsv_split_compare(Mat src_input, int index);
 double hsv_split_compare(Mat src_input, int index, bool output, int row, int col);
@@ -41,3 +37,6 @@ void on_double_compare();
 void double_compare_bus();
 
 double combin_compare_1(Mat src_input, int inputIndex);
+double combin_compare_2(Mat src_input, int inputIndex);
+double combin_compare_3(Mat src_input, int inputIndex, double r1 = 0.5, double r2 = 0.5);
+double combin_compare_4(Mat src_input, int inputIndex, double r1 = 0.5, double r2 = 0.5);
