@@ -17,3 +17,5 @@ using namespace cv;
 
 int get_group(int db_id);
 Mat convert_2DMat_to_1DMat(Mat inMat);
+string BOW_file_path(string featureName, int dictionarySize, bool greyscale);
+string ids_features_file_path(string featureName, int dictionarySize, bool greyscale);
