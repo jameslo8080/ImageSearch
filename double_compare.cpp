@@ -151,11 +151,12 @@ Mat cutMiddle(Mat src) {
 void on_double_compare() {
 declare:
 		int debugIndex = -1;
-		int inputIndex = -1;
+		//int inputIndex = -1;
 		int hbins_[3] = { 24, 24, 8 };
 		int sbins_[3] = { 28, 28, 12 };
-		int minH_[3] = { 192, 192, 64 };
-
+		int minH_[3] = { 64, 64, 64 };
+		int hsv_divide_[2] = { 4, 4 };
+		int fea_divide_[2] = { 9, 9 };
 		bool useHsv = true, useFea = true; // not ready 
 
 		vector<bestMethodData> bestMData_(8);
@@ -163,93 +164,134 @@ declare:
 		int valid_indexs[] = { 0, 1, 2, 3, 4, 6, 7 }; // 0, 1, 2, 3, 4, 6, 7
 
 eachInput:
+		//for each (int valid_index in valid_indexs) {
+		//		inputIndex = valid_index;
+		// for DEBUG
+		//if (debugIndex != 1 && debugIndex != inputIndex)
+		// continue;
+
+start:
+		cout << endl << "double_compare:::::" << endl;
+		vector<Mat> src_color_(8);
+		vector<Mat> src_gray_(8);
+		vector<Mat> src_color_middle_(8);
+		vector<Mat> src_gray_middle_(8);
+
 		for each (int valid_index in valid_indexs) {
-				inputIndex = valid_index;
-				// for DEBUG
-				//if (debugIndex != 1 && debugIndex != inputIndex)
-				// continue;
-
-		start:
-				cout << endl << "double_compare:::::" << endl;
-				string src = "./" + files[inputIndex] + ".jpg";
-
+				string src = "./" + files[valid_index] + ".jpg";
 				Mat src_color = imread(src.c_str(), CV_LOAD_IMAGE_COLOR);
 				Mat src_gray = imread(src.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 				Mat src_color_middle = cutMiddle(src_color);
 				Mat src_gray_middle = cutMiddle(src_gray);
 
-				int x1 = src_color.cols / 5, y1 = src_color.rows / 5, x2 = src_color.cols - (x1), y2 = src_color.rows - (y1);
+				src_color_[valid_index] = src_color;
+				src_gray_[valid_index] = src_gray;
+				src_color_middle_[valid_index] = src_color_middle;
+				src_gray_middle_[valid_index] = src_gray_middle;
+		}
 
-				bestMethodData bestMData;
-				for (int minH = minH_[0]; minH <= minH_[1]; minH += minH_[2]) {
-						for (int hbins = hbins_[0]; hbins <= hbins_[1]; hbins += hbins_[2]) {
-								for (int sbins = sbins_[0]; sbins <= sbins_[1]; sbins += sbins_[2]) {
+		//int x1 = src_color.cols / 5, y1 = src_color.rows / 5, x2 = src_color.cols - (x1), y2 = src_color.rows - (y1);
 
-										// ===== Divide =====
-										vector<Mat> src_color_divide = divide_image(src_color, 4, 4);
-										vector<Mat> src_gray_divide = divide_image(src_gray, 4, 4);
+		//bestMethodData bestMData;
+		for (int minH = minH_[0]; minH <= minH_[1]; minH += minH_[2]) {
+				for (int hbins = hbins_[0]; hbins <= hbins_[1]; hbins += hbins_[2]) {
+						for (int sbins = sbins_[0]; sbins <= sbins_[1]; sbins += sbins_[2]) {
 
-										// ===== HSV =====
-										Mat src_hsv = img_src_to_hsv(src_color, hbins, sbins);
-										Mat src_middle_hsv = img_src_to_hsv(src_color_middle, hbins, sbins);
-										vector<Mat> src_color_divide_hsv;
-										for (int i = 0; i < src_color_divide.size(); i++) {
-												src_color_divide_hsv.push_back(img_src_to_hsv(src_color_divide[i], hbins, sbins));
+								// ===== Divide =====
+								vector<vector<Mat>> src_color_divide_(8);
+								// for SURF feature
+								vector<vector<Mat>> src_gray_divide_(8);
+
+								// ===== HSV =====
+								vector<Mat> src_hsv_(8);
+								vector<Mat> src_middle_hsv_(8);
+								vector<vector<Mat>> src_color_divide_hsv_(8);
+
+
+								for each (int i in valid_indexs) {
+										src_color_divide_[i] = divide_image(src_color_[i], hsv_divide_[0], hsv_divide_[1]);
+										src_gray_divide_[i] = divide_image(src_gray_[i], fea_divide_[0], fea_divide_[1]);
+
+										src_hsv_[i] = img_src_to_hsv(src_color_[i], hbins, sbins);
+										src_middle_hsv_[i] = img_src_to_hsv(src_color_middle_[i], hbins, sbins);
+
+										for (int j = 0; j < src_color_divide_[i].size(); j++) {
+												src_color_divide_hsv_[i].push_back(img_src_to_hsv(src_color_divide_[i][j], hbins, sbins));
 										}
 
-										// ===== Feature descriptor =====
-										Mat src_g_m_descriptor;
-										vector<Mat> src_d_descriptors;
-										if (useFea) {
-												src_g_m_descriptor = calSURFDescriptor_one(src_gray_middle, minH);
+								}
 
-												for (int i = 0; i < src_gray_divide.size(); i++) {
-														Mat temp_desc = calSURFDescriptor_one(src_gray_divide[i], minH);
+								// ===== Feature descriptor =====
+								vector<Mat> src_g_m_descriptor_(8);
+								vector<vector<Mat>> src_d_descriptors_(8);
+								if (useFea) {
+										for each (int i in valid_indexs) {
+												src_g_m_descriptor_[i] = calSURFDescriptor_one(src_gray_middle_[i], minH);
+
+												for (int j = 0; j < src_gray_divide_[i].size(); j++) {
+														Mat temp_desc = calSURFDescriptor_one(src_gray_divide_[i][j], minH);
 														// it seems some img may not able to find any descriptor when it is too small
 														// we just ignore this currently
 														if (!temp_desc.empty())
-																src_d_descriptors.push_back(temp_desc);
+																src_d_descriptors_[i].push_back(temp_desc);
 														else {
-																cout << "log:empty:" << i << endl;
+																cout << "log:empty:" << i << ":" << j << endl;
 														}
 												}
 										}
-										vector<int> errorIndex;
 
-										vector<vector<ImgScore>> iss_list(13);
+								}
+								vector<int> errorIndex;
 
-										for (int fileIndex = 0; fileIndex < 1000; fileIndex++) {
-												try {
-														// ===== Load file =====
-														string file = "../image.orig/" + to_string(fileIndex) + ".jpg";
+								vector<vector<vector<ImgScore>>> iss_list_(8);
+								for (int i = 0; i < iss_list_.size(); i++) {
+										iss_list_[i] = vector<vector<ImgScore>>(15);
+								}
 
-														Mat dbimg_color = imread(file.c_str(), CV_LOAD_IMAGE_COLOR);
-														Mat dbimg_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
-														Mat dbimg_src_color_middle = cutMiddle(imread(file.c_str(), CV_LOAD_IMAGE_COLOR));
-														//Mat dbimg_src_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
+								for (int fileIndex = 0; fileIndex < 1000; fileIndex++) {
+										try {
+												// ===== Load file =====
+												string file = "../image.orig/" + to_string(fileIndex) + ".jpg";
 
-														// ===== Divide =====
-														vector<Mat> dbimg_color_divide = divide_image(dbimg_color, 4, 4);
+												Mat dbimg_color = imread(file.c_str(), CV_LOAD_IMAGE_COLOR);
+												Mat dbimg_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
+												Mat dbimg_src_color_middle = cutMiddle(imread(file.c_str(), CV_LOAD_IMAGE_COLOR));
+												//Mat dbimg_src_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 
-														// ===== HSV =====
+												// ===== Divide (for HSV) =====
+												vector<Mat> dbimg_color_divide = divide_image(dbimg_color, hsv_divide_[0], hsv_divide_[1]);
+												vector<Mat> dbimg_color_divide_hsv;
+												Mat dbimg_hsv_middle;
+												if (useHsv)
+														for (int i = 0; i < dbimg_color_divide.size(); i++) {
+																dbimg_color_divide_hsv.push_back(img_src_to_hsv(dbimg_color_divide[i], hbins, sbins));
+
+																// middle
+																dbimg_hsv_middle = img_src_to_hsv(dbimg_src_color_middle, hbins, sbins);
+														}
+
+												Mat dmimg_descriptor;
+												if (useFea)
+														dmimg_descriptor = calSURFDescriptor_one(dbimg_gray, minH);
+												// ===== HSV =====
+												for each (int i in valid_indexs) {
 														double hsv_score = 0;
 														double hsv_score_2 = 0;
 														double hsv_score_3 = 0;
 														double hsv_score_4 = 0;
 														double hsv_score_D = 0;
 														double hsv_score_MO = 0;
+
 														if (useHsv) {
 																// divided overall
-																for (int i = 0; i < dbimg_color_divide.size(); i++) {
-																		Mat temp_hsv = img_src_to_hsv(dbimg_color_divide[i], hbins, sbins);
-																		hsv_score_D += compareHist(src_color_divide_hsv[i], temp_hsv, CV_COMP_CORREL);
+																for (int j = 0; j < dbimg_color_divide_hsv.size(); j++) {
+																		hsv_score_D += compareHist(src_color_divide_hsv_[i][j], dbimg_color_divide_hsv[i], CV_COMP_CORREL);
 																}
 																if (dbimg_color_divide.size() > 0)
 																		hsv_score_D /= dbimg_color_divide.size();
 
 																// middle 
-																Mat dbimg_hsv_middle = img_src_to_hsv(dbimg_src_color_middle, hbins, sbins);
-																hsv_score_MO = compareHist(src_middle_hsv, dbimg_hsv_middle, CV_COMP_CORREL);
+																hsv_score_MO = compareHist(src_middle_hsv_[i], dbimg_hsv_middle, CV_COMP_CORREL);
 
 																if (dbimg_color_divide.size() > 0) {
 																		hsv_score = hsv_score_D * 0.5 + hsv_score_MO  * 0.5;
@@ -260,6 +302,7 @@ eachInput:
 																		hsv_score = 0;
 
 														}
+
 														//cout << "hsv_score:" << hsv_score << endl;
 														//fea
 														//vector<Mat> dbimg_fea = divide_image(dbimg_src, 4, 4);
@@ -275,21 +318,29 @@ eachInput:
 
 														double fea_score_MD = 0;
 														double fea_score_MO = 0;
-														Mat dmimg_descriptor;
+
 														if (useFea) {
-																dmimg_descriptor = calSURFDescriptor_one(dbimg_gray, minH);
+
 
 																// ===== Middle Divide Descriptor =====
-																for (int i = 0; i < src_d_descriptors.size(); i++) {
-																	fea_score_MD += 1 - feature_cmp(src_d_descriptors[i], dmimg_descriptor);
+
+																for (int j = 0; j < src_d_descriptors_[i].size(); j++) {
+																		fea_score_MD += 1 - feature_cmp(src_d_descriptors_[i][j], dmimg_descriptor);
 																}
-																if (src_d_descriptors.size() > 0)
-																		fea_score_MD /= src_d_descriptors.size();
+																//																for (int i = 0; i < src_d_descriptors.size(); i++) {
+																//																	fea_score_MD += 1 - feature_cmp(src_d_descriptors[i], dmimg_descriptor);
+																//>>>>>>> origin/master
+																//																}
+																if (src_d_descriptors_[i].size() > 0)
+																		fea_score_MD /= src_d_descriptors_[i].size();
 
 																// ===== Middle Overall Descriptor =====
-																fea_score_MO += (1 - feature_cmp(src_g_m_descriptor, dmimg_descriptor));
+																fea_score_MO += (1 - feature_cmp(src_g_m_descriptor_[i], dmimg_descriptor));
+																//=======
+																//																fea_score_MO += (1 - feature_cmp(src_g_m_descriptor, dmimg_descriptor));
+																//>>>>>>> origin/master
 
-																if (src_d_descriptors.size() > 0) {
+																if (src_d_descriptors_[i].size() > 0) {
 																		fea_score = fea_score_MD *0.5 + fea_score_MO * 0.5;
 																		fea_score_2 = fea_score_MD * 0.25 + fea_score_MO * 0.75;
 																		fea_score_3 = fea_score_MD * 0.75 + fea_score_MO * 0.25;
@@ -303,10 +354,10 @@ eachInput:
 														//fea_score /= (double) input_descriptors.size() * (input_descriptors.size() + 1) / 2;
 														//fea_score /= input_descriptors.size();
 														//cout << "fea_score:" << fea_score << endl;
-														vector<double> calScore_list(13);
+														vector<double> calScore_list(15);
 														if (useHsv && useFea) {
 																calScore_list[0] = (hsv_score + 1) / 2 + (fea_score * 4);
-																calScore_list[1] = (hsv_score + 1) / 2 + (fea_score * 8);
+																calScore_list[1] = (hsv_score + 1) / 2 + (fea_score * 8); // for bus
 																calScore_list[2] = (hsv_score + 1) / 2 + (fea_score * 1);
 																calScore_list[3] = (hsv_score + 1) / 2 + (fea_score * 0.5);
 
@@ -326,18 +377,23 @@ eachInput:
 																fea_score_2 = fea_score_MD * 0.25 + fea_score_MO * 0.75;
 																fea_score_3 = fea_score_MD * 0.75 + fea_score_MO * 0.25;
 																fea_score_4 = fea_score_MD;
+
+																horse : 6, 8, 10, 12, 15
 																*/
-																calScore_list[7] = (hsv_score_3 + 1) / 2 + (fea_score * 1);
+																calScore_list[7] = (hsv_score_3 + 1) / 2 + (fea_score * 1); /**/
 																calScore_list[8] = (hsv_score_4 + 1) / 2 + (fea_score * 1);
 
-																calScore_list[9] = (hsv_score + 1) / 2 + (fea_score_4 * 1);
+																calScore_list[9] = (hsv_score + 1) / 2 + (fea_score_4 * 1); //
 																calScore_list[10] = (hsv_score_2 + 1) / 2 + (fea_score_4 * 1);
-																calScore_list[11] = (hsv_score_3 + 1) / 2 + (fea_score_4 * 1);
+																calScore_list[11] = (hsv_score_3 + 1) / 2 + (fea_score_4 * 1); //**//
 																calScore_list[12] = (hsv_score_4 + 1) / 2 + (fea_score_4 * 1);
 
+																calScore_list[13] = (hsv_score + 1) / 2 + (fea_score_4 * 0.5); // beach , building
+																calScore_list[14] = (hsv_score + 1) / 2 + (fea_score_4 * 2);
+
 																// fea_score_4
-																for (int i = 0; i < calScore_list.size(); i++) {
-																		iss_list[i].push_back(ImgScore(fileIndex, calScore_list[i]));
+																for (int k = 0; k < calScore_list.size(); k++) {
+																		iss_list_[i][k].push_back(ImgScore(fileIndex, calScore_list[k]));
 																}
 
 														} else if (useHsv) {
@@ -345,57 +401,61 @@ eachInput:
 														} else if (useFea) {
 																//calScore = fea_score;
 														}
+												}// each valid_index
 
-												} catch (Exception e) {
-														printf(" -----ERROR-----img#%i, %s\n", fileIndex, e.msg);
-														errorIndex.push_back(fileIndex);
-												}
-
-												if (fileIndex % 50 == 0)
-														printf("%i%% ", (fileIndex + 1) / 10);
-										}
-										cout << endl;
-
-										//// compare hsv
-										//Mat src_hsv = rgbMat_to_hsvHist(src_input);
-
-										//for (int i = 0; i < features.size(); ++i)
-										//	imgScoreResult.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
-
-										reportImgError(errorIndex);
-
-										ScoreReport sr;
-										// ===== sort method 1 // for hsv? , or (1 - fea)
-										for (int i = 0; i < iss_list.size(); i++) {
-												sort(iss_list[i].rbegin(), iss_list[i].rend());
-												sr = ScoreReport(iss_list[i], inputIndex);
-												bestMData.update(sr, i + 1, hbins, sbins, minH);
+										} catch (Exception e) {
+												printf(" -----ERROR-----img#%i, %s\n", fileIndex, e.msg);
+												errorIndex.push_back(fileIndex);
 										}
 
-										//// ===== sort method 3
-										//for (ImgScore &is : iss) {
-										//	is.score = abs(is.score);
-										//}
-										//sort(iss.begin(), iss.end());
-										//sr = ScoreReport(iss, inputIndex);
-										//bestMData.update(sr, 3, hbins, sbins, minH);
+										if (fileIndex % 50 == 0)
+												printf("%i%% ", (fileIndex + 1) / 10);
+								}
+								cout << endl;
 
-										//// ===== sort method 4
-										//sort(iss.rbegin(), iss.rend());
-										//sr = ScoreReport(iss, inputIndex);
-										//bestMData.update(sr, 4, hbins, sbins, minH);
+								//// compare hsv
+								//Mat src_hsv = rgbMat_to_hsvHist(src_input);
 
-										printf(" - ===== End of minHessian : %i =====\n", minH);
-										printf(" - ===== End of hbin : %i , sbin: %i \n", hbins, sbins);
-										bestMData.report();
-										if (!useHsv) { goto fea_only; }
-								} // sbins
-						} // hbins
-				fea_only:
-						if (!useFea) { break; }
-				} // minH
-				bestMData_[inputIndex] = bestMData;
-		} // each input index
+								//for (int i = 0; i < features.size(); ++i)
+								//	imgScoreResult.push_back(ImgScore(i, compareHist(features[i], src_hsv, 0)));
+
+								reportImgError(errorIndex);
+
+								ScoreReport sr;
+								// ===== sort method 1 // for hsv? , or (1 - fea)
+								for each (int i in valid_indexs) {
+										for (int k = 0; k < iss_list_[i].size(); k++) {
+												sort(iss_list_[i][k].rbegin(), iss_list_[i][k].rend());
+												sr = ScoreReport(iss_list_[i][k], i);
+												bestMData_[i].update(sr, k + 1, hbins, sbins, minH);
+										}
+								}
+								//// ===== sort method 3
+								//for (ImgScore &is : iss) {
+								//	is.score = abs(is.score);
+								//}
+								//sort(iss.begin(), iss.end());
+								//sr = ScoreReport(iss, inputIndex);
+								//bestMData.update(sr, 3, hbins, sbins, minH);
+
+								//// ===== sort method 4
+								//sort(iss.rbegin(), iss.rend());
+								//sr = ScoreReport(iss, inputIndex);
+								//bestMData.update(sr, 4, hbins, sbins, minH);
+
+								printf(" - ===== End of minHessian : %i =====\n", minH);
+								printf(" - ===== End of hbin : %i , sbin: %i \n", hbins, sbins);
+								for each (int i in valid_indexs) {
+										bestMData_[i].report();
+								}
+								if (!useHsv) { goto fea_only; }
+						} // sbins
+				} // hbins
+		fea_only:
+				if (!useFea) { break; }
+		} // minH
+
+		//} // each input index
 
 		for each (int valid_index in valid_indexs) {
 				printf(" ===== Best of %s =====\n", files[valid_index].c_str());
