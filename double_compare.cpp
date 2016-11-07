@@ -98,19 +98,21 @@ struct bestMethodData {
 		int method = 0; // method
 		int bins[2];
 		int minH = 0;
-		bool Amethod[16]; // index start from 1, not 0
+		bool a_method[16];
 		int firstWrong;
 		ScoreReport save_sr;
+
+		bestMethodData() { for (int i = 0; i < sizeof(a_method); i++) { a_method[i] = false; } }
 
 		void update(ScoreReport sr, int _method, int hbins, int sbins, int minHe) {
 				sr.reportSorted(100);
 				sr.report();
 				bestMethodData bmd;
 				if (sr.bestGradeAindex != -1) {
-						Amethod[_method] = true;
+						a_method[_method - 1] = true;
 				}
 
-				if (sr.bestGradeAindex != -1 && sr.bestGradeAPR() > (bestGradeAP * bestGradeAR)) {
+				if (sr.bestGradeAindex != -1 && sr.bestGradeAPR() >(bestGradeAP * bestGradeAR)) {
 						bestGradeAP = sr.bestGradeAP;
 						bestGradeAR = sr.bestGradeAR;
 						score = sr.score(sr.bestGradeAindex);
@@ -130,12 +132,9 @@ struct bestMethodData {
 				}
 		}
 		void report() {
-				cout << " - A method: ";
-				for (int i = 0; i < 16; i++) {
-						if (Amethod[i])
-								cout << i << ", ";
-						cout << endl;
-				}
+				cout << " - A method (1~n): ";
+				for (int i = 0; i < 16; i++) { if (a_method[i])	cout << (i + 1) << ", "; }
+				cout << endl;
 				printf(" - Current best hbins: %i , sbins: %i , method: %i , minH: %i \n", bins[0], bins[1], method, minH);
 				printf(" - Current best bestGradeAP: %.4f%% , GradeAR: %.4f%% , score: %.4f , firstWrong:%i  \n\n", bestGradeAP, bestGradeAR, score, save_sr.firstWrong);
 		}
@@ -332,9 +331,9 @@ eachInput:
 																calScore_list[8] = (hsv_score_4 + 1) / 2 + (fea_score * 1);
 
 																calScore_list[9] = (hsv_score + 1) / 2 + (fea_score_4 * 1);
-																calScore_list[10] = (hsv_score_D + 1) / 2 + (fea_score_4 * 1);
-																calScore_list[11] = (hsv_score_D + 1) / 2 + (fea_score_4 * 1);
-																calScore_list[12] = (hsv_score_D + 1) / 2 + (fea_score_4 * 1);
+																calScore_list[10] = (hsv_score_2 + 1) / 2 + (fea_score_4 * 1);
+																calScore_list[11] = (hsv_score_3 + 1) / 2 + (fea_score_4 * 1);
+																calScore_list[12] = (hsv_score_4 + 1) / 2 + (fea_score_4 * 1);
 
 																// fea_score_4
 																for (int i = 0; i < calScore_list.size(); i++) {
@@ -386,8 +385,8 @@ eachInput:
 										//sr = ScoreReport(iss, inputIndex);
 										//bestMData.update(sr, 4, hbins, sbins, minH);
 
-										printf(" - ===== End of minHessian=%i =====\n", minH);
-										printf(" - ===== Finished hbin : %i , sbin: %i \n", hbins, sbins);
+										printf(" - ===== End of minHessian : %i =====\n", minH);
+										printf(" - ===== End of hbin : %i , sbin: %i \n", hbins, sbins);
 										bestMData.report();
 										if (!useHsv) { goto fea_only; }
 								} // sbins
