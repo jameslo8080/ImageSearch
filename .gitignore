@@ -3,3 +3,4 @@
 !*.h
 !*.txt
 _4_to_400.txt
+!tutorial.vcxproj.filters

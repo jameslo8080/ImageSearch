@@ -20,4 +20,4 @@ using namespace cv;
 void save_allSURFDescriptions_YML(bool greyscale = false);
 void save_allSIFTDescriptions_YML(bool greyscale = false);
 void save_allORBDescriptions_YML(bool greyscale = false);
-void save_BOW(string featureName, int dictionarySize = 1000, bool greyscale = false);
+void save_BOW(string featureName, int dictionarySize = 1000, bool greyscale = false, int partSize = 10);

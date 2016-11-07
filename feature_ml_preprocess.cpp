@@ -1,8 +1,8 @@
 #include "feature_preprocess.h"
 
-void save_BOW(string featureName, int dictionarySize, bool greyScale) {
+void save_BOW(string featureName, int dictionarySize, bool greyScale, int partSize) {
 
-	vector<Mat> allDescriptors = load_allDescriptions_YML(featureName, 10, greyScale);
+	vector<Mat> allDescriptors = load_allDescriptions_YML(featureName, partSize, greyScale);
 
 	Mat mallDescriptors;
 

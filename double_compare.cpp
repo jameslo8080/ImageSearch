@@ -323,14 +323,23 @@ start:
 
 
 																// ===== Middle Divide Descriptor =====
+<<<<<<< HEAD
 																for (int j = 0; j < src_d_descriptors_[i].size(); j++) {
 																		fea_score_MD += 1 - descriptors_cal_match(src_d_descriptors_[i][j], dmimg_descriptor);
+=======
+																for (int i = 0; i < src_d_descriptors.size(); i++) {
+																	fea_score_MD += 1 - feature_cmp(src_d_descriptors[i], dmimg_descriptor);
+>>>>>>> origin/master
 																}
 																if (src_d_descriptors_[i].size() > 0)
 																		fea_score_MD /= src_d_descriptors_[i].size();
 
 																// ===== Middle Overall Descriptor =====
+<<<<<<< HEAD
 																fea_score_MO += (1 - descriptors_cal_match(src_g_m_descriptor_[i], dmimg_descriptor));
+=======
+																fea_score_MO += (1 - feature_cmp(src_g_m_descriptor, dmimg_descriptor));
+>>>>>>> origin/master
 
 																if (src_d_descriptors_[i].size() > 0) {
 																		fea_score = fea_score_MD *0.5 + fea_score_MO * 0.5;
@@ -341,7 +350,7 @@ start:
 																		fea_score = fea_score_MO;
 														}
 														//for (int i = 0; i < input_descriptors.size(); i++) {
-														// fea_score += descriptors_cal_match(input_descriptors[i], dmimg_descriptor);
+														// fea_score += feature_cmp(input_descriptors[i], dmimg_descriptor);
 														//}
 														//fea_score /= (double) input_descriptors.size() * (input_descriptors.size() + 1) / 2;
 														//fea_score /= input_descriptors.size();
@@ -570,10 +579,10 @@ void double_compare_bus() {
 								}
 
 
-								//double score = descriptors_cal_match(descriptors_1, descriptors_dbimg);
+								//double score = feature_cmp(descriptors_1, descriptors_dbimg);
 								double score = 0;
 								for (int i = 0; i < busPreFeature.size(); i++) {
-										score += descriptors_cal_match(precut_descriptors[i], descriptors_dbimg);
+										score += feature_cmp(precut_descriptors[i], descriptors_dbimg);
 								}
 								score /= busPreFeature.size();
 								iss.push_back(ImgScore(i, score));
