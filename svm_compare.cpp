@@ -58,7 +58,7 @@ double svm_compare(Mat src_input, int index) {
 	svmtrained = true;
 
 	cout << "Predict" << endl;
-	Mat src_descriptor = cal_descriptor(bowExtractor, testMat, featureName);
+	Mat src_descriptor = cal_descriptor_bow(bowExtractor, testMat, featureName);
 	float response = svm.predict(src_descriptor);
 
 	cout << index << " | svm result: " << response << endl;

@@ -63,6 +63,19 @@ Mat rgbMat_to_hsvHist(Mat src_base) {
 	return hist_base;
 }
 
+Mat contrast_brightness_change(const Mat& img, double alpha, double beta) {
+	Mat new_image = Mat::zeros(img.size(), img.type());
+
+	for (int y = 0; y < img.rows; y++) {
+		for (int x = 0; x < img.cols; x++) {
+			for (int c = 0; c < img.channels(); c++) {
+				new_image.at<Vec3b>(y, x)[c] =
+					saturate_cast<uchar>(alpha*(img.at<Vec3b>(y, x)[c])) + beta;
+			}
+		}
+	}
+	return new_image;
+}
 
 vector<Mat> divide_image(Mat raw_img, int n_row, int n_col) {
 	int w = raw_img.cols, h = raw_img.rows;
@@ -81,6 +94,18 @@ vector<Mat> rgbMat_to_divided_hsvHist(Mat src_base, int n_row, int n_col) {
 	vector<Mat> res;
 	for (auto img : imgs)
 		res.push_back(rgbMat_to_hsvHist(img));
+	return res;
+}
+
+Mat crop_ellipse(const Mat& im1) {
+	double cx = im1.cols / 2.0, cy = im1.rows / 2.0;
+	double lx = cx * 0.8, ly = cy*0.8;
+
+	Mat im2(im1.rows, im1.cols, CV_8UC1, Scalar(0, 0, 0));
+	ellipse(im2, Point(cx, cy), Size(lx, ly), 0, 0, 360, Scalar(255, 255, 255), -1, 8);
+
+	Mat res;
+	bitwise_and(im1, im2, res);
 	return res;
 }
 
@@ -116,7 +141,7 @@ Mat calORBDescriptor(Mat input) {
 
 // =====================
 
-Mat surf_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
+Mat surf_cal_descriptor_bow(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
 	SurfFeatureDetector detector;
 	vector<KeyPoint> keyPoints;
 	Mat descriptors;
@@ -125,7 +150,7 @@ Mat surf_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_i
 	return descriptors;
 }
 
-Mat sift_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
+Mat sift_cal_descriptor_bow(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
 	SiftFeatureDetector detector;
 	vector<KeyPoint> keyPoints;
 	Mat descriptors;
@@ -134,7 +159,7 @@ Mat sift_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_i
 	return descriptors;
 }
 
-Mat orb_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
+Mat orb_cal_descriptor_bow(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img) {
 	OrbFeatureDetector detector;
 	vector<KeyPoint> keyPoints;
 	Mat descriptors;
@@ -143,12 +168,12 @@ Mat orb_cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_im
 	return descriptors;
 }
 
-Mat cal_descriptor(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img, string type) {
+Mat cal_descriptor_bow(BOWImgDescriptorExtractor& bowExtractor, const Mat &db_img, string type) {
 	if (type == "SURF")
-		return surf_cal_descriptor(bowExtractor, db_img);
+		return surf_cal_descriptor_bow(bowExtractor, db_img);
 	else if (type == "SIFT")
-		return sift_cal_descriptor(bowExtractor, db_img);
+		return sift_cal_descriptor_bow(bowExtractor, db_img);
 	else
-		return orb_cal_descriptor(bowExtractor, db_img);
+		return orb_cal_descriptor_bow(bowExtractor, db_img);
 
 }

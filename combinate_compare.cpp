@@ -1,5 +1,6 @@
 #include "compare.h"
 
+// pixel + hsv
 double combin_compare_1(Mat src_input, int inputIndex) {
 	Mat hsv_input = rgbMat_to_hsvHist(src_input);
 	vector<Mat> imgs = load_imgs();
@@ -19,7 +20,7 @@ double combin_compare_1(Mat src_input, int inputIndex) {
 	vector<ImgScore> imgScoreResult(len);
 	for (int i = 0; i < len; ++i) {
 		double score = 0.25*n_pixelscore[i] + 0.75*n_hsvhistscore[i];
-		imgScoreResult.push_back(ImgScore(i, score));
+		imgScoreResult[i] = ImgScore(i, score);
 	}
 
 	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
@@ -29,6 +30,7 @@ double combin_compare_1(Mat src_input, int inputIndex) {
 	return sr.acc100;
 }
 
+// equalized + greyscale
 double combin_compare_2(Mat src_input, int inputIndex) {
 	
 	Mat greyMat = equalized(src_input);
@@ -44,7 +46,7 @@ double combin_compare_2(Mat src_input, int inputIndex) {
 		Mat greyHist2 = greyscaleHist(greyMat2);
 
 		double score = hist_cmp(greyHist, greyHist2);
-		imgScoreResult.push_back(ImgScore(i, score));
+		imgScoreResult[i] = ImgScore(i, score);
 	}
 
 	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
@@ -54,8 +56,7 @@ double combin_compare_2(Mat src_input, int inputIndex) {
 	return sr.acc100;
 }
 
-
-
+// hsv + equalized + greyscale
 double combin_compare_3(Mat src_input, int inputIndex, double r1, double r2) {
 	Mat hsv_input = rgbMat_to_hsvHist(src_input);
 	vector<Mat> imgs = load_imgs();
@@ -82,7 +83,7 @@ double combin_compare_3(Mat src_input, int inputIndex, double r1, double r2) {
 	vector<ImgScore> imgScoreResult(len);
 	for (int i = 0; i < len; ++i) {
 		double score = r1*n_hsvhistscore[i] + r2*n_greyscalescore[i];
-		imgScoreResult.push_back(ImgScore(i, score));
+		imgScoreResult[i] = ImgScore(i, score);
 	}
 
 	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
@@ -92,7 +93,7 @@ double combin_compare_3(Mat src_input, int inputIndex, double r1, double r2) {
 	return sr.acc100;
 }
 
-
+// PSNR + equalized + greyscale
 double combin_compare_4(Mat src_input, int inputIndex, double r1, double r2) {
 	vector<Mat> imgs = load_imgs();
 	vector<Mat> hsvHist = load_hsvHist();
@@ -118,7 +119,7 @@ double combin_compare_4(Mat src_input, int inputIndex, double r1, double r2) {
 	vector<ImgScore> imgScoreResult(len);
 	for (int i = 0; i < len; ++i) {
 		double score = r1*psnrscore[i] + r2*greyscalescore[i];
-		imgScoreResult.push_back(ImgScore(i, score));
+		imgScoreResult[i] = ImgScore(i, score);
 	}
 
 	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
@@ -127,3 +128,72 @@ double combin_compare_4(Mat src_input, int inputIndex, double r1, double r2) {
 
 	return sr.acc100;
 }
+
+// contrast + hsv hist
+double combin_compare_5(Mat src_input, int inputIndex, double contrast) {
+	Mat im1 = contrast_brightness_change(src_input, contrast, 0);
+	Mat hsv_input = rgbMat_to_hsvHist(im1);
+
+	vector<Mat> imgs = load_imgs();
+
+	int len = imgs.size();
+
+	vector<ImgScore> imgScoreResult(len);
+	for (int i = 0; i < len; ++i) {
+		Mat im2 = contrast_brightness_change(imgs[i], contrast, 0);
+		Mat hsvhist = rgbMat_to_hsvHist(im2);
+		double score = hist_cmp(hsvhist, hsv_input);
+		imgScoreResult[i] = ImgScore(i, score);
+	}
+
+	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
+	ScoreReport sr(imgScoreResult, inputIndex);
+	sr.report();
+
+	return sr.acc100;
+}
+
+// contrast + split hsv
+double combin_compare_6(Mat src_input, int inputIndex, double contrast) {
+	Mat im1 = contrast_brightness_change(src_input, contrast, 0);
+	vector<Mat> hsv_input = rgbMat_to_divided_hsvHist(im1, 3, 3);
+
+	vector<Mat> imgs = load_imgs();
+
+	int len = imgs.size();
+
+	vector<ImgScore> imgScoreResult(len);
+	for (int i = 0; i < len; ++i) {
+		Mat im2 = contrast_brightness_change(imgs[i], contrast, 0);
+		double score = hsv_splited_cmp(hsv_input, im2, 0);
+		imgScoreResult[i] = ImgScore(i, score);
+	}
+
+	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
+	ScoreReport sr(imgScoreResult, inputIndex);
+	sr.report();
+
+	return sr.acc100;
+}
+
+// splited + equalized + greyscale
+
+// rgb + splited
+
+// rgb + circle mask
+
+// hsv + circle mask
+
+// equalized + greyscale + circle mask
+
+// hsv + surf
+
+// hsv + sift
+
+// hsv + orb
+
+// canny
+
+// glcm
+
+// lbp

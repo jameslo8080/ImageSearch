@@ -23,9 +23,17 @@ double hsv_splited_cmp(const Mat& img1, const Mat& img2, int row, int col, int m
 	return scores / (double)tot;
 }
 
-double hsv_splited_cmp(vector<Mat> splited_img1, const Mat& img2, int row, int col, int method) {
+double hsv_splited_cmp(const vector<Mat>& splited_img1, const Mat& img2, int row, int col, int method) {
 	int tot = row*col;
 	vector<Mat> splited_img2 = rgbMat_to_divided_hsvHist(img2, row, col);
+	double scores = 0;
+	for (int i = 0; i < tot; ++i)
+		scores += fabs(compareHist(splited_img1[i], splited_img2[i], method));
+	return scores / (double)tot;
+}
+
+double hsv_splited_cmp(const vector<Mat>& splited_img1, const vector<Mat>& splited_img2, int row, int col, int method) {
+	int tot = row*col;
 	double scores = 0;
 	for (int i = 0; i < tot; ++i)
 		scores += fabs(compareHist(splited_img1[i], splited_img2[i], method));

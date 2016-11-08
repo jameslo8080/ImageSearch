@@ -15,7 +15,7 @@ vector<pair<int, Mat> > load_mlSample(BOWImgDescriptorExtractor& bowExtractor, s
 		cout << "Calculating features" << endl;
 		for (int i = 0; i < imgs.size(); ++i) {
 			ids.push_back(i / 100);
-			Mat descriptor = cal_descriptor(bowExtractor, imgs[i], featureName);
+			Mat descriptor = cal_descriptor_bow(bowExtractor, imgs[i], featureName);
 
 			if (greyscale) {
 				Mat greyMat;

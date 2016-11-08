@@ -112,19 +112,20 @@ double solve(int index) {
 	// double acc = orb_compare(src_input, index);
 	// double acc = psnr_compare(src_input, index);
 	// double acc = mssim_compare(src_input, index);
+	double acc = combin_compare_5(src_input, index, 1);
 
-	double acc = combin_compare_4(src_input, index);
 	return acc;
 }
 
 void test_combin() {
 	double besti = -1, maxac = 0;
-	for (double i = 0; i <= 1; i += 0.1) {
-		double j = 1.0 - i;
+	for (double i = 1; i <= 2.5; i += 0.1) {
+		printf("\n -- i = %lf -- \n", i);
+
 		double acc = 0;
-		printf("\ni: %lf <> j: %lf\n", i, j);
 		for (auto index : valid_indexs) {
-			acc += solve(index);
+			Mat src_input = get_input_img(index);
+			acc += combin_compare_5(src_input, index, i);
 		}
 		if (acc > maxac) {
 			maxac = acc;

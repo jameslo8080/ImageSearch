@@ -26,7 +26,8 @@ double pixel_compare(const Mat& img1, const Mat& img2);
 double hist_cmp(const Mat& img1, const Mat& img2, int method = 0);
 double hsv_cmp(const Mat& img1, const Mat& img2, int method = 0);
 double hsv_splited_cmp(const Mat& img1, const Mat& img2, int row = 2, int col = 2, int method = 0);
-double hsv_splited_cmp(vector<Mat> splited_img1, const Mat& img2, int row = 2, int col = 2, int method = 0);
+double hsv_splited_cmp(const vector<Mat>& splited_img1, const Mat& img2, int row = 2, int col = 2, int method = 0);
+double hsv_splited_cmp(const vector<Mat>& splited_img1, const vector<Mat>& splited_img2, int row, int col, int method);
 
 double getPSNR(const Mat& I1, const Mat& I2);
 Scalar getMSSIM(const Mat& i1, const Mat& i2);
