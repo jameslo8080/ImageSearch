@@ -165,8 +165,81 @@ double combin_compare_6(Mat src_input, int inputIndex, double contrast) {
 	vector<ImgScore> imgScoreResult(len);
 	for (int i = 0; i < len; ++i) {
 		Mat im2 = contrast_brightness_change(imgs[i], contrast, 0);
-		double score = hsv_splited_cmp(hsv_input, im2, 0);
+		double score = hsv_splited_cmp(hsv_input, im2, 3, 3, 0);
 		imgScoreResult[i] = ImgScore(i, score);
+	}
+
+	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
+	ScoreReport sr(imgScoreResult, inputIndex);
+	sr.report();
+
+	return sr.acc100;
+}
+
+
+// PSNR + contrast
+double combin_compare_7(Mat src_input, int inputIndex, double contrast) {
+	Mat im1 = contrast_brightness_change(src_input, contrast, 0);
+	Mat hsv_input = rgbMat_to_hsvHist(im1);
+
+	vector<Mat> imgs = load_imgs();
+
+	int len = imgs.size();
+
+	vector<ImgScore> imgScoreResult(len);
+	for (int i = 0; i < len; ++i) {
+		Mat im2 = contrast_brightness_change(imgs[i], contrast, 0);
+		Mat img = rgbMat_to_hsvHist(im2);
+
+		imgScoreResult[i] = ImgScore(i, getPSNR(hsv_input, img));
+	}
+
+	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
+	ScoreReport sr(imgScoreResult, inputIndex);
+	sr.report();
+
+	return sr.acc100;
+}
+
+// PSNR + divided + contrast
+double combin_compare_7a(Mat src_input, int inputIndex, double contrast) {
+	Mat im1 = contrast_brightness_change(src_input, contrast, 0);
+	vector<Mat> hsv_input = rgbMat_to_divided_hsvHist(im1, 3, 3);
+
+	vector<Mat> imgs = load_imgs();
+
+	int len = imgs.size();
+
+	vector<ImgScore> imgScoreResult(len);
+	for (int i = 0; i < len; ++i) {
+		Mat im2 = contrast_brightness_change(imgs[i], contrast, 0);
+		vector<Mat> img = rgbMat_to_divided_hsvHist(im2, 3, 3);
+
+		imgScoreResult[i] = ImgScore(i, getPSNR_divided(hsv_input, img, 3, 3));
+	}
+
+	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
+	ScoreReport sr(imgScoreResult, inputIndex);
+	sr.report();
+
+	return sr.acc100;
+}
+
+// MSSIM + contrast
+double combin_compare_8(Mat src_input, int inputIndex, double contrast) {
+	Mat im1 = contrast_brightness_change(src_input, contrast, 0);
+	Mat hsv_input = rgbMat_to_hsvHist(im1);
+
+	vector<Mat> imgs = load_imgs();
+
+	int len = imgs.size();
+
+	vector<ImgScore> imgScoreResult(len);
+	for (int i = 0; i < len; ++i) {
+		Mat im2 = contrast_brightness_change(imgs[i], contrast, 0);
+		Mat img = rgbMat_to_hsvHist(im2);
+		Scalar ret = getMSSIM(img, hsv_input);
+		imgScoreResult[i] = ImgScore(i, ret[0]);
 	}
 
 	sort(imgScoreResult.rbegin(), imgScoreResult.rend());

@@ -8,7 +8,7 @@ double mssim_compare(Mat src_input, int inputIndex) {
 	vector<ImgScore> imgScoreResult;
 	for (int i = 0; i < features.size(); ++i) {
 		Scalar res = getMSSIM(features[i], src_hsv);
-		double score = res[0] + res[1] + res[2];
+		double score = res[0];
 		imgScoreResult.push_back(ImgScore(i, score));
 	}
 

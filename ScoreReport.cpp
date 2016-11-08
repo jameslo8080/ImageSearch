@@ -16,8 +16,8 @@ ScoreReport::ScoreReport(vector<ImgScore>& scoreList, int inputIndex) : scoreLis
 	this->scoreList = scoreList;
 	this->inputIndex = inputIndex;
 
-	for (size_t i = 0; i < scoreList.size() && correct != 100; i++) {
-
+	for (size_t i = 0; i < scoreList.size(); i++) {
+		
 		if (isMatch(i))
 			correct++;
 		else if (firstWrong == 1000) {
@@ -53,8 +53,14 @@ ScoreReport::ScoreReport(vector<ImgScore>& scoreList, int inputIndex) : scoreLis
 				bestGradeAR = r;
 			}
 		}
-		if (i <= 99) {
+
+		if (i == 99) {
 			acc100 = p;
+		}
+
+		if (correct == 100) {
+			if (firstWrong == 1000) firstWrong = i + 1;
+			break;
 		}
 	}
 }

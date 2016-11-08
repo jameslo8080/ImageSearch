@@ -30,6 +30,7 @@ double hsv_splited_cmp(const vector<Mat>& splited_img1, const Mat& img2, int row
 double hsv_splited_cmp(const vector<Mat>& splited_img1, const vector<Mat>& splited_img2, int row, int col, int method);
 
 double getPSNR(const Mat& I1, const Mat& I2);
+double getPSNR_divided(const vector<Mat>& I1, const vector<Mat>& I2, int col, int row);
 Scalar getMSSIM(const Mat& i1, const Mat& i2);
 
 

@@ -42,3 +42,6 @@ double combin_compare_3(Mat src_input, int inputIndex, double r1 = 0.5, double r
 double combin_compare_4(Mat src_input, int inputIndex, double r1 = 0.5, double r2 = 0.5);
 double combin_compare_5(Mat src_input, int inputIndex, double contrast = 1.2);
 double combin_compare_6(Mat src_input, int inputIndex, double contrast = 1.2);
+double combin_compare_7(Mat src_input, int inputIndex, double contrast = 1.2);
+double combin_compare_7a(Mat src_input, int inputIndex, double contrast = 1.2);
+double combin_compare_8(Mat src_input, int inputIndex, double contrast = 1);

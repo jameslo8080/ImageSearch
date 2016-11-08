@@ -44,27 +44,15 @@ string files[] = { "man", "beach", "building", "bus", "dinosaur", "elephant", "f
 int valid_indexs[] = { 0, 1, 2, 3, 4, 6, 7 };
 
 string getFilePath(int index) {
-	if (index < 0 || index >= sizeof(files))
+	if (index < 0 || index >= 10)
 		index = 0;
-	string s("./");
-	s.append(files[index]).append(".jpg");
+	string s = "./" + files[index] + ".jpg";
 	return s;
 }
 
 void file_select_instruction() {
 	cout << "Which file? (0:'man' 1:'beach', 2:'building', 3:'bus', 4:'dinosaur', " << endl
 		<< "            6:'flower', 7:'horse')? " << endl;
-}
-
-string askFile() {
-	file_select_instruction();
-	int index;
-	cin >> index;
-	while (index < -2 || index == 5 || index > 7) {
-		file_select_instruction();
-		cin >> index;
-	}
-	return getFilePath(index);
 }
 
 // "../image.orig/685.jpg"
@@ -88,8 +76,6 @@ Mat get_input_img(int index) {
 }
 
 void waitESC() {
-	// Wait for the user to press a key in the GUI window.
-	//Press ESC to quit
 	int keyValue = 0;
 	while (keyValue >= 0) {
 		keyValue = cvWaitKey(0);
@@ -112,20 +98,20 @@ double solve(int index) {
 	// double acc = orb_compare(src_input, index);
 	// double acc = psnr_compare(src_input, index);
 	// double acc = mssim_compare(src_input, index);
-	double acc = combin_compare_5(src_input, index, 1);
+	double acc = combin_compare_8(src_input, index, 1);
 
 	return acc;
 }
 
 void test_combin() {
 	double besti = -1, maxac = 0;
-	for (double i = 1; i <= 2.5; i += 0.1) {
+	for (double i = 1; i <= 1.4; i += 0.03) {
 		printf("\n -- i = %lf -- \n", i);
 
 		double acc = 0;
 		for (auto index : valid_indexs) {
 			Mat src_input = get_input_img(index);
-			acc += combin_compare_5(src_input, index, i);
+			acc += combin_compare_7a(src_input, index, i);
 		}
 		if (acc > maxac) {
 			maxac = acc;
@@ -242,12 +228,3 @@ int main(int argc, char** argv) {
 
 	return 0;
 }
-
-
-/*
-target:
-
-using setting:
-img:0 r:5, c:5, #1:T Acc(100): x.xx%, bestP: x.xx%(s:xx.xx), bestR: x.xx%(s:xx.xx)
-img:0 r:5, c:6, #1:F Acc(100): x.xx%,
-*/

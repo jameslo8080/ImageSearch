@@ -21,3 +21,11 @@ double getPSNR(const Mat& I1, const Mat& I2)
 		return psnr;
 	}
 }
+
+double getPSNR_divided(const vector<Mat>& I1, const vector<Mat>& I2, int col, int row) {
+	int tot = col*row;
+	
+	double res = 0;
+	for (int i = 0; i < tot; ++i) res += getPSNR(I1[i], I2[i]);
+	return res;
+}
