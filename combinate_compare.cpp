@@ -485,7 +485,27 @@ double combin_compare_17(Mat src_input, int inputIndex, double contrast) {
 }
 
 // canny
+double combin_compare_18(Mat src_input, int inputIndex, double contrast) {
+	vector<Mat> imgs = load_imgs();
+	int len = imgs.size();
 
-// glcm
+	Mat tim1 = contrast_brightness_change(src_input, contrast, 0);
+	vector<vector<Point> > imc_cont1 = getCannyContours(tim1);
 
-// lbp
+	vector<ImgScore> imgScoreResult(len);
+	for (int i = 0; i < len; ++i) {
+
+		Mat tim2 = contrast_brightness_change(imgs[i], contrast, 0);
+		vector<vector<Point> > imc_cont2 = getCannyContours(tim2);
+
+		double score = contour_cmp(imc_cont1, imc_cont2);
+		
+		imgScoreResult[i] = ImgScore(i, score);
+	}
+
+	sort(imgScoreResult.rbegin(), imgScoreResult.rend());
+	ScoreReport sr(imgScoreResult, inputIndex);
+	sr.report();
+
+	return sr.acc100;
+}

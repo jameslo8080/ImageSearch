@@ -35,3 +35,5 @@ Scalar getMSSIM(const Mat& i1, const Mat& i2);
 
 
 double feature_cmp(const Mat& descriptors_1, const Mat& descriptors_2);
+
+double contour_cmp(vector<vector<Point> > a, vector<vector<Point> > b);
