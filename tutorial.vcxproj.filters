@@ -93,6 +93,9 @@
     <ClCompile Include="combinate_compare.cpp">
       <Filter>Source Files\compare_function</Filter>
     </ClCompile>
+    <ClCompile Include="contour_cmp.cpp">
+      <Filter>Source Files\compare_function\core_cmp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="compare.h">

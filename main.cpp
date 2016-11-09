@@ -113,7 +113,7 @@ void test_combin() {
 		double acc = 0;
 		for (auto index : valid_indexs) {
 			Mat src_input = get_input_img(index);
-			acc += combin_compare_15(src_input, index, i);
+			acc += combin_compare_18(src_input, index, i);
 		}
 		if (acc > maxac) {
 			maxac = acc;
