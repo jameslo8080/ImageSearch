@@ -222,12 +222,13 @@ declare:
 		//int inputIndex = -1;
 		int hbins_[3] = { 24, 24, 8 };
 		int sbins_[3] = { 28, 28, 4 };
-		int minH_[3] = { 196, 196, 32 };
+		int minH_[3] = { 128, 128, 32 };
 		int hsv_divide_[2] = { 4, 4 };
 		int fea_divide_[2] = { 7, 7 };
 
 		double higherContrast_src = 1.2;
 		double higherContrast_dbimg = 1.2;
+		int method_count = METHOD_COUNT;
 
 		int hce_method_src = 0;
 		//int hce_method_dbimg = 0;
@@ -338,10 +339,12 @@ eachSetting:
 										}
 
 										// ===== Feature descriptor =====
+										vector<Mat> src_g_descriptor_(8);
 										vector<Mat> src_g_m_descriptor_(8);
 										vector<vector<Mat>> src_d_descriptors_(8);
 										if (useFea) {
 												for each (int i in valid_indexs) {
+														src_g_descriptor_[i] = calSURFDescriptor_one(src_gray_[i], minH);
 														src_g_m_descriptor_[i] = calSURFDescriptor_one(src_gray_middle_[i], minH);
 
 														for (int j = 0; j < src_gray_divide_[i].size(); j++) {
@@ -361,7 +364,7 @@ eachSetting:
 
 										vector<vector<vector<ImgScore>>> iss_list_(8);
 										for (int i = 0; i < iss_list_.size(); i++) {
-												iss_list_[i] = vector<vector<ImgScore>>(15);
+												iss_list_[i] = vector<vector<ImgScore>>(method_count);
 										}
 
 										// ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
@@ -430,26 +433,29 @@ eachSetting:
 																double hsv_score = 0;
 																double hsv_score_2 = 0;
 																double hsv_score_3 = 0;
-																double hsv_score_4 = 0;
-																double hsv_score_D = 0;
-																double hsv_score_MO = 0;
+																double hsv_score_4_D = 0;
+																double hsv_score_5_MOA = 0;
+
+																double hsv_score_D_only = 0;
+																double hsv_score_Middle_Overall = 0;
 
 																if (useHsv) {
 																		// divided overall
 																		for (int j = 0; j < dbimg_color_divide_hsv.size(); j++) {
-																				hsv_score_D += compareHist(src_color_divide_hsv_[i][j], dbimg_color_divide_hsv[i], CV_COMP_CORREL);
+																				hsv_score_D_only += compareHist(src_color_divide_hsv_[i][j], dbimg_color_divide_hsv[i], CV_COMP_CORREL);
 																		}
 																		if (dbimg_color_divide.size() > 0)
-																				hsv_score_D /= dbimg_color_divide.size();
+																				hsv_score_D_only /= dbimg_color_divide.size();
 
 																		// middle 
-																		hsv_score_MO = compareHist(src_middle_hsv_[i], dbimg_hsv_middle, CV_COMP_CORREL);
+																		hsv_score_Middle_Overall = compareHist(src_middle_hsv_[i], dbimg_hsv_middle, CV_COMP_CORREL);
 
 																		if (dbimg_color_divide.size() > 0) {
-																				hsv_score = hsv_score_D * 0.5 + hsv_score_MO  * 0.5;
-																				hsv_score_2 = hsv_score_D * 0.25 + hsv_score_MO  * 0.75;
-																				hsv_score_3 = hsv_score_D * 0.75 + hsv_score_MO  * 0.25;
-																				hsv_score_4 = hsv_score_D;
+																				hsv_score = hsv_score_D_only * 0.5 + hsv_score_Middle_Overall  * 0.5;
+																				hsv_score_2 = hsv_score_D_only * 0.25 + hsv_score_Middle_Overall  * 0.75;
+																				hsv_score_3 = hsv_score_D_only * 0.75 + hsv_score_Middle_Overall  * 0.25;
+																				hsv_score_4_D = hsv_score_D_only;
+																				hsv_score_5_MOA = hsv_score_Middle_Overall;
 																		} else
 																				hsv_score = 0;
 
@@ -466,39 +472,51 @@ eachSetting:
 																double fea_score = 0;
 																double fea_score_2 = 0;
 																double fea_score_3 = 0;
-																double fea_score_4 = 0;
+																double fea_score_4_MD = 0;
+																double fea_score_5_OA = 0;
+																double fea_score_6_MOA = 0;
 
-																double fea_score_MD = 0;
-																double fea_score_MO = 0;
+																double fea_score_Overall = 0;
+																double fea_score_Middle_D = 0;
+																double fea_score_Middle_Overall = 0;
 
 																if (useFea) {
-
-
+																		// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
+																		// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
+																		// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
+																		// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
+																		// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
 																		// ===== Middle Divide Descriptor =====
+																		fea_score_Overall = (1 - feature_cmp(src_g_descriptor_[i], dmimg_descriptor));
 
 																		for (int j = 0; j < src_d_descriptors_[i].size(); j++) {
-																				fea_score_MD += 1 - feature_cmp(src_d_descriptors_[i][j], dmimg_descriptor);
+																				fea_score_Middle_D += 1 - feature_cmp(src_d_descriptors_[i][j], dmimg_descriptor);
 																		}
+
+
+
 																		//								for (int i = 0; i < src_d_descriptors.size(); i++) {
 																		//									fea_score_MD += 1 - feature_cmp(src_d_descriptors[i], dmimg_descriptor);
 																		//>>>>>>> origin/master
 																		//								}
 																		if (src_d_descriptors_[i].size() > 0)
-																				fea_score_MD /= src_d_descriptors_[i].size();
+																				fea_score_Middle_D /= src_d_descriptors_[i].size();
 
 																		// ===== Middle Overall Descriptor =====
-																		fea_score_MO += (1 - feature_cmp(src_g_m_descriptor_[i], dmimg_descriptor));
+																		fea_score_Middle_Overall += (1 - feature_cmp(src_g_m_descriptor_[i], dmimg_descriptor));
 																		//=======
 																		//								fea_score_MO += (1 - feature_cmp(src_g_m_descriptor, dmimg_descriptor));
 																		//>>>>>>> origin/master
 
 																		if (src_d_descriptors_[i].size() > 0) {
-																				fea_score = fea_score_MD *0.5 + fea_score_MO * 0.5;
-																				fea_score_2 = fea_score_MD * 0.25 + fea_score_MO * 0.75;
-																				fea_score_3 = fea_score_MD * 0.75 + fea_score_MO * 0.25;
-																				fea_score_4 = fea_score_MD;
+																				fea_score = fea_score_Middle_D *0.5 + fea_score_Middle_Overall * 0.5;
+																				fea_score_2 = fea_score_Middle_D * 0.25 + fea_score_Middle_Overall * 0.75;
+																				fea_score_3 = fea_score_Middle_D * 0.75 + fea_score_Middle_Overall * 0.25;
+																				fea_score_4_MD = fea_score_Middle_D;
+																				fea_score_5_OA = fea_score_Overall;
+																				fea_score_6_MOA = fea_score_Middle_Overall;
 																		} else
-																				fea_score = fea_score_MO;
+																				fea_score = fea_score_Middle_Overall;
 																}
 																//for (int i = 0; i < input_descriptors.size(); i++) {
 																// fea_score += feature_cmp(input_descriptors[i], dmimg_descriptor);
@@ -506,10 +524,31 @@ eachSetting:
 																//fea_score /= (double) input_descriptors.size() * (input_descriptors.size() + 1) / 2;
 																//fea_score /= input_descriptors.size();
 																//cout << "fea_score:" << fea_score << endl;
-																vector<double> calScore_list(15);
+																vector<double> calScore_list(method_count);
 																if (useHsv && useFea) {
+																		/*
+																		hsv_score = hsv_score_D * 0.5 + hsv_score_MO  * 0.5;
+																		hsv_score_2 = hsv_score_D * 0.25 + hsv_score_MO  * 0.75;
+																		hsv_score_3 = hsv_score_D * 0.75 + hsv_score_MO  * 0.25;
+
+																		hsv_score_4_D = hsv_score_D_only;
+																		hsv_score_5_MOA = hsv_score_Middle_Overall;
+																		*/
+
+																		/*
+																		fea_score = fea_score_MD *0.5 + fea_score_MO * 0.5;
+																		fea_score_2 = fea_score_MD * 0.25 + fea_score_MO * 0.75;
+																		fea_score_3 = fea_score_MD * 0.75 + fea_score_MO * 0.25;
+
+																		fea_score_4_MD = fea_score_Middle_D;
+																		fea_score_5_OA = fea_score_Overall;
+																		fea_score_6_MOA = fea_score_Middle_Overall;
+
+																		horse : 6, 8, 10, 12, 15
+																		*/
 																		calScore_list[0] = (hsv_score + 1) / 2 + (fea_score * 4);
 																		calScore_list[1] = (hsv_score + 1) / 2 + (fea_score * 8); // for bus
+
 																		calScore_list[2] = (hsv_score + 1) / 2 + (fea_score * 1);
 																		calScore_list[3] = (hsv_score + 1) / 2 + (fea_score * 0.5);
 
@@ -517,31 +556,34 @@ eachSetting:
 																		calScore_list[5] = (hsv_score + 1) / 2 + (fea_score_3 * 4);
 
 																		calScore_list[6] = (hsv_score_2 + 1) / 2 + (fea_score * 1);
-
-																		/*
-																		hsv_score = hsv_score_D * 0.5 + hsv_score_MO  * 0.5;
-																		hsv_score_2 = hsv_score_D * 0.25 + hsv_score_MO  * 0.75;
-																		hsv_score_3 = hsv_score_D * 0.75 + hsv_score_MO  * 0.25;
-																		hsv_score_4 = hsv_score_D;
-																		*/
-																		/*
-																		fea_score = fea_score_MD *0.5 + fea_score_MO * 0.5;
-																		fea_score_2 = fea_score_MD * 0.25 + fea_score_MO * 0.75;
-																		fea_score_3 = fea_score_MD * 0.75 + fea_score_MO * 0.25;
-																		fea_score_4 = fea_score_MD;
-
-																		horse : 6, 8, 10, 12, 15
-																		*/
 																		calScore_list[7] = (hsv_score_3 + 1) / 2 + (fea_score * 1); /**/
-																		calScore_list[8] = (hsv_score_4 + 1) / 2 + (fea_score * 1);
 
-																		calScore_list[9] = (hsv_score + 1) / 2 + (fea_score_4 * 1); //
-																		calScore_list[10] = (hsv_score_2 + 1) / 2 + (fea_score_4 * 1);
-																		calScore_list[11] = (hsv_score_3 + 1) / 2 + (fea_score_4 * 1); //**//
-																		calScore_list[12] = (hsv_score_4 + 1) / 2 + (fea_score_4 * 1); //<< suck
+																		//calScore_list[8] = (hsv_score_4 + 1) / 2 + (fea_score * 1);
+																		calScore_list[8] = (hsv_score_5_MOA + 1) / 2 + (fea_score_4_MD * 1); // new
 
-																		calScore_list[13] = (hsv_score + 1) / 2 + (fea_score_4 * 0.5); // beach , building
-																		calScore_list[14] = (hsv_score + 1) / 2 + (fea_score_4 * 2);
+																		calScore_list[9] = (hsv_score + 1) / 2 + (fea_score_4_MD * 1); //
+
+																		//	hsv_score_2 = hsv_score_D * 0.25 + hsv_score_MO  * 0.75;
+																		// fea_score_4 = fea_score_MD;
+																		calScore_list[10] = (hsv_score_2 + 1) / 2 + (fea_score_4_MD * 1);
+																		calScore_list[11] = (hsv_score_3 + 1) / 2 + (fea_score_4_MD * 1); //**//
+																		calScore_list[12] = (hsv_score_4_D + 1) / 2 + (fea_score_4_MD * 1); //<< suck
+
+																		calScore_list[13] = (hsv_score + 1) / 2 + (fea_score_4_MD * 0.5); // beach , building
+																		calScore_list[14] = (hsv_score + 1) / 2 + (fea_score_4_MD * 2);
+
+																		calScore_list[15] = (hsv_score_5_MOA + 1) / 2 + (fea_score * 2);
+																		calScore_list[16] = (hsv_score + 1) / 2 + (fea_score_5_OA * 2);
+																		calScore_list[17] = (hsv_score + 1) / 2 + (fea_score_6_MOA * 2);
+
+																		calScore_list[18] = (hsv_score + 1) / 2 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
+																		calScore_list[19] = (hsv_score + 1) / 2 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
+
+																		calScore_list[20] = (hsv_score_4_D + 1) / 2 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
+																		calScore_list[21] = (hsv_score_4_D + 1) / 2 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
+
+																		calScore_list[22] = (hsv_score_5_MOA + 1) / 2 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
+																		calScore_list[23] = (hsv_score_5_MOA + 1) / 2 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
 
 																		// fea_score_4
 																		for (int k = 0; k < calScore_list.size(); k++) {
@@ -582,18 +624,6 @@ eachSetting:
 														bestMData_[i].update(sr, k + 1, hbins, sbins, minH);
 												}
 										}
-										//// ===== sort method 3
-										//for (ImgScore &is : iss) {
-										//	is.score = abs(is.score);
-										//}
-										//sort(iss.begin(), iss.end());
-										//sr = ScoreReport(iss, inputIndex);
-										//bestMData.update(sr, 3, hbins, sbins, minH);
-
-										//// ===== sort method 4
-										//sort(iss.rbegin(), iss.rend());
-										//sr = ScoreReport(iss, inputIndex);
-										//bestMData.update(sr, 4, hbins, sbins, minH);
 
 										printf(" - ===== End of minHessian : %i =====\n", minH);
 										printf(" - ===== End of hbin : %i , sbin: %i =====\n\n", hbins, sbins);
@@ -613,7 +643,7 @@ eachSetting:
 										vector<double> acc_first_match_;
 										vector<int> match_count_method;
 
-										for (int k = 0; k < 15; k++) {
+										for (int k = 0; k < method_count; k++) {
 												double acc = 0;
 												double acc_first_match = 0;
 												int count = 0;
@@ -643,7 +673,7 @@ eachSetting:
 										} //each method
 										m_result._acc_of = acc_of_method_;
 										m_result._acc_first_match = acc_first_match_;
-										m_result._firstMatch_of = match_count_method;
+										m_result._first_match_count = match_count_method;
 
 										m_result.report();
 										list_of_method_result.push_back(m_result);

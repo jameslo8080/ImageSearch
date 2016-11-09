@@ -2,7 +2,6 @@
 #include "compare.h"
 #include "ScoreReport.h"
 
-
 //void getBestMethodResult(vector<MethodResult>) {
 //
 //}
@@ -21,7 +20,7 @@ struct MethodResult {
 		vector<double> best_threshold_fm; //first match only
 		vector<pair<double, double>> best_threshold_fm_pr;
 
-		vector<int> _firstMatch_of;
+		vector<int> _first_match_count;
 
 		void add_best_threshold(vector<ScoreReport> sr_list_for_same_method) {
 				double best_p = 0, best_r = 0;
@@ -50,15 +49,18 @@ struct MethodResult {
 								double sum_p_fm_a = 0, sum_r_fm_a = 0;
 								for each (auto sr_sub in sr_list_for_same_method) {
 										bool is_fm = sr_sub.firstWrong != 0;
+
 										pair<double, double> pr = sr_sub.getPRbyScore(score);
+										sum_p += (pr.first > 60) ? 60 : pr.first;
+										sum_r += (pr.second > 60) ? 60 : pr.second;
+
 										sum_p_a += pr.first;
 										sum_r_a += pr.second;
 
-										sum_p += (pr.first > 60) ? 60 : pr.first;
-										sum_r += (pr.second > 60) ? 60 : pr.second;
 										if (is_fm) {
 												sum_p_fm += (pr.first > 60) ? 60 : pr.first;
 												sum_r_fm += (pr.second > 60) ? 60 : pr.second;
+
 												sum_p_fm_a += pr.first;
 												sum_r_fm_a += pr.second;
 										}
@@ -146,14 +148,16 @@ struct MethodResult {
 		}
 		void report_acc() {
 				for (int i = 0; i < _acc_of.size(); i++) {
-						printf(" - method:%3i , overall acc: %f%% , first match count: %i , acc fm: %f%% \n", i + 1, _acc_of[i], _firstMatch_of[i], _acc_first_match[i]);
-
-						printf("  - best_threshold:%f , p: %f%% , r: %f%% \n", best_threshold[i], best_threshold_pr[i].first / 7, best_threshold_pr[i].second / 7);
-						if (_acc_first_match[i] > 0) {
-								double avg_p = best_threshold_fm_pr[i].first / _firstMatch_of[i];
-								double avg_r = best_threshold_fm_pr[i].second / _firstMatch_of[i];
-								printf("  - best_threshold_fm:%f , p: %f%% , r: %f%% \n", best_threshold_fm[i], avg_p, avg_r);
+						printf(" - method:%3i , overall acc: %f%% , first match count: %i , acc fm: %f%% \n", i + 1, _acc_of[i], _first_match_count[i], _acc_first_match[i]);
+						double a_p = best_threshold_pr[i].first / (double)7.0;
+						double a_r = best_threshold_pr[i].second / (double)7.0;
+						printf("  - best_threshold: %f , p: %f%% , r: %f%% \n", best_threshold[i], a_p, a_r);
+						if (_first_match_count[i] > 0) {
+								double avg_p = best_threshold_fm_pr[i].first / (double) _first_match_count[i];
+								double avg_r = best_threshold_fm_pr[i].second / (double) _first_match_count[i];
+								printf("  - best_threshold_fm: %f , p: %f%% , r: %f%% \n", best_threshold_fm[i], avg_p, avg_r);
 						}
+						printf("\n");
 				}
 		}
 };
@@ -163,12 +167,12 @@ struct BestMethodData {
 		int method = 0; // method
 		int bins[2];
 		int minH = 0;
-		bool a_method[16];
+		bool a_method[METHOD_COUNT];
 		int firstWrong;
 		ScoreReport save_sr;
 		vector<ScoreReport> srs;
 
-		BestMethodData() { for (int i = 0; i < sizeof(a_method); i++) { a_method[i] = false; srs = vector<ScoreReport>(16); } }
+		BestMethodData() { for (int i = 0; i < sizeof(a_method); i++) { a_method[i] = false; srs = vector<ScoreReport>(METHOD_COUNT); } }
 
 		void update(ScoreReport sr, int _method, int hbins, int sbins, int minHe) {
 				//sr.reportSorted(100);
@@ -200,7 +204,7 @@ struct BestMethodData {
 		}
 		void report() {
 				cout << " - A method (1~n): ";
-				for (int i = 0; i < 16; i++) { if (a_method[i])	cout << (i + 1) << ", "; }
+				for (int i = 0; i < 24; i++) { if (a_method[i])	cout << (i + 1) << ", "; }
 				cout << endl;
 				printf(" - Current best hbins: %i , sbins: %i , method: %i , minH: %i \n", bins[0], bins[1], method, minH);
 				printf(" - Current best bestGradeAP: %.4f%% , GradeAR: %.4f%% , score: %.4f , firstWrong:%i  \n\n", bestGradeAP, bestGradeAR, score, save_sr.firstWrong);

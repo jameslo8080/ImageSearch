@@ -100,60 +100,60 @@ double solve(int index) {
 }
 
 void test_combin() {
-		double besti = -1, maxac = 0;
+		//double besti = -1, maxac = 0;
 
-		int count = 0;
-		MethodResult best_mr;
-		for (double con_setting = 1.15; con_setting <= 1.25; con_setting += 0.05) {
-				printf("\n -- i = %lf -- \n", con_setting);
+		//int count = 0;
+		//MethodResult best_mr;
+		//for (double con_setting = 1.15; con_setting <= 1.25; con_setting += 0.05) {
+		//		printf("\n -- i = %lf -- \n", con_setting);
 
-				vector<double> acc_;
+		//		vector<double> acc_;
 
-				for (int i = 0; i < 7; i++) {
-						acc_.push_back(0);
-				}
+		//		for (int i = 0; i < 7; i++) {
+		//				acc_.push_back(0);
+		//		}
 
-				MethodResult mr;
-				mr.add_double_setting(con_setting);
+		//		MethodResult mr;
+		//		mr.add_double_setting(con_setting);
 
-				// for each input
-				for (auto index : valid_indexs) {
-						Mat src_input = get_input_img(index);
-						//acc += combin_compare_15(src_input, index, i);
-						if (count == 0) {
-								//acc_[0] += combin_compare_1(src_input, index);
-								//acc_[1] += combin_compare_2(src_input, index);
-								//acc_[2] += combin_compare_3(src_input, index);
-								//acc_[3] += combin_compare_4(src_input, index);
-						} else {
-								acc_[0] += 0;
-								acc_[1] += 0;
-								acc_[2] += 0;
-								acc_[3] += 0;
-						}
+		//		// for each input
+		//		for (auto index : valid_indexs) {
+		//				Mat src_input = get_input_img(index);
+		//				//acc += combin_compare_15(src_input, index, i);
+		//				if (count == 0) {
+		//						//acc_[0] += combin_compare_1(src_input, index);
+		//						//acc_[1] += combin_compare_2(src_input, index);
+		//						//acc_[2] += combin_compare_3(src_input, index);
+		//						//acc_[3] += combin_compare_4(src_input, index);
+		//				} else {
+		//						acc_[0] += 0;
+		//						acc_[1] += 0;
+		//						acc_[2] += 0;
+		//						acc_[3] += 0;
+		//				}
 
-						acc_[4] += combin_compare_5(src_input, index, con_setting);
-						acc_[5] += 0;
-						//acc_[6] += combin_compare_7(src_input, index, con_setting);
+		//				acc_[4] += combin_compare_5(src_input, index, con_setting);
+		//				acc_[5] += 0;
+		//				//acc_[6] += combin_compare_7(src_input, index, con_setting);
 
 
-				}
-				for (int i = 0; i < 7; i++) {
-						acc_[i] /= 7;
-						mr.add_acc(acc_[i]);
-				}
+		//		}
+		//		for (int i = 0; i < 7; i++) {
+		//				acc_[i] /= 7;
+		//				mr.add_acc(acc_[i]);
+		//		}
 
-				double mr_best_acc = mr.getBestAcc();
-				if (mr_best_acc > maxac) {
-						maxac = mr_best_acc;
-						besti = con_setting;
-						best_mr = mr;
-				}
-				printf("\n so far: Best acc: %lf || i = %lf\n", maxac, besti);
-				best_mr.report();
-		}
-		printf("\nBest acc: %lf || i = %lf\n", maxac, besti);
-		best_mr.report();
+		//		double mr_best_acc = mr.getBestAcc();
+		//		if (mr_best_acc > maxac) {
+		//				maxac = mr_best_acc;
+		//				besti = con_setting;
+		//				best_mr = mr;
+		//		}
+		//		printf("\n so far: Best acc: %lf || i = %lf\n", maxac, besti);
+		//		best_mr.report();
+		//}
+		//printf("\nBest acc: %lf || i = %lf\n", maxac, besti);
+		//best_mr.report();
 }
 
 void test_all_average() {
