@@ -71,7 +71,7 @@ public:
 								//finish
 								double p;
 								if (i > 0)
-										p = (double) correct / ((double) (i)) * 100.0;
+										p = (double) correct / (double) (i) * 100.0;
 								else
 										p = 0;
 								double r = (double) correct;
