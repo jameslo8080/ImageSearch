@@ -249,6 +249,8 @@ int main(int argc, char** argv) {
 				double_compare();
 		} else if (index == -6) {
 				test_combin();
+		} else if (index == -7){
+
 		} else {
 				solve(index);
 				vector<int> res = { 1, 23, 456, 1345 };

@@ -621,6 +621,7 @@ eachSetting:
 												for (int k = 0; k < iss_list_[i].size(); k++) {
 														sort(iss_list_[i][k].rbegin(), iss_list_[i][k].rend());
 														sr = ScoreReport(iss_list_[i][k], i);
+														cout << "method#" << k + 1 << " : ";
 														bestMData_[i].update(sr, k + 1, hbins, sbins, minH);
 												}
 										}
@@ -670,6 +671,13 @@ eachSetting:
 
 												match_count_method.push_back(match_count);
 												m_result.add_best_threshold(for_best_threshold);
+
+												//string fname = "./method/method" + to_string(k + 1) + ".yml";
+												//FileStorage fs(fname.c_str(), FileStorage::WRITE);
+												//write(fs, "ScoreReport", for_best_threshold);
+												//fs.release();
+
+
 										} //each method
 										m_result._acc_of = acc_of_method_;
 										m_result._acc_first_match = acc_first_match_;
@@ -711,27 +719,27 @@ eachSetting:
 		double average = accumulate(times_need.begin(), times_need.end(), 0.0) / times_need.size();
 
 		// after all:
-		double bestMethodAcc = 0;
-		MethodResult bestMR;
-		for each (MethodResult mr in list_of_method_result) {
-				for each (double acc in mr._acc_of) {
-						if (acc > bestMethodAcc) {
-								bestMethodAcc = acc;
-								bestMR = mr;
-						}
-				}
-		}
+		//double bestMethodAcc = 0;
+		//MethodResult bestMR;
+		//for each (MethodResult mr in list_of_method_result) {
+		//		for each (double acc in mr._acc_of) {
+		//				if (acc > bestMethodAcc) {
+		//						bestMethodAcc = acc;
+		//						bestMR = mr;
+		//				}
+		//		}
+		//}
 
-		printf(" ===== Best Acc in: =====\n");
-		bestMR.report();
+		//printf(" ===== Best Acc in: =====\n");
+		//bestMR.report();
 
 
 		//} // each input index
 
-		for each (int vi in valid_indexs) {
-				printf(" ===== Best of %s =====\n", files[vi].c_str());
-				bestMData_[vi].report();
-		}
+		//for each (int vi in valid_indexs) {
+		//		printf(" ===== Best of %s =====\n", files[vi].c_str());
+		//		bestMData_[vi].report();
+		//}
 }
 
 /*

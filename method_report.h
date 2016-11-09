@@ -51,18 +51,18 @@ struct MethodResult {
 										bool is_fm = sr_sub.firstWrong != 0;
 
 										pair<double, double> pr = sr_sub.getPRbyScore(score);
-										sum_p += (pr.first > 60) ? 60 : pr.first;
-										sum_r += (pr.second > 60) ? 60 : pr.second;
+										sum_p += (pr.first > 60) ? 60 : (double) pr.first;
+										sum_r += (pr.second > 60) ? 60 : (double) pr.second;
 
-										sum_p_a += pr.first;
-										sum_r_a += pr.second;
+										sum_p_a += (double) pr.first;
+										sum_r_a += (double) pr.second;
 
 										if (is_fm) {
-												sum_p_fm += (pr.first > 60) ? 60 : pr.first;
-												sum_r_fm += (pr.second > 60) ? 60 : pr.second;
+												sum_p_fm += (pr.first > 60) ? 60 : (double) pr.first;
+												sum_r_fm += (pr.second > 60) ? 60 : (double) pr.second;
 
-												sum_p_fm_a += pr.first;
-												sum_r_fm_a += pr.second;
+												sum_p_fm_a += (double) pr.first;
+												sum_r_fm_a += (double) pr.second;
 										}
 								}
 
@@ -87,16 +87,26 @@ struct MethodResult {
 								if (correct == 100) break;
 						}
 						best_threshold.push_back(best_s);
-						best_threshold_pr.push_back({ best_p_a, best_r_a });
+
+						double fin_p = 0, fin_r = 0;
+						double fin_p_fm = 0, fin_r_fm = 0;
+						for each (auto sr_sub in sr_list_for_same_method) {
+								pair<double, double> pr = sr_sub.getPRbyScore(best_s);
+								fin_p += (double) pr.first;
+								fin_r += (double) pr.second;
+
+								if (sr_sub.firstWrong != 0) {
+										pair<double, double> pr_fm = sr_sub.getPRbyScore(best_s_fm);
+										fin_p_fm += (double) pr_fm.first;
+										fin_r_fm += (double) pr_fm.second;
+								}
+						}
+						best_threshold_pr.push_back({ fin_p, fin_r });
 
 						best_threshold_fm.push_back(best_s_fm);
-						best_threshold_fm_pr.push_back({ best_p_fma, best_r_fma });
+						best_threshold_fm_pr.push_back({ fin_p_fm, fin_r_fm });
 				}
 
-
-		}
-
-		void add_best_threshold(double threshold) {
 
 		}
 
@@ -120,16 +130,23 @@ struct MethodResult {
 		}
 
 		// sr_list is for the same method, but all different input
-		void add_acc(vector<ScoreReport> sr_list) {
-				if (sr_list.size() == 0) {
-						return add_acc(0);
-				}
-				double acc = 0;
-				for each(ScoreReport sr in sr_list) {
-						acc += sr.acc100;
-				}
-				acc /= sr_list.size();
-		}
+		//void add_acc(vector<ScoreReport> sr_list) {
+		//		if (sr_list.size() == 0) {
+		//				return add_acc(0);
+		//		}
+		//		double acc = 0, acc_fm=0;
+		//		int match_count = 0;
+
+		//		for each(ScoreReport sr in sr_list) {
+		//				acc += sr.acc100;
+		//				if (sr.firstWrong != 0) {
+		//						match_count++;
+		//				}
+		//		}
+		//		acc /= sr_list.size();
+		//		_acc_of.push_back(acc);
+
+		//}
 
 
 		void report() {
