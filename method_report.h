@@ -152,7 +152,8 @@ struct MethodResult {
 						if (_acc_first_match[i] > 0) {
 								double avg_p = best_threshold_fm_pr[i].first / _firstMatch_of[i];
 								double avg_r = best_threshold_fm_pr[i].second / _firstMatch_of[i];
-								printf("  - best_threshold_fm:%f , p: %f%% , r: %f%% \n", best_threshold_fm[i], avg_p, avg_r);
+								printf("  - sum p: %f%% , sum r: %f%% , f count:%i \n", best_threshold_fm_pr[i].first, best_threshold_fm_pr[i].second);
+								printf("  - best_threshold_fm:%f , p: %f%% , r: %f%% , f count:%i \n", best_threshold_fm[i], avg_p, avg_r, _firstMatch_of[i]);
 						}
 				}
 		}
