@@ -98,20 +98,22 @@ double solve(int index) {
 	// double acc = orb_compare(src_input, index);
 	// double acc = psnr_compare(src_input, index);
 	// double acc = mssim_compare(src_input, index);
-	double acc = combin_compare_8(src_input, index, 1);
+	
+	// combin_compare_6
+	double acc = combin_compare_16(src_input, index, 1.2);
 
 	return acc;
 }
 
 void test_combin() {
 	double besti = -1, maxac = 0;
-	for (double i = 1; i <= 1.4; i += 0.03) {
+	for (double i = 1; i <= 1.3; i += 0.03) {
 		printf("\n -- i = %lf -- \n", i);
 
 		double acc = 0;
 		for (auto index : valid_indexs) {
 			Mat src_input = get_input_img(index);
-			acc += combin_compare_7a(src_input, index, i);
+			acc += combin_compare_15(src_input, index, i);
 		}
 		if (acc > maxac) {
 			maxac = acc;
