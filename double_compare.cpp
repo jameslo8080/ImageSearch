@@ -436,7 +436,7 @@ eachSetting:
 						if (useHsv) {
 								// divided overall
 								for (int j = 0; j < dbimg_color_divide_hsv.size(); j++) {
-										hsv_score_D_only += compareHist(src_color_divide_hsv[j], dbimg_color_divide_hsv[i], CV_COMP_CORREL);
+										hsv_score_D_only += compareHist(src_color_divide_hsv[j], dbimg_color_divide_hsv, CV_COMP_CORREL);
 								}
 								if (dbimg_color_divide.size() > 0)
 										hsv_score_D_only /= dbimg_color_divide.size();
@@ -502,7 +502,7 @@ eachSetting:
 								//								fea_score_MO += (1 - feature_cmp(src_g_m_descriptor, dmimg_descriptor));
 								//>>>>>>> origin/master
 
-								if (src_d_descriptors_[i].size() > 0) {
+								if (src_d_descriptors.size() > 0) {
 										fea_score = fea_score_Middle_D *0.5 + fea_score_Middle_Overall * 0.5;
 										fea_score_2 = fea_score_Middle_D * 0.25 + fea_score_Middle_Overall * 0.75;
 										fea_score_3 = fea_score_Middle_D * 0.75 + fea_score_Middle_Overall * 0.25;
