@@ -1,6 +1,15 @@
 #include "utils.h"
 
 
+// "../image.orig/685.jpg"
+string getFilePath999(int index) {
+	if (index < 0 || index > 999)
+		index = 0;
+	string s("../image.orig/");
+	s.append(std::to_string(index) + ".jpg");
+	return s;
+}
+
 int get_group(int db_id) {
 	return (db_id < 0 || db_id > 999) ? -1 : db_id / 100;
 }
@@ -56,4 +65,15 @@ string BOW_file_path(string featureName, int dictionarySize, bool greyscale) {
 
 string ids_features_file_path(string featureName, int dictionarySize, bool greyscale) {
 	return "../bow/" + (string)(greyscale ? "g_f" : "f") + featureName + to_string(dictionarySize) + ".yml";
+}
+
+void save_result(const vector<int>& nums) {
+	wstring fpath = L"../result/";
+	RemoveDirectory(fpath.data());
+	CreateDirectory(fpath.data(), NULL);
+	for (auto num : nums) {
+		ifstream src(getFilePath999(num), ios::binary);
+		ofstream dst("../result/" + to_string(num) + ".jpg", ios::binary);
+		dst << src.rdbuf();
+	}
 }

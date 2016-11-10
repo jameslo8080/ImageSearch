@@ -56,14 +56,6 @@ void file_select_instruction() {
 				<< "            6:'flower', 7:'horse')? " << endl;
 }
 
-// "../image.orig/685.jpg"
-string getFilePath999(int index) {
-		if (index < 0 || index > 999)
-				index = 0;
-		string s("../image.orig/");
-		s.append(std::to_string(index) + ".jpg");
-		return s;
-}
 
 Mat get_input_img(int index) {
 		string filepath = getFilePath(index);
@@ -259,6 +251,8 @@ int main(int argc, char** argv) {
 				test_combin();
 		} else {
 				solve(index);
+				vector<int> res = { 1, 23, 456, 1345 };
+				save_result(res);
 		}
 
 		do {

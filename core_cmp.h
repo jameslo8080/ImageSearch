@@ -10,7 +10,6 @@
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/nonfree/nonfree.hpp"
 #include "opencv2/features2d/features2d.hpp"
-#include "opencv2/gpu/gpu.hpp"
 #include "feature_loader.h"
 #include "feature_extract.h"
 #include "feature_preprocess.h"
