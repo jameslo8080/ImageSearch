@@ -250,6 +250,9 @@ int main(int argc, char** argv) {
 		} else if (index == -6) {
 				test_combin();
 		} else if (index == -7){
+		 string src = "./man.jpg";
+		 Mat src_color = imread(src.c_str(), CV_LOAD_IMAGE_COLOR);
+		 new_compare(src_color, 0, 6.6);
 
 		} else {
 				solve(index);

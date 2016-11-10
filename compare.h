@@ -37,6 +37,7 @@ double mssim_compare(Mat src_input, int inputIndex);
 void double_compare();
 void on_double_compare();
 void double_compare_bus();
+void new_compare(Mat src_color, int inputIndex, double the);
 
 //double combin_compare_1(Mat src_input, int inputIndex);
 //double combin_compare_2(Mat src_input, int inputIndex);
