@@ -323,9 +323,6 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 					break;
 			}
 
-
-
-
 			//Mat dbimg_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 			Mat dbimg_gray;
 			cv::cvtColor(dbimg_color, dbimg_gray, CV_BGR2GRAY); // CV_BGR2GRAY
@@ -347,8 +344,7 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 				dbimg_hsv_middle = img_src_to_hsv(dbimg_src_color_middle, hbins, sbins);
 			}
 
-			Mat dmimg_descriptor;
-
+			Mat dmimg_descriptor; // we can store it
 			dmimg_descriptor = calSURFDescriptor_one(dbimg_gray, minH);
 			// ===== HSV =====
 
