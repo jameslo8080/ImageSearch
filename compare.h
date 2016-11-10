@@ -23,6 +23,7 @@ using namespace cv;
 
 #define METHOD_COUNT 24
 
+double pixel_compare(Mat src_input, int index);
 double hsv_compare(Mat src_input, int index);
 double hsv_split_compare(Mat src_input, int index);
 double hsv_split_compare(Mat src_input, int index, bool output, int row, int col);

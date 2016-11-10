@@ -376,7 +376,7 @@ vector<int> new_compare(Mat src_color, int inputIndex, double the) {
 						if (useHsv) {
 								// divided overall
 								for (int j = 0; j < dbimg_color_divide_hsv.size(); j++) {
-										hsv_score_D_only += compareHist(src_color_divide_hsv[j], dbimg_color_divide_hsv, CV_COMP_CORREL);
+										hsv_score_D_only += compareHist(src_color_divide_hsv[j], dbimg_color_divide_hsv[j], CV_COMP_CORREL);
 								}
 								if (dbimg_color_divide.size() > 0)
 										hsv_score_D_only /= dbimg_color_divide.size();

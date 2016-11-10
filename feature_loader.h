@@ -28,6 +28,5 @@ vector<Mat> load_allDescriptions_YML(string type, int partOf100 = 100, bool grey
 vector<pair<int, Mat>>  load_mlSample(BOWImgDescriptorExtractor& bowExtractor, string type, int dictionarySize, bool greyscale=false);
 
 vector<Mat> load_hsvHist();
-vector<Mat> load_imgs();
-vector<Mat> load_imgs(bool);
+vector<Mat> load_imgs(bool out=false);
 bool read_images(FILE* fp, Mat &db_img, int db_id);

@@ -20,7 +20,7 @@
 using namespace std;
 using namespace cv;
 
-double pixel_compare(const Mat& img1, const Mat& img2);
+double pixel_cmp(Mat img1, Mat img2);
 
 double hist_cmp(const Mat& img1, const Mat& img2, int method = 0);
 double hsv_cmp(const Mat& img1, const Mat& img2, int method = 0);

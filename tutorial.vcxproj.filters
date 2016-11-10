@@ -30,29 +30,29 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ScoreReport.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="utils.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="feature_extract.h">
-      <Filter>Source Files\feature</Filter>
-    </ClInclude>
-    <ClInclude Include="feature_loader.h">
-      <Filter>Source Files\feature</Filter>
-    </ClInclude>
-    <ClInclude Include="compare.h">
-      <Filter>Source Files\compare_function</Filter>
-    </ClInclude>
-    <ClInclude Include="feature_preprocess.h">
-      <Filter>Source Files\feature</Filter>
-    </ClInclude>
-    <ClInclude Include="ml.h">
-      <Filter>Source Files\ml</Filter>
-    </ClInclude>
     <ClInclude Include="method_report.h">
       <Filter>Source Files\report</Filter>
+    </ClInclude>
+    <ClInclude Include="compare.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature_loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature_extract.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="feature_preprocess.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ml.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreReport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -98,9 +98,6 @@
     <ClCompile Include="psnr_compare.cpp">
       <Filter>Source Files\compare_function</Filter>
     </ClCompile>
-    <ClCompile Include="pixel_compare.cpp">
-      <Filter>Source Files\compare_function</Filter>
-    </ClCompile>
     <ClCompile Include="ml.cpp">
       <Filter>Source Files\ml</Filter>
     </ClCompile>
@@ -123,6 +120,12 @@
       <Filter>Source Files\compare_function\core_cmp</Filter>
     </ClCompile>
     <ClCompile Include="svm_compare.cpp">
+      <Filter>Source Files\compare_function</Filter>
+    </ClCompile>
+    <ClCompile Include="pixel_cmp.cpp">
+      <Filter>Source Files\compare_function\core_cmp</Filter>
+    </ClCompile>
+    <ClCompile Include="pixel_compare.cpp">
       <Filter>Source Files\compare_function</Filter>
     </ClCompile>
   </ItemGroup>

@@ -136,7 +136,7 @@ vector<Mat> load_imgs(bool out) {
 	Mat db_img;
 	FILE* fp;
 	fopen_s(&fp, IMAGE_LIST_FILE, "r");
-	printf("Extracting features from input images...\n");
+	printf("Loading the image dataset...\n");
 	while (read_images(fp, db_img, db_id, out)) {
 		all_img.push_back(db_img);
 		if (db_id % 50 == 0)
@@ -146,8 +146,4 @@ vector<Mat> load_imgs(bool out) {
 	fclose(fp);
 	printf("Done\n");
 	return all_img;
-}
-
-vector<Mat> load_imgs(){
-	return load_imgs(true);
 }
