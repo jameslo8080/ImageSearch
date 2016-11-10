@@ -234,9 +234,6 @@ vector<int> new_compare(Mat src_color, int inputIndex, double the) {
 
 		bool useHsv = true, useFea = true; // not ready 
 
-		string files[] = { "man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food" };
-		int valid_indexs[] = { 0, 1, 2, 3, 4, 6, 7 }; // 0, 1, 2, 3, 4, 6, 7
-
 		Mat src_gray; // imread(src.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 		cv::cvtColor(src_color, src_gray, CV_BGR2GRAY); // CV_BGR2GRAY
 
