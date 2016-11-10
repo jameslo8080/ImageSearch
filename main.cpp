@@ -98,20 +98,25 @@ void solve() {
 	}
 
 	double threshold;
-	cout << "Input the threshold: (the recommended threshold is 6.619589)" << endl;
+	cout << "Input the threshold: (the recommended threshold is 1.287449)" << endl;
 	cout << "--------------------------------------------------------------" << endl;
 	cin >> threshold;
 
 	Mat src_input = get_input_img(index);
 	vector<int> res = new_compare(src_input, index, threshold);
-	save_result(res);
+	if (res.size() > 0) {
+		save_result(res);
 
-	cout << "Done! The similiar images are saved in folder ../output." << endl;
+		cout << "Done! The similiar images are saved in folder ../output." << endl;
 
-	Mat mostSimiliar = imread(getFilePath999(res[0]));
-	cout << "Here are the most similiar image\n" << endl;
-	imshow("The most similiar image", mostSimiliar);
-	waitESC();
+		Mat mostSimiliar = imread(getFilePath999(res[0]));
+		cout << "Here are the most similiar image\n" << endl;
+		imshow("The most similiar image", mostSimiliar);
+		waitESC();
+	} else {
+		cout << "the threshold maybe too high." << endl;
+	}
+
 }
 
 void extra_fucntion() {
@@ -146,7 +151,7 @@ void extra_fucntion() {
 	cout << "25. high contrast + hsv histrogram compare(correlation) + SURF" << endl;
 	cout << "26. high contrast + hsv histrogram compare(correlation) + SIFT" << endl;
 	cout << "27. high contrast + hsv histrogram compare(correlation) + ORB" << endl;
-	cout << "28. Canny + contour compare" << endl; 
+	cout << "28. Canny + contour compare" << endl;
 	cout << "--------------------------------------------------------------" << endl;
 
 	int option = -1;
@@ -156,91 +161,91 @@ void extra_fucntion() {
 		cin >> option;
 	}
 	switch (option) {
-	case 1:
-		for (auto idx : valid_indexs) pixel_compare(get_input_img(idx), idx);
-		break;
-	case 2:
-		for (auto idx : valid_indexs) hsv_compare(get_input_img(idx), idx);
-		break;
-	case 3:
-		for (auto idx : valid_indexs) hsv_split_compare(get_input_img(idx), idx);
-		break;
-	case 4:
-		for (auto idx : valid_indexs) surf_compare(get_input_img(idx), idx);
-		break;
-	case 5:
-		for (auto idx : valid_indexs) sift_compare(get_input_img(idx), idx);
-		break;
-	case 6:
-		for (auto idx : valid_indexs) orb_compare(get_input_img(idx), idx);
-		break;
-	case 7:
-		for (auto idx : valid_indexs) psnr_compare(get_input_img(idx), idx);
-		break;
-	case 8:
-		for (auto idx : valid_indexs) mssim_compare(get_input_img(idx), idx);
-		break;
-	case 9:
-		for (auto idx : valid_indexs) svm_compare(get_input_img(idx), idx);
-		break;
-	case 10:
-		for (auto idx : valid_indexs) combin_compare_1(get_input_img(idx), idx);
-		break;
-	case 11:
-		for (auto idx : valid_indexs) combin_compare_2(get_input_img(idx), idx);
-		break;
-	case 12:
-		for (auto idx : valid_indexs) combin_compare_3(get_input_img(idx), idx);
-		break;
-	case 13:
-		for (auto idx : valid_indexs) combin_compare_4(get_input_img(idx), idx);
-		break;
-	case 14:
-		for (auto idx : valid_indexs) combin_compare_5(get_input_img(idx), idx);
-		break;
-	case 15:
-		for (auto idx : valid_indexs) combin_compare_6(get_input_img(idx), idx);
-		break;
-	case 16:
-		for (auto idx : valid_indexs) combin_compare_7(get_input_img(idx), idx);
-		break;
-	case 17:
-		for (auto idx : valid_indexs) combin_compare_7a(get_input_img(idx), idx);
-		break;
-	case 18:
-		for (auto idx : valid_indexs) combin_compare_8(get_input_img(idx), idx);
-		break;
-	case 19:
-		for (auto idx : valid_indexs) combin_compare_9(get_input_img(idx), idx);
-		break;
-	case 20:
-		for (auto idx : valid_indexs) combin_compare_10(get_input_img(idx), idx);
-		break;
-	case 21:
-		for (auto idx : valid_indexs) combin_compare_11(get_input_img(idx), idx);
-		break;
-	case 22:
-		for (auto idx : valid_indexs) combin_compare_12(get_input_img(idx), idx);
-		break;
-	case 23:
-		for (auto idx : valid_indexs) combin_compare_13(get_input_img(idx), idx);
-		break;
-	case 24:
-		for (auto idx : valid_indexs) combin_compare_14(get_input_img(idx), idx);
-		break;
-	case 25:
-		for (auto idx : valid_indexs) combin_compare_15(get_input_img(idx), idx);
-		break;
-	case 26:
-		for (auto idx : valid_indexs) combin_compare_16(get_input_img(idx), idx);
-		break;
-	case 27:
-		for (auto idx : valid_indexs) combin_compare_17(get_input_img(idx), idx);
-		break;
-	case 28:
-		for (auto idx : valid_indexs) combin_compare_18(get_input_img(idx), idx);
-	default:
-		break;
+		case 1:
+			for (auto idx : valid_indexs) pixel_compare(get_input_img(idx), idx);
+			break;
+		case 2:
+			for (auto idx : valid_indexs) hsv_compare(get_input_img(idx), idx);
+			break;
+		case 3:
+			for (auto idx : valid_indexs) hsv_split_compare(get_input_img(idx), idx);
+			break;
+		case 4:
+			for (auto idx : valid_indexs) surf_compare(get_input_img(idx), idx);
+			break;
+		case 5:
+			for (auto idx : valid_indexs) sift_compare(get_input_img(idx), idx);
+			break;
+		case 6:
+			for (auto idx : valid_indexs) orb_compare(get_input_img(idx), idx);
+			break;
+		case 7:
+			for (auto idx : valid_indexs) psnr_compare(get_input_img(idx), idx);
+			break;
+		case 8:
+			for (auto idx : valid_indexs) mssim_compare(get_input_img(idx), idx);
+			break;
+		case 9:
+			for (auto idx : valid_indexs) svm_compare(get_input_img(idx), idx);
+			break;
+		case 10:
+			for (auto idx : valid_indexs) combin_compare_1(get_input_img(idx), idx);
+			break;
+		case 11:
+			for (auto idx : valid_indexs) combin_compare_2(get_input_img(idx), idx);
+			break;
+		case 12:
+			for (auto idx : valid_indexs) combin_compare_3(get_input_img(idx), idx);
+			break;
+		case 13:
+			for (auto idx : valid_indexs) combin_compare_4(get_input_img(idx), idx);
+			break;
+		case 14:
+			for (auto idx : valid_indexs) combin_compare_5(get_input_img(idx), idx);
+			break;
+		case 15:
+			for (auto idx : valid_indexs) combin_compare_6(get_input_img(idx), idx);
+			break;
+		case 16:
+			for (auto idx : valid_indexs) combin_compare_7(get_input_img(idx), idx);
+			break;
+		case 17:
+			for (auto idx : valid_indexs) combin_compare_7a(get_input_img(idx), idx);
+			break;
+		case 18:
+			for (auto idx : valid_indexs) combin_compare_8(get_input_img(idx), idx);
+			break;
+		case 19:
+			for (auto idx : valid_indexs) combin_compare_9(get_input_img(idx), idx);
+			break;
+		case 20:
+			for (auto idx : valid_indexs) combin_compare_10(get_input_img(idx), idx);
+			break;
+		case 21:
+			for (auto idx : valid_indexs) combin_compare_11(get_input_img(idx), idx);
+			break;
+		case 22:
+			for (auto idx : valid_indexs) combin_compare_12(get_input_img(idx), idx);
+			break;
+		case 23:
+			for (auto idx : valid_indexs) combin_compare_13(get_input_img(idx), idx);
+			break;
+		case 24:
+			for (auto idx : valid_indexs) combin_compare_14(get_input_img(idx), idx);
+			break;
+		case 25:
+			for (auto idx : valid_indexs) combin_compare_15(get_input_img(idx), idx);
+			break;
+		case 26:
+			for (auto idx : valid_indexs) combin_compare_16(get_input_img(idx), idx);
+			break;
+		case 27:
+			for (auto idx : valid_indexs) combin_compare_17(get_input_img(idx), idx);
+			break;
+		case 28:
+			for (auto idx : valid_indexs) combin_compare_18(get_input_img(idx), idx);
+		default:
+			break;
 	}
 
 	cout << "Done" << endl;
@@ -268,8 +273,7 @@ int main(int argc, char** argv) {
 
 	if (instruction == 0) {
 		solve();
-	}
-	else {
+	} else {
 		extra_fucntion();
 	}
 
