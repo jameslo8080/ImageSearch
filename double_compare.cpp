@@ -294,16 +294,7 @@ vector<int> new_compare(Mat src_color, int inputIndex, double the) {
 		}
 		vector<int> errorIndex;
 
-		//vector<vector<vector<ImgScore>>> iss_list_(8);
-
 		vector<ImgScore> iss_list;
-		//for (int i = 0; i < iss_list_.size(); i++) {
-		//		iss_list_[i] = vector<vector<ImgScore>>(method_count);
-		//}
-
-		// ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
-		// ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
-		// ===== ===== ===== ===== ===== ===== ===== ===== ===== ===== 
 		for (int fileIndex = 0; fileIndex < 1000; fileIndex++) {
 				try {
 						// ===== Load file =====
@@ -395,13 +386,6 @@ vector<int> new_compare(Mat src_color, int inputIndex, double the) {
 
 						}
 
-						//cout << "hsv_score:" << hsv_score << endl;
-						//fea
-						//vector<Mat> dbimg_fea = divide_image(dbimg_src, 4, 4);
-						//dbimg_fea.erase(dbimg_fea.begin(), dbimg_fea.begin() + 5);
-						//dbimg_fea.erase(dbimg_fea.begin() + 2, dbimg_fea.begin() + 4);
-						//dbimg_fea.resize(4);
-
 						// ===== Feature =====
 						double fea_score = 0;
 						double fea_score_2 = 0;
@@ -415,11 +399,6 @@ vector<int> new_compare(Mat src_color, int inputIndex, double the) {
 						double fea_score_Middle_Overall = 0;
 
 						if (useFea) {
-								// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
-								// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
-								// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
-								// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
-								// ===== ===== ===== ===== Descriptor ===== ===== ===== =====
 								// ===== Middle Divide Descriptor =====
 								fea_score_Overall = (1 - feature_cmp(src_g_descriptor, dmimg_descriptor));
 
