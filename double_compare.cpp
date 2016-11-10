@@ -232,7 +232,7 @@ declare:
  //int hce_method_dbimg = 0;
 
  bool useHsv = true, useFea = true; // not ready 
- 
+
  //string files[] = { "man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food" };
  //int valid_indexs[] = { 0, 1, 2, 3, 4, 6, 7 }; // 0, 1, 2, 3, 4, 6, 7
 
@@ -295,20 +295,20 @@ eachSetting:
  Mat src_g_m_descriptor;
  vector<Mat> src_d_descriptors;
 
-	src_g_descriptor = calSURFDescriptor_one(src_gray, minH);
-	src_g_m_descriptor = calSURFDescriptor_one(src_gray_middle, minH);
+ src_g_descriptor = calSURFDescriptor_one(src_gray, minH);
+ src_g_m_descriptor = calSURFDescriptor_one(src_gray_middle, minH);
 
-	for (int j = 0; j < src_gray_divide.size(); j++) {
-	 Mat temp_desc = calSURFDescriptor_one(src_gray_divide[j], minH);
-	 // it seems some img may not able to find any descriptor when it is too small
-	 // we just ignore this currently
-	 if (!temp_desc.empty())
-		src_d_descriptors.push_back(temp_desc);
-	 else {
-		cout << "log:empty:" << j << endl;
-	 }
+ for (int j = 0; j < src_gray_divide.size(); j++) {
+	Mat temp_desc = calSURFDescriptor_one(src_gray_divide[j], minH);
+	// it seems some img may not able to find any descriptor when it is too small
+	// we just ignore this currently
+	if (!temp_desc.empty())
+	 src_d_descriptors.push_back(temp_desc);
+	else {
+	 cout << "log:empty:" << j << endl;
 	}
- 
+ }
+
  vector<int> errorIndex;
 
  //vector<vector<vector<ImgScore>>> iss_list_(8);
@@ -338,6 +338,7 @@ eachSetting:
 	 Mat dbimg_src_color_middle = cutMiddle(dbimg_color);
 	 //Mat dbimg_src_gray = imread(file.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 
+
 	 // ===== Divide (for HSV) =====
 	 vector<Mat> dbimg_color_divide = divide_image(dbimg_color, hsv_divide_[0], hsv_divide_[1]);
 	 vector<Mat> dbimg_color_divide_hsv;
@@ -364,27 +365,30 @@ eachSetting:
 	 double hsv_score_D_only = 0;
 	 double hsv_score_Middle_Overall = 0;
 
-	 if (useHsv) {
-		// divided overall
-		for (int j = 0; j < dbimg_color_divide_hsv.size(); j++) {
-		 hsv_score_D_only += compareHist(src_color_divide_hsv[j], dbimg_color_divide_hsv, CV_COMP_CORREL);
-		}
-		if (dbimg_color_divide.size() > 0)
-		 hsv_score_D_only /= dbimg_color_divide.size();
-
-		// middle 
-		hsv_score_Middle_Overall = compareHist(src_middle_hsv, dbimg_hsv_middle, CV_COMP_CORREL);
-
-		if (dbimg_color_divide.size() > 0) {
-		 hsv_score = hsv_score_D_only * 0.5 + hsv_score_Middle_Overall  * 0.5;
-		 hsv_score_2 = hsv_score_D_only * 0.25 + hsv_score_Middle_Overall  * 0.75;
-		 hsv_score_3 = hsv_score_D_only * 0.75 + hsv_score_Middle_Overall  * 0.25;
-		 hsv_score_4_D = hsv_score_D_only;
-		 hsv_score_5_MOA = hsv_score_Middle_Overall;
-		} else
-		 hsv_score = 0;
-
+	 cout << "AAAAAAAAAAAA" << endl;
+	 // divided overall
+	 for (int j = 0; j < dbimg_color_divide_hsv.size(); j++) {
+		cout << "bbbbbbbbbbbb" << endl;
+		hsv_score_D_only += compareHist(src_color_divide_hsv[j], dbimg_color_divide_hsv, CV_COMP_CORREL);
+		cout << "ccccccccccc" << endl;
 	 }
+	 if (dbimg_color_divide.size() > 0)
+		hsv_score_D_only /= dbimg_color_divide.size();
+	 cout << "ddddddddddddd" << endl;
+	 // middle 
+	 hsv_score_Middle_Overall = compareHist(src_middle_hsv, dbimg_hsv_middle, CV_COMP_CORREL);
+
+
+	 if (dbimg_color_divide.size() > 0) {
+		hsv_score = hsv_score_D_only * 0.5 + hsv_score_Middle_Overall  * 0.5;
+		hsv_score_2 = hsv_score_D_only * 0.25 + hsv_score_Middle_Overall  * 0.75;
+		hsv_score_3 = hsv_score_D_only * 0.75 + hsv_score_Middle_Overall  * 0.25;
+		hsv_score_4_D = hsv_score_D_only;
+		hsv_score_5_MOA = hsv_score_Middle_Overall;
+	 } else
+		hsv_score = 0;
+
+
 
 	 //cout << "hsv_score:" << hsv_score << endl;
 	 //fea
@@ -446,23 +450,9 @@ eachSetting:
 
 	 ///vector<double> calScore_list(method_count);
 	 double calScore = 0;
-	 if (useHsv && useFea) {
+	 calScore = (hsv_score_3 + 1) / 2 + (fea_score_4_MD * 1); //**//
+	 iss_list.push_back(ImgScore(fileIndex, calScore));
 
-
-		calScore = (hsv_score_3 + 1) / 2 + (fea_score_4_MD * 1); //**//
-
-		iss_list.push_back(ImgScore(fileIndex, calScore));
-		// fea_score_4
-		//for (int k = 0; k < calScore_list.size(); k++) {
-		//		iss_list_[i][k].push_back(ImgScore(fileIndex, calScore_list[k]));
-		//}
-
-	 } else if (useHsv) {
-		//calScore = hsv_score;
-	 } else if (useFea) {
-		//calScore = fea_score;
-	 }
-	 // each valid_index
 
 	} catch (Exception e) {
 	 printf(" -----ERROR-----img#%i, %s\n", fileIndex, e.msg);
