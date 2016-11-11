@@ -34,7 +34,7 @@ double orb_compare(Mat src_input, int index);
 double psnr_compare(Mat src_input, int inputIndex);
 double mssim_compare(Mat src_input, int inputIndex);
 
-
+void test_read();
 void double_compare();
 void on_double_compare();
 void double_compare_bus();

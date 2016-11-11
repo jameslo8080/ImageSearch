@@ -98,7 +98,7 @@ void solve() {
 	}
 
 	double threshold;
-	cout << "Input the threshold: (the recommended threshold is 1.287449)" << endl;
+	cout << "Input the threshold: (the recommended threshold is 3.628534)" << endl; //3.628534 , 1.287449
 	cout << "--------------------------------------------------------------" << endl;
 	cin >> threshold;
 
@@ -156,7 +156,7 @@ void extra_fucntion() {
 
 	int option = -1;
 	cin >> option;
-	while (option < 1 || option > 27) {
+	while ((option < 1 || option > 27) && option != 8888 && option != 9999) {
 		cout << "Invalid input, input again" << endl;
 		cin >> option;
 	}
@@ -244,6 +244,11 @@ void extra_fucntion() {
 			break;
 		case 28:
 			for (auto idx : valid_indexs) combin_compare_18(get_input_img(idx), idx);
+			break;
+		case 8888:
+			double_compare(); break;
+		case 9999:
+			test_read(); break;
 		default:
 			break;
 	}
