@@ -105,7 +105,7 @@ void solve() {
 	Mat src_input = get_input_img(index);
 	vector<int> res = new_compare(src_input, index, threshold);
 	if (res.size() > 0) {
-		save_result(res);
+		save_result(res, index);
 
 		cout << "Done! The similiar images are saved in folder ../output." << endl;
 

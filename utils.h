@@ -30,4 +30,4 @@ vector<double> normalize_vec(const vector<double> &vec);
 string BOW_file_path(string featureName, int dictionarySize, bool greyscale);
 string ids_features_file_path(string featureName, int dictionarySize, bool greyscale);
 
-void save_result(const vector<int>& nums);
+void save_result(const vector<int>& nums, int inputIndex);

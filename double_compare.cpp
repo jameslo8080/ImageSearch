@@ -229,14 +229,14 @@ Mat img_src_to_hsv(Mat src, int hbins, int sbins) {
 		Mat histImg = Mat::zeros(sbins*scale, hbins * 10, CV_8UC3);
 
 		for (int h = 0; h < hbins; h++)
-			for (int s = 0; s < sbins; s++) {
-				float binVal = hist.at<float>(h, s);
-				int intensity = cvRound(binVal * 255 / maxVal);
-				rectangle(histImg, Point(h*scale, s*scale),
-														Point((h + 1)*scale - 1, (s + 1)*scale - 1),
-														Scalar::all(intensity),
-														CV_FILLED);
-			}
+		for (int s = 0; s < sbins; s++) {
+			float binVal = hist.at<float>(h, s);
+			int intensity = cvRound(binVal * 255 / maxVal);
+			rectangle(histImg, Point(h*scale, s*scale),
+													Point((h + 1)*scale - 1, (s + 1)*scale - 1),
+													Scalar::all(intensity),
+													CV_FILLED);
+		}
 
 		namedWindow("Source", 1);
 		imshow("Source", src);
@@ -289,16 +289,9 @@ Mat cutMiddle(Mat src) {
 }
 
 vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
-	//int hbins_[3] = { 24, 24, 8 };
-	//int sbins_[3] = { 28, 28, 4 };
-	//int minH_[3] = { 128, 128, 32 };
 	int hsv_divide_[2] = { 4, 4 };
 	int fea_divide_[2] = { 5, 5 };
 	int minH = 192, hbins = 24, sbins = 28;
-	//int hce_method_src = 2 , hce_method_dbimg = 2;
-	//double higherContrast_src = 1.2;
-	//double higherContrast_dbimg = 1.2;
-	//int method_count = METHOD_COUNT;
 
 	Mat src_gray; // imread(src.c_str(), CV_LOAD_IMAGE_GRAYSCALE);
 	cv::cvtColor(src_color, src_gray, CV_BGR2GRAY); // CV_BGR2GRAY
@@ -457,9 +450,6 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 
 			iss_list.push_back(ImgScore(fileIndex, calScore));
 
-
-
-
 		} catch (Exception e) {
 			printf(" -----ERROR-----img#%i, %s\n", fileIndex, e.msg);
 			errorIndex.push_back(fileIndex);
@@ -471,8 +461,9 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 	cout << endl;
 
 	// sort
-	ScoreReport sr;
 	sort(iss_list.rbegin(), iss_list.rend());
+
+	ScoreReport sr;
 	sr = ScoreReport(iss_list, inputIndex);
 	sr.reportSorted(200);
 	sr.report();
@@ -483,53 +474,41 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 	times_need.push_back(elapsed_secs);
 	printf("\nused time:%f\n", elapsed_secs);
 
-	double input;
-	cout << "using threshold " << threshold << " (-1 for ok, -2 to save, others value for change the threshold):";
-	cin >> input;
-	do {
+	vector<ImgScore> iss_threshold = iss_list;
 
-		if (input != -1 && input != -2) {
-			threshold = input;
+	// apply threshold
+	for (int i = 0; i < iss_threshold.size(); i++) {
+		if (iss_threshold[i].score < threshold) {
+			iss_threshold.resize(i);
+			break;
 		}
-
-		vector<ImgScore> iss_threshold = iss_list;
-
-		// apply threshold
-		for (int i = 0; i < iss_threshold.size(); i++) {
-			if (iss_threshold[i].score < threshold) {
-				iss_threshold.resize(i);
-				break;
-			}
-		}
-		ScoreReport sr_threshold = ScoreReport(iss_threshold, inputIndex);
+	}
+	ScoreReport sr_threshold = ScoreReport(iss_threshold, inputIndex);
 
 
-		double p = sr_threshold.correct / (double) iss_threshold.size() * (double) 100.0;
-		double r = sr_threshold.correct;
+	double p = sr_threshold.correct / (double) iss_threshold.size() * (double) 100.0;
+	double r = sr_threshold.correct;
 
-		printf("p:%f, r:%f, size:%i (", p, r, iss_threshold.size());
+	printf("p:%f, r:%f, size:%i (", p, r, iss_threshold.size());
 
-		vector<int> res;
-		for (int i = 0; i < iss_threshold.size(); ++i)
-			res.push_back(iss_threshold[i].db_id);
+	vector<int> res;
+	for (int i = 0; i < iss_threshold.size(); ++i)
+		res.push_back(iss_threshold[i].db_id);
 
-		cout << "-1 for leave, -2 to save, others for try other threshold):";
-		cin >> input;
+	//if (input == -2) {
+	//	vector<ImgScore> save_list = sr.scoreList;
+	//	string  filename = "./core_result/input_" + to_string(inputIndex) + ".yml";
+	//	FileStorage fs(filename.c_str(), FileStorage::WRITE);
+	//	//write(fs, "aNameYouLike", save_list);
+	//	fs << "ImgScore" << "[";
+	//	for each(ImgScore ims in save_list) { fs << ims; }
+	//	fs << "]";   // close sequence
+	//	fs.release();
+	//}
 
-		if (input == -2) {
-			vector<ImgScore> save_list = sr.scoreList;
-			string  filename = "./core_result/input_" + to_string(inputIndex) + ".yml";
-			FileStorage fs(filename.c_str(), FileStorage::WRITE);
-			//write(fs, "aNameYouLike", save_list);
-			fs << "ImgScore" << "[";
-			for each(ImgScore ims in save_list) { fs << ims; }
-			fs << "]";   // close sequence
-			fs.release();
-		}
 
-		if (input == -1)
-			return res;
-	} while (true);
+	return res;
+
 
 
 }
@@ -732,12 +711,12 @@ eachSetting:
 						vector<Mat> dbimg_color_divide_hsv;
 						Mat dbimg_hsv_middle;
 						if (useHsv)
-							for (int i = 0; i < dbimg_color_divide.size(); i++) {
-								dbimg_color_divide_hsv.push_back(img_src_to_hsv(dbimg_color_divide[i], hbins, sbins));
+						for (int i = 0; i < dbimg_color_divide.size(); i++) {
+							dbimg_color_divide_hsv.push_back(img_src_to_hsv(dbimg_color_divide[i], hbins, sbins));
 
-								// middle
-								dbimg_hsv_middle = img_src_to_hsv(dbimg_src_color_middle, hbins, sbins);
-							}
+							// middle
+							dbimg_hsv_middle = img_src_to_hsv(dbimg_src_color_middle, hbins, sbins);
+						}
 
 						Mat dmimg_descriptor;
 						if (useFea)

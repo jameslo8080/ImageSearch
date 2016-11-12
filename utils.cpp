@@ -67,13 +67,16 @@ string ids_features_file_path(string featureName, int dictionarySize, bool greys
 	return "../bow/" + (string)(greyscale ? "g_f" : "f") + featureName + to_string(dictionarySize) + ".yml";
 }
 
-void save_result(const vector<int>& nums) {
-	wstring fpath = L"../result/";
-	RemoveDirectory(fpath.data());
-	CreateDirectory(fpath.data(), NULL);
-	for (auto num : nums) {
+void save_result(const vector<int>& nums, int inputIndex) {
+	string files[] = { "man", "beach", "building", "bus", "dinosaur", "elephant", "flower", "horse", "mountain", "food" };
+	//wstring fpath = L"../result/";
+	//fpath.append(files[inputIndex]);
+	string path = "../result/" + files[inputIndex] + "/";
+	/*RemoveDirectory(fpath.data());
+	CreateDirectory(fpath.data(), NULL);*/
+	for (int num : nums) {
 		ifstream src(getFilePath999(num), ios::binary);
-		ofstream dst("../result/" + to_string(num) + ".jpg", ios::binary);
+		ofstream dst(path.c_str() + to_string(num) + ".jpg", ios::binary);
 		dst << src.rdbuf();
 	}
 }
