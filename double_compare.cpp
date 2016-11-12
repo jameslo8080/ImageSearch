@@ -423,7 +423,7 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 
 			//double fea_score_Overall = 0;
 			double fea_score_Middle_Divide = 0;
-			double fea_score_Middle_Overall = 0;
+			//double fea_score_Middle_Overall = 0;
 
 
 			// ===== Middle Divide Descriptor =====
@@ -436,7 +436,7 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 				fea_score_Middle_Divide /= src_d_descriptors.size();
 
 			// ===== Middle Overall Descriptor =====
-			//fea_score_Middle_Overall += (1 - feature_cmp(src_g_m_descriptor, dmimg_descriptor));
+			double fea_score_Middle_Overall = (1 - feature_cmp(src_g_m_descriptor, dmimg_descriptor));
 
 
 			if (src_d_descriptors.size() > 0) {
@@ -484,7 +484,7 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 	printf("\nused time:%f\n", elapsed_secs);
 
 	double input;
-	cout << "using threshold " << threshold << " (-1 for ok, others value for change the threshold):";
+	cout << "using threshold " << threshold << " (-1 for ok, -2 to save, others value for change the threshold):";
 	cin >> input;
 	do {
 
@@ -513,7 +513,7 @@ vector<int> new_compare(Mat src_color, int inputIndex, double threshold) {
 		for (int i = 0; i < iss_threshold.size(); ++i)
 			res.push_back(iss_threshold[i].db_id);
 
-		cout << "-1 for ok, -2 to save, others for try other threshold):";
+		cout << "-1 for leave, -2 to save, others for try other threshold):";
 		cin >> input;
 
 		if (input == -2) {
@@ -807,20 +807,11 @@ eachSetting:
 									fea_score_Middle_D += 1 - feature_cmp(src_d_descriptors_[i][j], dmimg_descriptor);
 								}
 
-
-
-								//								for (int i = 0; i < src_d_descriptors.size(); i++) {
-								//									fea_score_MD += 1 - feature_cmp(src_d_descriptors[i], dmimg_descriptor);
-								//>>>>>>> origin/master
-								//								}
 								if (src_d_descriptors_[i].size() > 0)
 									fea_score_Middle_D /= src_d_descriptors_[i].size();
 
 								// ===== Middle Overall Descriptor =====
 								fea_score_Middle_Overall += (1 - feature_cmp(src_g_m_descriptor_[i], dmimg_descriptor));
-								//=======
-								//								fea_score_MO += (1 - feature_cmp(src_g_m_descriptor, dmimg_descriptor));
-								//>>>>>>> origin/master
 
 								if (src_d_descriptors_[i].size() > 0) {
 									fea_score = fea_score_Middle_D *0.5 + fea_score_Middle_Overall * 0.5;
@@ -869,35 +860,35 @@ eachSetting:
 								calScore_list[4] = (hsv_score + (double)1.0) / 2.0 + (fea_score_2 * 4.0);
 								calScore_list[5] = (hsv_score + (double)1.0) / 2.0 + (fea_score_3 * 4.0);
 
-								calScore_list[6] = (hsv_score_2 + (double) 1.0) / 2.0 + (fea_score * 1.0);
-								calScore_list[7] = (hsv_score_3 + (double) 1.0) / 2.0 + (fea_score * 1.0); /**/
+								//calScore_list[6] = (hsv_score_2 + (double) 1.0) / 2.0 + (fea_score * 1.0);
+								//calScore_list[7] = (hsv_score_3 + (double) 1.0) / 2.0 + (fea_score * 1.0); /**/
 
-								//calScore_list[8] = (hsv_score_4 + (double) 1.0) / 2.0 + (fea_score * 1);
-								calScore_list[8] = (hsv_score_5_MOA + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0); // new
+								////calScore_list[8] = (hsv_score_4 + (double) 1.0) / 2.0 + (fea_score * 1);
+								//calScore_list[8] = (hsv_score_5_MOA + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0); // new
 
-								calScore_list[9] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0); //
+								//calScore_list[9] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0); //
 
-								//	hsv_score_2 = hsv_score_D * 0.25 + hsv_score_MO  * 0.75;
-								// fea_score_4 = fea_score_MD;
-								calScore_list[10] = (hsv_score_2 + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0);
-								calScore_list[11] = (hsv_score_3 + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0); //**//
-								calScore_list[12] = (hsv_score_4_D + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0); //<< suck
+								////	hsv_score_2 = hsv_score_D * 0.25 + hsv_score_MO  * 0.75;
+								//// fea_score_4 = fea_score_MD;
+								//calScore_list[10] = (hsv_score_2 + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0);
+								//calScore_list[11] = (hsv_score_3 + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0); //**//
+								//calScore_list[12] = (hsv_score_4_D + (double) 1.0) / 2.0 + (fea_score_4_MD * 1.0); //<< suck
 
-								calScore_list[13] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_4_MD * 0.5); // beach , building
-								calScore_list[14] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_4_MD * (double) 2.0);
+								//calScore_list[13] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_4_MD * 0.5); // beach , building
+								//calScore_list[14] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_4_MD * (double) 2.0);
 
-								calScore_list[15] = (hsv_score_5_MOA + (double) 1.0) / 2.0 + (fea_score * (double) 2.0);
-								calScore_list[16] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_5_OA * (double) 2.0);
-								calScore_list[17] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_6_MOA * (double) 2.0);
+								//calScore_list[15] = (hsv_score_5_MOA + (double) 1.0) / 2.0 + (fea_score * (double) 2.0);
+								//calScore_list[16] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_5_OA * (double) 2.0);
+								//calScore_list[17] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_6_MOA * (double) 2.0);
 
-								calScore_list[18] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
-								calScore_list[19] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
+								//calScore_list[18] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
+								//calScore_list[19] = (hsv_score + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
 
-								calScore_list[20] = (hsv_score_4_D + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
-								calScore_list[21] = (hsv_score_4_D + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
+								//calScore_list[20] = (hsv_score_4_D + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
+								//calScore_list[21] = (hsv_score_4_D + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
 
-								calScore_list[22] = (hsv_score_5_MOA + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
-								calScore_list[23] = (hsv_score_5_MOA + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
+								//calScore_list[22] = (hsv_score_5_MOA + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.75 + fea_score_6_MOA *0.25);
+								//calScore_list[23] = (hsv_score_5_MOA + (double) 1.0) / 2.0 + (fea_score_5_OA * 0.5 + fea_score_6_MOA *0.5);
 
 								// fea_score_4
 								for (int k = 0; k < calScore_list.size(); k++) {
@@ -938,8 +929,9 @@ eachSetting:
 					for (int k = 0; k < iss_list_[i].size(); k++) {
 						sort(iss_list_[i][k].rbegin(), iss_list_[i][k].rend());
 
-						vector<ImgScore> save = iss_list_[i][k];
-						save_D_C_R(save, i, k);
+						//@save
+						//vector<ImgScore> save = iss_list_[i][k];
+						//save_D_C_R(save, i, k);
 
 						sr = ScoreReport(iss_list_[i][k], i);
 						cout << "method#" << k + 1 << " : ";
@@ -960,49 +952,19 @@ eachSetting:
 				m_result._minH = minH;
 				m_result._hce_method_dbimg = hce_method_dbimg;
 
-				// acc and firstMatch count of each method
-				vector<double> acc_of_method_;
-				vector<double> acc_first_match_;
-				vector<int> match_count_method;
-
-				for (int k = 0; k < METHOD_COUNT; k++) {
-					double acc = 0;
-					double acc_first_match = 0;
-					int count = 0;
-					int match_count = 0;
-
+				for (int k = 0; k < iss_list_[0].size(); k++) {
 					vector<ScoreReport> for_best_threshold;
 
 					for each (int i in valid_indexs) {
-						acc += bestMData_[i].srs[k].acc100;
-						count++;
 						for_best_threshold.push_back(bestMData_[i].srs[k]);
-						// need firstMatch count
-						if (bestMData_[i].srs[k].firstWrong != 0) {
-							match_count++;
-							acc_first_match += bestMData_[i].srs[k].acc100;
-						}
+
+						if (k == 5)
+							bestMData_[i].srs[k].reportSorted(200);
 					}
-					acc /= 7;
-					if (match_count > 0)
-						acc_first_match /= match_count;
-
-					acc_of_method_.push_back(acc);
-					acc_first_match_.push_back(acc_first_match);
-
-					match_count_method.push_back(match_count);
+					m_result.add_acc(for_best_threshold);
 					m_result.add_best_threshold(for_best_threshold);
 
-					//string fname = "./method/method" + to_string(k + 1) + ".yml";
-					//FileStorage fs(fname.c_str(), FileStorage::WRITE);
-					//write(fs, "ScoreReport", for_best_threshold);
-					//fs.release();
-
-
 				} //each method
-				m_result._acc_of = acc_of_method_;
-				m_result._acc_first_match = acc_first_match_;
-				m_result._first_match_count = match_count_method;
 
 				m_result.report();
 				list_of_method_result.push_back(m_result);
