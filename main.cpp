@@ -100,12 +100,13 @@ void solve() {
 	double threshold;
 	cout << "Input the threshold: (the recommended threshold is 3.628534)" << endl; //3.628534 , 1.287449
 	cout << "--------------------------------------------------------------" << endl;
-	cin >> threshold;
+	//cin >> threshold;
+	threshold = 3.642653;
 
 	Mat src_input = get_input_img(index);
 	vector<int> res = new_compare(src_input, index, threshold);
 	if (res.size() > 0) {
-		save_result(res, index);
+		//save_result(res, index);
 
 		cout << "Done! The similiar images are saved in folder ../output." << endl;
 
